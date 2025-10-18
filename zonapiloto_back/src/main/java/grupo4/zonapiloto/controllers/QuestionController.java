@@ -3,6 +3,8 @@ package grupo4.zonapiloto.controllers;
 import grupo4.zonapiloto.models.dtos.QuestionRequest;
 import grupo4.zonapiloto.models.dtos.QuestionResponse;
 import grupo4.zonapiloto.services.QuestionService;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,25 +13,25 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/questions")
+@RequiredArgsConstructor
 public class QuestionController {
 
     private final QuestionService questionService;
 
-    public QuestionController(QuestionService questionService) {
-        this.questionService = questionService;
-    }
-
     @GetMapping
-    public List<QuestionResponse> getAllQuestions() {
-        return questionService.getAllQuestionsDTO();
+    public ResponseEntity<List<QuestionResponse>> getAllQuestions() {
+        List<QuestionResponse> questions = questionService.getAllQuestionsDTO();
+        return ResponseEntity.ok(questions);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<QuestionResponse> getQuestionById(@PathVariable Long id) {
-        return questionService.getById(id)
-                .map(questionService::mapToResponse)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        try {
+            QuestionResponse response = questionService.getById(id);
+            return ResponseEntity.ok(response);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping

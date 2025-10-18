@@ -1,81 +1,54 @@
 package grupo4.zonapiloto.services;
 
+import grupo4.zonapiloto.mappers.CategoryMapper;
 import grupo4.zonapiloto.models.dtos.CategoryRequest;
 import grupo4.zonapiloto.models.dtos.CategoryResponse;
-import grupo4.zonapiloto.models.dtos.QuestionResponse;
-import grupo4.zonapiloto.models.entitys.Category;
-import grupo4.zonapiloto.models.entitys.Question;
+import grupo4.zonapiloto.models.entities.Category;
 import grupo4.zonapiloto.models.repositories.CategoryRepo;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
-
     private final CategoryRepo categoryRepo;
-
-    public CategoryService(CategoryRepo categoryRepo) {
-        this.categoryRepo = categoryRepo;
-    }
 
     public List<CategoryResponse> getAllCategoriesDTO() {
         return categoryRepo.findAll().stream()
-                .map(this::mapToResponse)
+                .map(CategoryMapper::toResponse)
                 .toList();
     }
 
-    public Optional<Category> getCategoryById(Long id) {
-        return categoryRepo.findById(id);
+    public CategoryResponse getCategoryById(Long id) {
+        Category category = categoryRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Categoría no encontrada"));
+        return CategoryMapper.toResponse(category);
     }
 
     public CategoryResponse createCategory(CategoryRequest dto) {
-        Category category = new Category();
-        category.setName(dto.getName());
-        category.setDescription(dto.getDescription());
-
+        Category category = CategoryMapper.toEntity(dto);
         Category saved = categoryRepo.save(category);
-        return mapToResponse(saved);
+        return CategoryMapper.toResponse(saved);
     }
 
     public CategoryResponse updateCategory(Long id, CategoryRequest dto) {
         Category category = categoryRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Categoría no encontrada"));
 
         category.setName(dto.getName());
         category.setDescription(dto.getDescription());
 
         Category updated = categoryRepo.save(category);
-        return mapToResponse(updated);
+        return CategoryMapper.toResponse(updated);
     }
 
     public void deleteCategory(Long id) {
-        categoryRepo.deleteById(id);
-    }
-
-    public CategoryResponse mapToResponse(Category category) {
-        CategoryResponse resp = new CategoryResponse();
-        resp.setCategoryId(category.getCategoryId());
-        resp.setName(category.getName());
-        resp.setDescription(category.getDescription());
-
-        if (category.getQuestions() != null) {
-            resp.setQuestions(category.getQuestions().stream()
-                    .map(this::mapQuestionToResponse)
-                    .toList());
+        if (!categoryRepo.existsById(id)) {
+            throw new EntityNotFoundException("Categoría no encontrada");
         }
-
-        return resp;
-    }
-
-    private QuestionResponse mapQuestionToResponse(Question question) {
-        QuestionResponse qr = new QuestionResponse();
-        qr.setQuestionId(question.getQuestionId());
-        qr.setQuestion(question.getQuestion());
-        qr.setAnswer(question.getAnswer());
-        qr.setCategoryId(question.getCategory().getCategoryId());
-        qr.setCategoryName(question.getCategory().getName());
-        return qr;
+        categoryRepo.deleteById(id);
     }
 }
