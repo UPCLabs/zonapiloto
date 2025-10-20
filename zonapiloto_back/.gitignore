@@ -1,33 +1,86 @@
-HELP.md
+# ==============================
+# Java / Maven
+# ==============================
 target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+*/target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/
+dependency-reduced-pom.xml
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+*.iml
+*.class
+*.jar
+*.war
+*.ear
 
-### VS Code ###
+# ==============================
+# IDEs / Editors
+# ==============================
+# IntelliJ IDEA
+.idea/
+*.ipr
+*.iws
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# VS Code
 .vscode/
+.history/
+*.code-workspace
+
+# ==============================
+# OS / Editor / Misc
+# ==============================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.tmp
+*.bak
+*~
+
+# ==============================
+# Docker / Containers
+# ==============================
+# Compose volumes and images
+postgres_data/
+*.pid
+*.log
+*.db
+docker-compose.override.yml
+
+# ==============================
+# Environment / Secrets
+# ==============================
+.env
+*.env.local
+.env.*
+!.env.example
+
+# ==============================
+# Node (por si usas frontend luego)
+# ==============================
+node_modules/
+dist/
+build/
+
+# ==============================
+# Backup / Reports
+# ==============================
+*.log
+*.out
+*.zip
+*.tar
+*.gz
+*.bak
+*.old
+
+# ==============================
+# Custom for Zonapiloto
+# ==============================
+# Ignore compiled classes inside services
+services/*/target/
+gateway/target/

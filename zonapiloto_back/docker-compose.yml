@@ -1,36 +1,56 @@
 version: '3.9'
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql-zonapiloto
+  postgres:
+    image: postgres:15
+    container_name: postgres-zonapiloto
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_DATABASE: zonapiloto
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - zonapiloto_db:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - zonapiloto_net
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p123456"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 20s
 
-  app:
-    build: .
-    container_name: spring-zonapiloto
+  auth-service:
+    build: ./services/auth-service
+    container_name: auth-service
+    restart: always
     depends_on:
-      mysql:
+      postgres:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/zonapiloto?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 123456
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+    ports:
+      - "8081:8081"
+    networks:
+      - zonapiloto_net
+
+  gateway:
+    build: ./gateway
+    container_name: gateway
+    restart: always
+    depends_on:
+      auth-service:
+        condition: service_started
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
     ports:
       - "8080:8080"
     networks:
@@ -38,6 +58,7 @@ services:
 
 networks:
   zonapiloto_net:
+    driver: bridge
 
 volumes:
-  zonapiloto_db:
+  postgres_data:

@@ -1,5 +1,17 @@
 #!/bin/bash
+set -e
 
+ROOT_DIR=$(pwd)
+
+echo "🔧 Compilando Gateway..."
+cd "$ROOT_DIR/gateway"
 ./mvnw clean package -DskipTests
 
+echo "🔧 Compilando Auth Service..."
+cd "$ROOT_DIR/services/auth-service"
+./mvnw clean package -DskipTests
+
+cd "$ROOT_DIR"
+
+echo "Construyendo y levantando los contenedores Docker..."
 docker compose up --build
