@@ -1,0 +1,37 @@
+.hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 100px 20px;
+    background-color: #fff;
+    text-align: center;
+}
+
+.hero-text h1 {
+    color: #e60000;
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.hero-text h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+.hero-text span {
+    color: #e60000;
+    font-weight: bold;
+}
+
+.hero-text button {
+    background-color: #000;
+    color: #fff;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.hero-text button:hover {
+    background-color: #e60000;
+}
