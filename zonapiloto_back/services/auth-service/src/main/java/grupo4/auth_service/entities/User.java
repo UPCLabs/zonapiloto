@@ -18,7 +18,6 @@ public class User {
     private String username;
 
     private String mfaSecret;
-
     private String password;
     private String role;
 }

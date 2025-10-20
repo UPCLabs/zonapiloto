@@ -1,53 +1,41 @@
 package grupo4.auth_service.services;
 
+import grupo4.auth_service.entities.PendingUser;
 import grupo4.auth_service.entities.User;
+import grupo4.auth_service.repositories.PendingUserRepository;
 import grupo4.auth_service.repositories.UserRepository;
 import grupo4.auth_service.util.JwtUtil;
+import grupo4.auth_service.util.UserUtil;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import java.security.MessageDigest;
-import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepo;
     private final JwtUtil jwtUtil;
+    private final UserService userService;
     private final MfaService mfaService;
 
-    private String hashPassword(String password) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(password.getBytes());
-            return Base64.getEncoder().encodeToString(hash);
-        } catch (Exception e) {
-            throw new RuntimeException("Error hashing password", e);
-        }
-    }
+    public boolean checkCredentials(String username, String password) {
+        String hashPassword = UserUtil.hashPassword(password);
+        User user = userService.getUser(username);
 
-    public User registerUser(String username, String password, String role, String secret) {
-        String hashed = hashPassword(password);
-        User user = User.builder()
-                .username(username)
-                .password(hashed)
-                .role(role)
-                .mfaSecret(secret)
-                .build();
-        return userRepo.save(user);
+        return user.getPassword().equals(hashPassword);
     }
 
     public String loginWithMfa(String username, String password, int code) {
-        var user = userRepo.findByUsername(username).orElse(null);
+        User user = userService.getUser(username);
         if (user == null)
             return null;
 
-        // String hashed = hashPassword(password);
-        if (!user.getPassword().equals(password))
+        String hashed = UserUtil.hashPassword(password);
+        if (!user.getPassword().equals(hashed))
             return null;
 
-        boolean valid = mfaService.verifyCode(user.getMfaSecret(), code);
-        if (!valid)
+        if (!mfaService.verifyCode(user.getMfaSecret(), code))
             return null;
 
         return jwtUtil.generateToken(user);

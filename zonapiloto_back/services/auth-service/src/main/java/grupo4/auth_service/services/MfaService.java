@@ -14,7 +14,7 @@ public class MfaService {
         final GoogleAuthenticatorKey key = gAuth.createCredentials();
         String secret = key.getKey();
 
-        String qrUrl = GoogleAuthenticatorQRGenerator.getOtpAuthURL(
+        String qrUrl = GoogleAuthenticatorQRGenerator.getOtpAuthTotpURL(
                 "ZonaPiloto", username, key);
 
         return new MfaSetup(secret, qrUrl);

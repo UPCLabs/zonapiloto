@@ -1,14 +1,17 @@
 package grupo4.auth_service.controllers;
 
-import grupo4.auth_service.entities.User;
-import grupo4.auth_service.repositories.UserRepository;
+import grupo4.auth_service.entities.PendingUser;
 import grupo4.auth_service.services.AuthService;
 import grupo4.auth_service.services.MfaService;
+import grupo4.auth_service.services.PendingUserService;
+import grupo4.auth_service.services.UserService;
+import grupo4.auth_service.services.MfaService.MfaSetup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -17,7 +20,8 @@ public class AuthController {
 
     private final AuthService authService;
     private final MfaService mfaService;
-    private final UserRepository userRepo;
+    private final UserService userService;
+    private final PendingUserService pendingUserService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Map<String, String> req) {
@@ -25,15 +29,14 @@ public class AuthController {
         String password = req.get("password");
         String role = req.get("role");
 
-        if (userRepo.findByUsername(username).isPresent()) {
+        if (userService.userExists(username)) {
             return ResponseEntity.badRequest().body(Map.of("error", "Usuario ya existe"));
         }
 
-        var setup = mfaService.generateSetup(username);
+        MfaSetup setup = mfaService.generateSetup(username);
+        pendingUserService.createPendingUser(username, password, role, setup.secret());
+
         return ResponseEntity.ok(Map.of(
-                "username", username,
-                "password", password,
-                "role", role,
                 "mfa_secret", setup.secret(),
                 "qr_url", setup.qrUrl()));
     }
@@ -41,23 +44,32 @@ public class AuthController {
     @PostMapping("/verify-registration")
     public ResponseEntity<?> verifyRegistration(@RequestBody Map<String, String> req) {
         String username = req.get("username");
-        String password = req.get("password");
-        String role = req.get("role");
-        String secret = req.get("mfa_secret");
         int code = Integer.parseInt(req.get("mfa_code"));
 
-        if (mfaService.verifyCode(secret, code)) {
-            User user = User.builder()
-                    .username(username)
-                    .password(password)
-                    .role(role)
-                    .mfaSecret(secret)
-                    .build();
-            userRepo.save(user);
-            return ResponseEntity.ok(Map.of("message", "Usuario registrado con MFA"));
+        Optional<PendingUser> userOptional = pendingUserService.getPendingUser(username);
+
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Registro ya expiro o nombre de usuario no encontrado"));
+        }
+
+        PendingUser user = userOptional.get();
+
+        if (mfaService.verifyCode(user.getMfaSecret(), code)) {
+            userService.registerUser(user);
+            pendingUserService.deletePendingUser(user.getId());
+            return ResponseEntity.ok(Map.of("message", "Usuario registrado con exito"));
         } else {
             return ResponseEntity.status(401).body(Map.of("error", "Código MFA inválido"));
         }
+    }
+
+    @PostMapping("/check-credentials")
+    public ResponseEntity<Boolean> checkCredentials(@RequestBody Map<String, String> req) {
+        String username = req.get("username");
+        String password = req.get("password");
+
+        return ResponseEntity.ok().body(authService.checkCredentials(username, password));
     }
 
     @PostMapping("/login")
