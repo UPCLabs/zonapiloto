@@ -21,7 +21,7 @@ services:
       start_period: 20s
 
   auth-service:
-    build: ./services/auth-service
+    build: ./zonapiloto_back/services/auth-service
     container_name: auth-service
     restart: always
     depends_on:
@@ -41,7 +41,7 @@ services:
       - zonapiloto_net
 
   question-bank-service:
-    build: ./services/question-bank-service
+    build: ./zonapiloto_back/services/question-bank-service
     container_name: question-bank-service
     restart: always
     depends_on:
@@ -59,7 +59,7 @@ services:
       - zonapiloto_net
 
   gateway:
-    build: ./gateway
+    build: ./zonapiloto_back/gateway
     container_name: gateway
     restart: always
     depends_on:
@@ -74,9 +74,27 @@ services:
       - "8080:8080"
     networks:
       - zonapiloto_net
+      - frontend_net
+
+  frontend:
+    build:
+      context: ./zonapiloto_front
+    container_name: zonapiloto-frontend
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - frontend_net
+      - zonapiloto_net
+    depends_on:
+      - gateway
+
+
 
 networks:
   zonapiloto_net:
+    driver: bridge
+  frontend_net:
     driver: bridge
 
 volumes:

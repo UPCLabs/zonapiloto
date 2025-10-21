@@ -9,7 +9,7 @@ function BancoPreguntas() {
     const [preguntaAbierta, setPreguntaAbierta] = useState(null);
 
     useEffect(() => {
-        fetch("http://gateway:8080/api/question-bank/questions")
+        fetch("http://127.0.0.1:8080/api/question-bank/questions")
             .then(res => res.json())
             .then(data => setPreguntas(data))
             .catch(err => console.error("Error al cargar preguntas:", err));
@@ -18,8 +18,8 @@ function BancoPreguntas() {
 
     const preguntasFiltradas = preguntas.filter(
         (p) =>
-            p.pregunta.toLowerCase().includes(busqueda.toLowerCase()) ||
-            p.categoria.toLowerCase().includes(busqueda.toLowerCase())
+            p.question.toLowerCase().includes(busqueda.toLowerCase()) ||
+            p.categoryName.toLowerCase().includes(busqueda.toLowerCase())
     );
 
     return (
@@ -45,11 +45,11 @@ function BancoPreguntas() {
                                 setPreguntaAbierta(preguntaAbierta === index ? null : index)
                             }
                         >
-                            <h3>{p.pregunta}</h3>
-                            <p className="categoria">{p.categoria}</p>
+                            <h3>{p.question}</h3>
+                            <p className="categoria">{p.categoryName}</p>
                             {preguntaAbierta === index && (
                                 <div className="respuesta">
-                                    <p>{p.respuesta}</p>
+                                    <p>{p.answer}</p>
                                 </div>
                             )}
                         </div>
