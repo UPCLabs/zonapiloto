@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import "../styles/services.css";
 
 const services = [
@@ -12,12 +13,26 @@ const services = [
 ];
 
 function ServicesGrid() {
+    const navigate = useNavigate();
+
+    const handleClick = (title) => {
+        if (title === "Banco de Preguntas") {
+            navigate("/banco-preguntas");
+        } else {
+            alert(`Haz clic en: ${title}`);
+        }
+    };
+
     return (
         <section className="services">
             <h2>Servicios Disponibles</h2>
             <div className="grid">
                 {services.map((s, i) => (
-                    <div className="card" key={i}>
+                    <div
+                        className="card"
+                        key={i}
+                        onClick={() => handleClick(s.title)}
+                    >
                         <h3>{s.title}</h3>
                         <p>{s.desc}</p>
                     </div>

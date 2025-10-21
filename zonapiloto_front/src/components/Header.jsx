@@ -1,5 +1,6 @@
 import "../styles/header.css";
 import logo from "../assets/images/logo_zona_piloto.png";
+import { Link } from "react-router-dom";
 
 function Header() {
     return (
@@ -9,8 +10,7 @@ function Header() {
                 <h2>Zona Piloto</h2>
             </div>
             <nav className="nav">
-                <a href="#">Inicio</a>
-                <a href="#">Mi Perfil</a>
+                <Link to="/">Inicio</Link>
                 <a href="#">Contacto</a>
             </nav>
         </header>
