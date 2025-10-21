@@ -1,14 +1,10 @@
 package grupo4.auth_service.services;
 
-import grupo4.auth_service.entities.PendingUser;
 import grupo4.auth_service.entities.User;
-import grupo4.auth_service.repositories.PendingUserRepository;
-import grupo4.auth_service.repositories.UserRepository;
 import grupo4.auth_service.util.JwtUtil;
 import grupo4.auth_service.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,7 +31,7 @@ public class AuthService {
         if (!user.getPassword().equals(hashed))
             return null;
 
-        if (!mfaService.verifyCode(user.getMfaSecret(), code))
+        if (!mfaService.verifyCode(username, user.getMfaSecret(), code))
             return null;
 
         return jwtUtil.generateToken(user);

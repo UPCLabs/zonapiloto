@@ -55,7 +55,7 @@ public class AuthController {
 
         PendingUser user = userOptional.get();
 
-        if (mfaService.verifyCode(user.getMfaSecret(), code)) {
+        if (mfaService.verifyCode(user.getUsername(), user.getMfaSecret(), code)) {
             userService.registerUser(user);
             pendingUserService.deletePendingUser(user.getId());
             return ResponseEntity.ok(Map.of("message", "Usuario registrado con exito"));
