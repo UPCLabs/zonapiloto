@@ -1,29 +1,90 @@
 .header {
+    background-color: #a60000;
+    color: #fff;
     display: flex;
     justify-content: space-between;
+    /* separa extremos */
     align-items: center;
-    padding: 15px 40px;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 12px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* === Zona izquierda (logo + nombre) === */
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+    gap: 10px;
+    transition: transform 0.3s ease;
+}
+
+.logo-link:hover {
+    transform: scale(1.05);
 }
 
 .logo {
+    width: 55px;
+    height: auto;
+}
+
+.site-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: white;
+    transition: color 0.3s ease;
+}
+
+.site-title:hover {
+    color: #ffdddd;
+}
+
+/* === Zona derecha (links) === */
+.header-right {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    gap: 35px;
 }
 
-.logo img {
-    height: 40px;
-}
-
-.nav a {
-    margin-left: 25px;
+.header-right a {
+    color: white;
     text-decoration: none;
-    color: #222;
-    font-weight: 500;
+    font-size: 1rem;
+    position: relative;
+    transition: color 0.3s ease;
 }
 
-.nav a:hover {
-    color: #c90000;
+/* Línea animada al pasar el mouse */
+.header-right a::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background-color: white;
+    transition: width 0.3s ease;
+}
+
+.header-right a:hover::after {
+    width: 100%;
+}
+
+.header-right a:hover {
+    color: #ffdddd;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .header-right {
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }
