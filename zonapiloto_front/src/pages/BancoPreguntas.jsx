@@ -9,38 +9,10 @@ function BancoPreguntas() {
     const [preguntaAbierta, setPreguntaAbierta] = useState(null);
 
     useEffect(() => {
-        //  aqui conecto con el back (habalr con el ing del back Mendiz) 
-        // fetch("http://localhost:8080/api/preguntas")
-        //   .then(res => res.json())
-        //   .then(data => setPreguntas(data))
-        //   .catch(err => console.error("Error al cargar preguntas:", err));
-
-        //  Mock temporal preguntas pruebas
-        const mock = [
-            {
-                id: 1,
-                categoria: "Matemáticas",
-                pregunta: "¿Qué es una derivada?",
-                respuesta:
-                    "SOY"
-            },
-            {
-                id: 2,
-                categoria: "Programación",
-                pregunta: "¿Qué es una API?",
-                respuesta:
-                    "LA"
-            },
-            {
-                id: 3,
-                categoria: "Física",
-                pregunta: "¿Qué es la velocidad?",
-                respuesta:
-                    "Monda"
-            }
-        ];
-
-        setPreguntas(mock);
+        fetch("http://gateway:8080/api/question-bank/questions")
+            .then(res => res.json())
+            .then(data => setPreguntas(data))
+            .catch(err => console.error("Error al cargar preguntas:", err));
     }, []);
 
 
