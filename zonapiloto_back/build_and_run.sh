@@ -11,6 +11,10 @@ echo "🔧 Compilando Auth Service..."
 cd "$ROOT_DIR/services/auth-service"
 ./mvnw clean package -DskipTests
 
+echo "🔧 Compilando Question bank..."
+cd "$ROOT_DIR/services/question-bank-service"
+./mvnw clean package -DskipTests
+
 cd "$ROOT_DIR"
 
 echo "Construyendo y levantando los contenedores Docker..."

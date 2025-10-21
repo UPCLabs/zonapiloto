@@ -15,6 +15,10 @@ public class GatewayConfig {
                         .path("/api/auth/**")
                         .filters(f -> f.stripPrefix(1))
                         .uri("http://auth-service:8081"))
+                .route("question-bank-service", r -> r
+                        .path("/api/question-bank/**")
+                        .filters(f -> f.stripPrefix(1))
+                        .uri("http://question-bank-service:8082"))
                 .build();
     }
 }

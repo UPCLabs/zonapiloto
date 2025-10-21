@@ -19,6 +19,10 @@ public class AuthService {
         String hashPassword = UserUtil.hashPassword(password);
         User user = userService.getUser(username);
 
+        if (user == null) {
+            return false;
+        }
+
         return user.getPassword().equals(hashPassword);
     }
 
