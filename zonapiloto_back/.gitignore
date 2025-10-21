@@ -4,7 +4,6 @@
 target/
 */target/
 !.mvn/wrapper/maven-wrapper.jar
-.mvn/
 dependency-reduced-pom.xml
 build/
 *.iml
