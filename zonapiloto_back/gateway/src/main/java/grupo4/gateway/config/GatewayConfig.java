@@ -14,11 +14,11 @@ public class GatewayConfig {
                 .route("auth-service", r -> r
                         .path("/api/auth/**")
                         .filters(f -> f.stripPrefix(1))
-                        .uri("http://auth-service:5001"))
+                        .uri("http://auth-service:5000"))
                 .route("question-bank-service", r -> r
                         .path("/api/question-bank/**")
                         .filters(f -> f.stripPrefix(1))
-                        .uri("http://question-bank-service:5002"))
+                        .uri("http://question-bank-service:5000"))
                 .build();
     }
 }
