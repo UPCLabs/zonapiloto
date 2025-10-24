@@ -36,7 +36,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION}
     ports:
-      - "8081"
+      - "5001"
     networks:
       - zonapiloto_net
 
@@ -54,7 +54,7 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
     ports:
-      - "8082"
+      - "5002"
     networks:
       - zonapiloto_net
 
@@ -71,7 +71,7 @@ services:
         auth-service=http://auth-service:8081/actuator/health,
         question-bank-service=http://question-bank-service:8082/actuator/health
     ports:
-      - "8080:8080"
+      - "5000:5000"
     networks:
       - zonapiloto_net
       - frontend_net
@@ -79,6 +79,9 @@ services:
   frontend:
     build:
       context: ./zonapiloto_front
+      dockerfile: Dockerfile.dev
+      args:
+        VITE_API_BASE_URL: "http://127.0.0.1:5000/api"
     container_name: zonapiloto-frontend
     restart: always
     ports:

@@ -1,0 +1,108 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres-zonapiloto
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - zonapiloto_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  auth-service:
+    build: ./zonapiloto_back/services/auth-service
+    container_name: auth-service
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+    ports:
+      - "5001"
+    networks:
+      - zonapiloto_net
+
+  question-bank-service:
+    build: ./zonapiloto_back/services/question-bank-service
+    container_name: question-bank-service
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+    ports:
+      - "5002"
+    networks:
+      - zonapiloto_net
+
+  gateway:
+    build: ./zonapiloto_back/gateway
+    container_name: gateway
+    restart: always
+    depends_on:
+      auth-service:
+        condition: service_started
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      SERVICES_URLS: >
+        auth-service=http://auth-service:5001/actuator/health,
+        question-bank-service=http://question-bank-service:5002/actuator/health
+    ports:
+      - "5000:5000"
+    networks:
+      - zonapiloto_net
+      - frontend_net
+
+  frontend:
+    build:
+      context: ./zonapiloto_front
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_API_BASE_URL: "https://zonapiloto.com/api"
+    container_name: zonapiloto-frontend
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/ssl/_.zonapiloto.com_private_key.key:/etc/ssl/_.zonapiloto.com_private_key.key:ro
+      - /etc/ssl/zonapiloto.com_ssl_certificate.cer:/etc/ssl/zonapiloto.com_ssl_certificate.cer:ro
+    networks:
+      - frontend_net
+      - zonapiloto_net
+    depends_on:
+      - gateway
+
+
+
+networks:
+  zonapiloto_net:
+    driver: bridge
+  frontend_net:
+    driver: bridge
+
+volumes:
+  postgres_data:

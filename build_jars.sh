@@ -17,5 +17,4 @@ cd "$ROOT_DIR/zonapiloto_back/services/question-bank-service"
 
 cd "$ROOT_DIR"
 
-echo "Construyendo y levantando los contenedores Docker..."
-docker compose up --build
+echo "Compilado todo"

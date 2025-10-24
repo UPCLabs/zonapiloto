@@ -9,7 +9,8 @@ function BancoPreguntas() {
     const [preguntaAbierta, setPreguntaAbierta] = useState(null);
 
     useEffect(() => {
-        fetch("http://127.0.0.1:8080/api/question-bank/questions")
+        const API_URL = import.meta.env.VITE_API_BASE_URL;
+        fetch(`${API_URL}/question-bank/questions`)
             .then(res => res.json())
             .then(data => setPreguntas(data))
             .catch(err => console.error("Error al cargar preguntas:", err));
