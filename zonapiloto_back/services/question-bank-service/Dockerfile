@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY target/question-bank-service-0.0.1.jar app.jar
 
-EXPOSE 5000
+EXPOSE 5002
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
