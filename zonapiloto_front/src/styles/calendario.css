@@ -1,0 +1,170 @@
+.calendar-container {
+    max-width: 950px;
+    margin: 60px auto;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    text-align: center;
+    font-family: 'Georgia', serif;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.calendar-header h2 {
+    color: #9b0000;
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #9b0000;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    transition: 0.3s;
+}
+
+.arrow.left {
+    left: 10px;
+}
+
+.arrow.right {
+    right: 10px;
+}
+
+.arrow:hover {
+    background-color: #b32424;
+}
+
+.today-btn {
+    background-color: #9b0000;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
+    margin-bottom: 15px;
+}
+
+.today-btn:hover {
+    background-color: #b32424;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+.calendar-day-header {
+    font-weight: bold;
+    color: #9b0000;
+    padding: 8px 0;
+}
+
+.calendar-day {
+    background: #fafafa;
+    border-radius: 12px;
+    min-height: 90px;
+    border: 2px solid #eee;
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.calendar-day:hover {
+    transform: scale(1.03);
+    background: #fff;
+    border-color: #9b0000;
+}
+
+.day-number {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    font-weight: bold;
+    color: #444;
+}
+
+.today {
+    background-color: #ffe6e6;
+    border-color: #9b0000;
+}
+
+.event-title {
+    position: absolute;
+    bottom: 10px;
+    left: 5px;
+    right: 5px;
+    background-color: #9b0000;
+    color: white;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    padding: 4px;
+    transition: 0.3s ease;
+}
+
+.event-title:hover {
+    background-color: #b32424;
+}
+
+.tooltip-flotante {
+    position: fixed;
+    transform: translate(-50%, -100%);
+    background-color: #fff;
+    border: 2px solid #9b0000;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    width: 260px;
+    color: #333;
+    z-index: 1000;
+    animation: fadeIn 0.25s ease-in-out;
+    pointer-events: none;
+    text-align: left;
+}
+
+.tooltip-flotante h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: #9b0000;
+}
+
+.tooltip-flotante p {
+    margin: 6px 0;
+    font-size: 0.85rem;
+}
+
+.tooltip-flotante small {
+    font-size: 0.8rem;
+    color: #555;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -90%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -100%);
+    }
+}

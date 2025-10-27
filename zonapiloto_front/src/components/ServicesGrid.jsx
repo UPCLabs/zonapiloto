@@ -16,10 +16,15 @@ function ServicesGrid() {
     const navigate = useNavigate();
 
     const handleClick = (title) => {
-        if (title === "Banco de Preguntas") {
-            navigate("/banco-preguntas");
-        } else {
-            alert(`Haz clic en: ${title}`);
+        switch (title) {
+            case "Banco de Preguntas":
+                navigate("/banco-preguntas");
+                break;
+            case "Calendario Académico":
+                navigate("/calendario");
+                break;
+            default:
+                alert(`Haz clic en: ${title}`);
         }
     };
 
