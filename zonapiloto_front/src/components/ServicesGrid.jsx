@@ -23,6 +23,9 @@ function ServicesGrid() {
             case "Calendario Académico":
                 navigate("/calendario");
                 break;
+            case "Cafetería":
+                navigate("/cafeteria");
+                break;
             default:
                 alert(`Haz clic en: ${title}`);
         }
