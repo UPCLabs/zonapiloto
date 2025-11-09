@@ -17,13 +17,13 @@ public class EventController {
 
     private final IEventService eventService;
 
-    @GetMapping
+    @GetMapping("/events")
     public ResponseEntity<?> getAllEvents() {
         List<Event> events = eventService.getAllEvents();
         return ResponseEntity.ok(events);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/events/{id}")
     public ResponseEntity<?> getEvent(@PathVariable Long id) {
         Event event = eventService.getEvent(id);
 
@@ -34,15 +34,15 @@ public class EventController {
         return ResponseEntity.ok(event);
     }
 
-    @PostMapping
-    @PreAuthorize("hasAuthority('ADMIN', 'SUPERADMIN')")
+    @PostMapping("/events")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> createEvent(@RequestBody EventDTO eventDTO) {
         Event event = eventService.createEvent(eventDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(event);
     }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN', 'SUPERADMIN')")
+    @PutMapping("/events/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> updateEvent(
         @PathVariable Long id,
         @RequestBody EventDTO eventDTO
@@ -51,8 +51,8 @@ public class EventController {
         return ResponseEntity.ok(updated);
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN', 'SUPERADMIN')")
+    @DeleteMapping("/events/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
     public void deleteEvent(@PathVariable Long id) {
         eventService.deleteEvent(id);
     }
