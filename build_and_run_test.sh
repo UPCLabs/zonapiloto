@@ -15,6 +15,10 @@ echo "🔧 Compilando Question bank..."
 cd "$ROOT_DIR/zonapiloto_back/services/question-bank-service"
 ./mvnw clean package -DskipTests
 
+echo "🔧 Compilando Calendar service..."
+cd "$ROOT_DIR/zonapiloto_back/services/calendar-service"
+./mvnw clean package -DskipTests
+
 cd "$ROOT_DIR"
 
 echo "Construyendo y levantando los contenedores Docker..."
