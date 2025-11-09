@@ -35,11 +35,9 @@ public class SuperAdminInit implements CommandLineRunner {
             superAdmin.setRole(UserRole.SUPERADMIN);
 
             userRepository.save(superAdmin);
-            System.out.println("✅ SUPERADMIN creado: " + superAdminUsername);
+            System.out.println("SUPERADMIN created: " + superAdminUsername);
         } else {
-            System.out.println(
-                "ℹ️ SUPERADMIN ya existe, no se creó uno nuevo."
-            );
+            System.out.println("SUPERADMIN exists, Not create a new one");
         }
     }
 }
