@@ -49,6 +49,9 @@ function ServicesGrid() {
 
     const handleClick = (title) => {
         switch (title) {
+            case "Perfil Académico":
+                navigate("/perfil-academico");
+                break;
             case "Banco de Preguntas":
                 navigate("/banco-preguntas");
                 break;
