@@ -35,6 +35,9 @@ services:
       SPRING_JPA_SHOW_SQL: "true"
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION}
+      SUPERADMIN_USERNAME: ${SUPERADMIN_USERNAME}
+      SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD}
+
     ports:
       - "5001"
     networks:
@@ -91,8 +94,6 @@ services:
       - zonapiloto_net
     depends_on:
       - gateway
-
-
 
 networks:
   zonapiloto_net:

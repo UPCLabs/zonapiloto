@@ -14,15 +14,18 @@ public class AuthService {
     private final UserService userService;
     private final MfaService mfaService;
 
+    public String generateToken(User user) {
+        return jwtUtil.generateToken(user);
+    }
+
     public boolean checkCredentials(String username, String password) {
-        String hashPassword = UserUtil.encryptPassword(password);
         User user = userService.getUser(username);
 
         if (user == null) {
             return false;
         }
 
-        return user.getPassword().equals(hashPassword);
+        return UserUtil.checkPassword(password, user.getPassword());
     }
 
     public String loginWithMfa(String username, String password, int code) {
