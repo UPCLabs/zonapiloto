@@ -14,8 +14,7 @@ function Header() {
 
             <nav className="header-right">
                 <Link to="/">Inicio</Link>
-                <Link to="/servicios">Servicios</Link>
-                <Link to="/banco">Banco de Preguntas</Link>
+                <Link to="/banco-preguntas">Banco de Preguntas</Link>
                 <Link to="/contacto">Contacto</Link>
             </nav>
         </header>

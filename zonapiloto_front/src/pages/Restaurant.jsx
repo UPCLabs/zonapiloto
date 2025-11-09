@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import menu1 from "../assets/images/menu1.jpg";
-import "../styles/cafeteria.css";
+import "../styles/restaurant.css";
 
 const Cafeteria = () => {
     const [menuImg, setMenuImg] = useState(null);
