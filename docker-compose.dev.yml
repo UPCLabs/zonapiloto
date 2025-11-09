@@ -35,6 +35,9 @@ services:
       SPRING_JPA_SHOW_SQL: "true"
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION}
+      SUPERADMIN_USERNAME: ${SUPERADMIN_USERNAME}
+      SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD}
+
     ports:
       - "5001"
     networks:
@@ -58,6 +61,24 @@ services:
     networks:
       - zonapiloto_net
 
+  calendar-service:
+    build: ./zonapiloto_back/services/calendar-service
+    container_name: calendar-service
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+    ports:
+      - "5003"
+    networks:
+      - zonapiloto_net
+
   gateway:
     build: ./zonapiloto_back/gateway
     container_name: gateway
@@ -68,8 +89,9 @@ services:
     environment:
       JWT_SECRET: ${JWT_SECRET}
       SERVICES_URLS: >
-        auth-service=http://auth-service:8081/actuator/health,
-        question-bank-service=http://question-bank-service:8082/actuator/health
+        auth-service=http://auth-service:5001/actuator/health,
+        question-bank-service=http://question-bank-service:5002/actuator/health
+        calendar-service=http://question-bank-service:5003/actuator/health
     ports:
       - "5000:5000"
     networks:
@@ -91,8 +113,6 @@ services:
       - zonapiloto_net
     depends_on:
       - gateway
-
-
 
 networks:
   zonapiloto_net:
