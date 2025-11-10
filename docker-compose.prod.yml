@@ -90,8 +90,8 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       SERVICES_URLS: >
         auth-service=http://auth-service:5001/actuator/health,
-        question-bank-service=http://question-bank-service:5002/actuator/health
-        calendar-service=http://calendar-service:5003/actuator/health
+        question-bank-service=http://question-bank-service:5002/actuator/health,
+        calendar-service=http://calendar-service:5003/actuator/health,
     ports:
       - "5000:5000"
     networks:
