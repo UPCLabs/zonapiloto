@@ -7,6 +7,10 @@ import CalendarioAcademico from "./pages/CalendarioAcademico.jsx";
 import Restaurant from "./pages/Restaurant.jsx";
 import Events from "./pages/InstitucionalEvents.jsx";
 import Lybrary from "./pages/Biblioteca.jsx";
+import LogLock from "./pages/LogLock.jsx";
+import MFA from "./pages/MFAverify.jsx";
+import AdminDash from "./pages/AdminDashboard.jsx";
+
 
 
 function App() {
@@ -21,6 +25,9 @@ function App() {
         <Route path="/cafeteria" element={<Restaurant />} />
         <Route path="/eventos" element={<Events />} />
         <Route path="/biblioteca" element={<Lybrary />} />
+        <Route path="/loglock" element={<LogLock />} />
+        <Route path="/MFAVerify" element={<MFA />} />
+        <Route path="/AdminDash" element={<AdminDash />} />
       </Routes>
     </Router>
   );

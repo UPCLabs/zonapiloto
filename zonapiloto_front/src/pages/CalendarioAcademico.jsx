@@ -8,6 +8,7 @@ const CalendarioAcademico = () => {
     const [eventos, setEventos] = useState([]);
     const [diaSeleccionado, setDiaSeleccionado] = useState(null);
     const [mostrarPanel, setMostrarPanel] = useState(false);
+    const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
 
     const months = [
         "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -27,7 +28,7 @@ const CalendarioAcademico = () => {
     for (let i = 1; i <= daysInMonth; i++) days.push(new Date(year, month, i));
 
     /* 
-    Conexión con back (mendizzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz)
+    Conexión con back
     useEffect(() => {
         const API_URL = import.meta.env.VITE_API_BASE_URL;
         fetch(`${API_URL}/eventos`)
@@ -53,7 +54,7 @@ const CalendarioAcademico = () => {
                 titulo_evento: "Entrega de trabajos finales",
                 descripcion: "Fecha límite para subir proyectos y documentos de cierre de semestre.",
                 fecha_inicio: "2025-11-15",
-                fecha_fin: "2025-11-15",
+                fecha_fin: "2025-11-18",
                 tipo_evento: "Académico",
             },
             {
@@ -72,6 +73,14 @@ const CalendarioAcademico = () => {
                 fecha_fin: "2025-11-11",
                 tipo_evento: "Festivo",
             },
+            {
+                id_evento: 5,
+                titulo_evento: "Semana de exámenes finales",
+                descripcion: "Evaluaciones finales de todas las materias.",
+                fecha_inicio: "2025-11-24",
+                fecha_fin: "2025-11-29",
+                tipo_evento: "Evaluación",
+            },
         ];
         setEventos(ejemploEventos);
     }, []);
@@ -80,36 +89,76 @@ const CalendarioAcademico = () => {
         setCurrentDate(new Date(year, month - 1, 1));
         setMostrarPanel(false);
         setDiaSeleccionado(null);
+        setEventoSeleccionado(null);
     };
 
     const handleNextMonth = () => {
         setCurrentDate(new Date(year, month + 1, 1));
         setMostrarPanel(false);
         setDiaSeleccionado(null);
+        setEventoSeleccionado(null);
     };
 
     const handleToday = () => {
         setCurrentDate(new Date());
         setMostrarPanel(false);
         setDiaSeleccionado(null);
+        setEventoSeleccionado(null);
     };
 
     const hoy = new Date().toDateString();
 
+    // Verificar si una fecha está dentro del rango de un evento
+    const estaEnRangoEvento = (fecha, evento) => {
+        const fechaDate = new Date(fecha);
+        const inicioDate = new Date(evento.fecha_inicio);
+        const finDate = new Date(evento.fecha_fin);
+
+        fechaDate.setHours(0, 0, 0, 0);
+        inicioDate.setHours(0, 0, 0, 0);
+        finDate.setHours(0, 0, 0, 0);
+
+        return fechaDate >= inicioDate && fechaDate <= finDate;
+    };
+
+    // Obtener eventos que incluyen una fecha específica (dentro del rango)
     const getEventosPorFecha = (fecha) => {
         const fechaISO = fecha.toISOString().split("T")[0];
-        return eventos.filter((ev) => ev.fecha_inicio === fechaISO);
+        return eventos.filter((ev) => estaEnRangoEvento(fechaISO, ev));
+    };
+
+    // Verificar si un día está en el rango del evento seleccionado
+    const esDiaEnRangoSeleccionado = (fecha) => {
+        if (!eventoSeleccionado) return false;
+        const fechaISO = fecha.toISOString().split("T")[0];
+        return estaEnRangoEvento(fechaISO, eventoSeleccionado);
     };
 
     const handleDiaClick = (fecha) => {
         const eventosDia = getEventosPorFecha(fecha);
+        setDiaSeleccionado(fecha);
+        setMostrarPanel(true);
+
+        // Si hay eventos, seleccionar el primero
         if (eventosDia.length > 0) {
-            setDiaSeleccionado(fecha);
-            setMostrarPanel(true);
+            setEventoSeleccionado(eventosDia[0]);
+        } else {
+            setEventoSeleccionado(null);
         }
     };
 
+    const handleEventoClick = (evento) => {
+        setEventoSeleccionado(evento);
+    };
+
     const formatearFecha = (fecha) => {
+        const dia = fecha.getDate();
+        const mes = months[fecha.getMonth()];
+        return `${dia} de ${mes}, ${fecha.getFullYear()}`;
+    };
+
+    const formatearFechaEvento = (fechaStr) => {
+        const fecha = new Date(fechaStr + 'T00:00:00');
         const dia = fecha.getDate();
         const mes = months[fecha.getMonth()];
         return `${dia} de ${mes}, ${fecha.getFullYear()}`;
@@ -123,6 +172,10 @@ const CalendarioAcademico = () => {
             "Reunión": "#2980b9",
         };
         return colores[tipo] || "#9b0000";
+    };
+
+    const esEventoMultiDia = (evento) => {
+        return evento.fecha_inicio !== evento.fecha_fin;
     };
 
     return (
@@ -144,10 +197,11 @@ const CalendarioAcademico = () => {
                                     if (!day) return <div key={i} className="mini-dia-empty"></div>;
                                     const isSelected = diaSeleccionado && day.toDateString() === diaSeleccionado.toDateString();
                                     const isToday = day.toDateString() === hoy;
+                                    const enRango = esDiaEnRangoSeleccionado(day);
                                     return (
                                         <div
                                             key={i}
-                                            className={`mini-dia ${isSelected ? 'seleccionado' : ''} ${isToday && !isSelected ? 'hoy' : ''}`}
+                                            className={`mini-dia ${isSelected ? 'seleccionado' : ''} ${isToday && !isSelected ? 'hoy' : ''} ${enRango && !isSelected ? 'en-rango' : ''}`}
                                         >
                                             {day.getDate()}
                                         </div>
@@ -158,11 +212,25 @@ const CalendarioAcademico = () => {
 
                         {diaSeleccionado && (
                             <div className="eventos-lista">
-                                <h3 className="eventos-titulo">Eventos del día</h3>
+                                <h3 className="eventos-titulo">
+                                    {getEventosPorFecha(diaSeleccionado).length > 0
+                                        ? 'Eventos del día'
+                                        : 'Sin eventos'}
+                                </h3>
                                 <p className="eventos-fecha">{formatearFecha(diaSeleccionado)}</p>
 
+                                {getEventosPorFecha(diaSeleccionado).length === 0 && (
+                                    <div className="sin-eventos-mensaje">
+                                        <p>📅 No hay eventos programados para este día</p>
+                                    </div>
+                                )}
+
                                 {getEventosPorFecha(diaSeleccionado).map((evento) => (
-                                    <div key={evento.id_evento} className="evento-card">
+                                    <div
+                                        key={evento.id_evento}
+                                        className={`evento-card ${eventoSeleccionado?.id_evento === evento.id_evento ? 'evento-activo' : ''}`}
+                                        onClick={() => handleEventoClick(evento)}
+                                    >
                                         <div
                                             className="evento-indicador"
                                             style={{ backgroundColor: getTipoColor(evento.tipo_evento) }}
@@ -170,6 +238,26 @@ const CalendarioAcademico = () => {
                                         <div className="evento-content">
                                             <h4 className="evento-titulo">{evento.titulo_evento}</h4>
                                             <p className="evento-descripcion">{evento.descripcion}</p>
+
+                                            {/* Mostrar rango de fechas */}
+                                            <div className="evento-fechas">
+                                                {esEventoMultiDia(evento) ? (
+                                                    <>
+                                                        <span className="fecha-rango">
+                                                            📅 {formatearFechaEvento(evento.fecha_inicio)}
+                                                        </span>
+                                                        <span className="fecha-separador">→</span>
+                                                        <span className="fecha-rango">
+                                                            {formatearFechaEvento(evento.fecha_fin)}
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    <span className="fecha-unica">
+                                                        📅 {formatearFechaEvento(evento.fecha_inicio)}
+                                                    </span>
+                                                )}
+                                            </div>
+
                                             <div className="evento-meta">
                                                 <span
                                                     className="evento-tipo"
@@ -177,6 +265,11 @@ const CalendarioAcademico = () => {
                                                 >
                                                     {evento.tipo_evento}
                                                 </span>
+                                                {esEventoMultiDia(evento) && (
+                                                    <span className="evento-duracion">
+                                                        {Math.ceil((new Date(evento.fecha_fin) - new Date(evento.fecha_inicio)) / (1000 * 60 * 60 * 24)) + 1} días
+                                                    </span>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
@@ -206,11 +299,12 @@ const CalendarioAcademico = () => {
                                 const eventosDia = getEventosPorFecha(day);
                                 const isToday = day.toDateString() === hoy;
                                 const isSelected = diaSeleccionado && day.toDateString() === diaSeleccionado.toDateString();
+                                const enRango = esDiaEnRangoSeleccionado(day);
 
                                 return (
                                     <div
                                         key={i}
-                                        className={`calendar-day ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''} ${eventosDia.length > 0 ? 'con-eventos' : ''}`}
+                                        className={`calendar-day ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''} ${enRango && !isSelected ? 'en-rango-evento' : ''} ${eventosDia.length > 0 ? 'con-eventos' : ''}`}
                                         onClick={() => handleDiaClick(day)}
                                     >
                                         <span className="day-number">{day.getDate()}</span>

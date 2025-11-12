@@ -31,8 +31,13 @@ function Footer() {
                     <Link to="/contacto">Contacto</Link>
                 </div>
                 <p className="footer-copyright">
-                    Desarrollado con ❤️ para la comunidad UniPiloto
+                    Desarrollado con{" "}
+                    <Link to="/loglock" className="footer-heart">
+                        ❤️
+                    </Link>{" "}
+                    para la comunidad UniPiloto
                 </p>
+
             </div>
         </footer>
     );
