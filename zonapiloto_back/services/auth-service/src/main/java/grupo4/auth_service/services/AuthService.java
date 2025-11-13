@@ -4,7 +4,6 @@ import grupo4.auth_service.entities.User;
 import grupo4.auth_service.util.JwtUtil;
 import grupo4.auth_service.util.UserUtil;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,28 +14,33 @@ public class AuthService {
     private final UserService userService;
     private final MfaService mfaService;
 
+    public String generateToken(User user) {
+        return jwtUtil.generateToken(user);
+    }
+
     public boolean checkCredentials(String username, String password) {
-        String hashPassword = UserUtil.hashPassword(password);
         User user = userService.getUser(username);
 
         if (user == null) {
             return false;
         }
 
-        return user.getPassword().equals(hashPassword);
+        return UserUtil.checkPassword(password, user.getPassword());
     }
 
     public String loginWithMfa(String username, String password, int code) {
         User user = userService.getUser(username);
-        if (user == null)
+        if (user == null) {
             return null;
+        }
 
-        String hashed = UserUtil.hashPassword(password);
-        if (!user.getPassword().equals(hashed))
+        if (!UserUtil.checkPassword(password, user.getPassword())) {
             return null;
+        }
 
-        if (!mfaService.verifyCode(username, user.getMfaSecret(), code))
+        if (!mfaService.verifyCode(username, user.getMfaSecret(), code)) {
             return null;
+        }
 
         return jwtUtil.generateToken(user);
     }

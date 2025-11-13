@@ -1,21 +1,460 @@
 .announcements {
-    margin: 60px auto;
-    max-width: 900px;
-    background: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    margin: 80px auto;
+    max-width: 1200px;
+    padding: 0 20px;
 }
 
-.announcements h3 {
-    font-size: 1.4rem;
+.announcements-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.announcements-title-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.announcements-icon {
+    font-size: 2.5rem;
+    animation: bell-ring 2s ease-in-out infinite;
+}
+
+.announcements-title {
+    font-size: 2.3rem;
+    margin: 0;
+    color: #333;
+    font-weight: 700;
+    position: relative;
+}
+
+.announcements-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #9b0000, #b32424);
+    border-radius: 2px;
+}
+
+
+.carousel-container {
+    margin-bottom: 50px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.carousel-main {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    overflow: hidden;
+    background: #000;
+}
+
+.carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+}
+
+.carousel-slide.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+}
+
+.carousel-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    padding: 40px 30px 30px;
+    color: white;
+}
+
+.carousel-caption h4 {
+    font-size: 1.8rem;
+    margin: 0;
+    font-weight: 700;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    color: #9b0000;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.carousel-btn:hover {
+    background: #9b0000;
+    color: white;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-btn.prev {
+    left: 20px;
+}
+
+.carousel-btn.next {
+    right: 20px;
+}
+
+.carousel-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    background: white;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.indicator:hover {
+    border-color: #9b0000;
+    transform: scale(1.2);
+}
+
+.indicator.active {
+    background: #9b0000;
+    border-color: #9b0000;
+    width: 30px;
+    border-radius: 6px;
+}
+
+
+.section-divider {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-top: 20px;
+}
+
+.section-subtitle {
+    font-size: 1.6rem;
+    color: #333;
+    margin: 0;
+    font-weight: 700;
+}
+
+.announcements-badge {
+    background: linear-gradient(135deg, #9b0000, #b32424);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(155, 0, 0, 0.3);
+}
+
+
+.announcements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+}
+
+.announcement-card {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    border-left: 5px solid;
+}
+
+
+.announcement-card.importante {
+    border-left-color: #9b0000;
+}
+
+.announcement-card.alerta {
+    border-left-color: #ff6b35;
+}
+
+.announcement-card.novedad {
+    border-left-color: #2980b9;
+}
+
+.announcement-card.general {
+    border-left-color: #27ae60;
+}
+
+.announcement-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, transparent 0%, rgba(155, 0, 0, 0.02) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.announcement-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(155, 0, 0, 0.15);
+}
+
+.announcement-card:hover::before {
+    opacity: 1;
+}
+
+.announcement-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 15px;
 }
 
-.announcement-box {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
+.announcement-emoji {
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: rgba(155, 0, 0, 0.1);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.announcement-card:hover .announcement-emoji {
+    transform: scale(1.2) rotate(10deg);
+    background: rgba(155, 0, 0, 0.15);
+}
+
+.announcement-fecha {
+    font-size: 0.85rem;
+    color: #888;
+    font-weight: 600;
+}
+
+.announcement-card-title {
+    font-size: 1.3rem;
+    color: #333;
+    margin: 0 0 15px 0;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.announcement-card-desc {
+    font-size: 0.95rem;
     color: #666;
-    background-color: #fafafa;
+    line-height: 1.6;
+    margin: 0 0 20px 0;
+}
+
+.announcement-tipo-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+}
+
+.announcement-tipo-badge.importante {
+    background: linear-gradient(135deg, #9b0000, #b32424);
+}
+
+.announcement-tipo-badge.alerta {
+    background: linear-gradient(135deg, #ff6b35, #ff8c5a);
+}
+
+.announcement-tipo-badge.novedad {
+    background: linear-gradient(135deg, #2980b9, #3498db);
+}
+
+.announcement-tipo-badge.general {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+}
+
+
+.announcement-empty {
+    background: white;
+    border-radius: 20px;
+    padding: 60px 40px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.empty-icon {
+    font-size: 5rem;
+    display: block;
+    margin-bottom: 20px;
+    animation: float-empty 3s ease-in-out infinite;
+}
+
+.empty-text {
+    font-size: 1.3rem;
+    color: #666;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+}
+
+.empty-subtext {
+    font-size: 1rem;
+    color: #999;
+    margin: 0;
+}
+
+
+@keyframes bell-ring {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    10%,
+    30% {
+        transform: rotate(-10deg);
+    }
+
+    20%,
+    40% {
+        transform: rotate(10deg);
+    }
+
+    50% {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes float-empty {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+
+@media (max-width: 768px) {
+    .announcements {
+        margin: 60px auto;
+    }
+
+    .announcements-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .announcements-title {
+        font-size: 1.8rem;
+    }
+
+    .announcements-icon {
+        font-size: 2rem;
+    }
+
+    .carousel-main {
+        height: 300px;
+    }
+
+    .carousel-caption h4 {
+        font-size: 1.3rem;
+    }
+
+    .carousel-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    .carousel-btn.prev {
+        left: 10px;
+    }
+
+    .carousel-btn.next {
+        right: 10px;
+    }
+
+    .section-divider {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .announcements-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .announcement-empty {
+        padding: 40px 20px;
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .announcement-card {
+        padding: 20px;
+    }
+
+    .announcement-card-title {
+        font-size: 1.1rem;
+    }
+
+    .announcement-emoji {
+        font-size: 1.5rem;
+        width: 40px;
+        height: 40px;
+    }
+
+    .carousel-main {
+        height: 250px;
+    }
 }
