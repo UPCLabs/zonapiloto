@@ -90,7 +90,12 @@
     font-weight: bold;
 }
 
-/* Lista de eventos */
+.mini-dia.en-rango {
+    background-color: #ffd4d4;
+    font-weight: 600;
+}
+
+
 .eventos-lista {
     margin-top: 20px;
 }
@@ -105,6 +110,20 @@
     color: #666;
     font-size: 0.9rem;
     margin: 0 0 20px 0;
+}
+
+.sin-eventos-mensaje {
+    background-color: #f9f9f9;
+    border: 2px dashed #ddd;
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.sin-eventos-mensaje p {
+    margin: 0;
+    color: #999;
+    font-size: 0.95rem;
 }
 
 .evento-card {
@@ -124,6 +143,12 @@
     border-color: #9b0000;
 }
 
+.evento-card.evento-activo {
+    background-color: #fff5f5;
+    border-color: #9b0000;
+    box-shadow: 0 4px 12px rgba(155, 0, 0, 0.15);
+}
+
 .evento-indicador {
     width: 4px;
     border-radius: 2px;
@@ -141,16 +166,40 @@
 }
 
 .evento-descripcion {
-    margin: 0 0 10px 0;
+    margin: 0 0 12px 0;
     font-size: 0.85rem;
     color: #666;
     line-height: 1.4;
+}
+
+.evento-fechas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+    font-size: 0.8rem;
+    color: #555;
+}
+
+.fecha-rango,
+.fecha-unica {
+    background-color: #f0f0f0;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.fecha-separador {
+    color: #9b0000;
+    font-weight: bold;
 }
 
 .evento-meta {
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .evento-tipo {
@@ -161,7 +210,16 @@
     font-weight: 600;
 }
 
-/* Calendario principal */
+.evento-duracion {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background-color: #f0f0f0;
+    color: #666;
+    font-weight: 600;
+}
+
+
 .calendar-container {
     flex: 1;
     background-color: #fff;
@@ -255,7 +313,7 @@
     border: 2px solid #f0f0f0;
     position: relative;
     transition: all 0.3s ease;
-    cursor: default;
+    cursor: pointer;
     display: flex;
     flex-direction: column;
     padding: 10px;
@@ -267,15 +325,14 @@
     cursor: default;
 }
 
-.calendar-day.con-eventos {
-    cursor: pointer;
-    border-color: #e0e0e0;
-}
-
-.calendar-day.con-eventos:hover {
+.calendar-day:not(.empty):hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
     border-color: #9b0000;
+}
+
+.calendar-day.con-eventos {
+    border-color: #e0e0e0;
 }
 
 .calendar-day.today {
@@ -293,6 +350,17 @@
 
 .calendar-day.selected .day-number {
     color: #fff;
+}
+
+.calendar-day.en-rango-evento {
+    background-color: #ffe0e0;
+    border-color: #ffb3b3;
+    border-width: 2px;
+}
+
+.calendar-day.en-rango-evento .day-number {
+    color: #9b0000;
+    font-weight: 600;
 }
 
 .day-number {
@@ -328,7 +396,7 @@
     color: #fff;
 }
 
-/* Responsive */
+
 @media (max-width: 1200px) {
     .calendario-wrapper {
         flex-direction: column;
@@ -372,9 +440,13 @@
     .calendar-grid {
         gap: 8px;
     }
+
+    .evento-fechas {
+        font-size: 0.75rem;
+    }
 }
 
-/* Scroll suave para el panel lateral */
+
 .panel-lateral::-webkit-scrollbar {
     width: 6px;
 }
