@@ -38,7 +38,7 @@ const CalendarioAcademico = () => {
 
   useEffect(() => {
     const API_URL = import.meta.env.VITE_API_BASE_URL;
-    fetch(`${API_URL}/calendar-events/events`)
+    fetch(`${API_URL}/information/calendar-events/events`)
       .then((res) => res.json())
       .then((data) => setEventos(data))
       .catch((err) => console.error("Error al cargar eventos:", err));

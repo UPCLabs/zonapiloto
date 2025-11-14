@@ -8,6 +8,7 @@ import grupo4.auth_service.services.MfaService.MfaSetup;
 import grupo4.auth_service.services.UserService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,28 @@ public class AuthController {
                 "Usuario creado exitosamente. Pendiente de confirmar registro (configurar MFA)."
             )
         );
+    }
+
+    @PostMapping("/me")
+    public ResponseEntity<?> userInfo(
+        @RequestHeader("X-User") String user,
+        @RequestHeader("X-Role") String role
+    ) {
+        return ResponseEntity.ok(Map.of("user", user, "role", role));
+    }
+
+    @PostMapping("/check-credentials")
+    public ResponseEntity<?> checkCredentials(
+        @RequestBody Map<String, String> req
+    ) {
+        String username = req.get("username");
+        String password = req.get("password");
+
+        if (authService.checkCredentials(username, password)) {
+            return ResponseEntity.ok(Map.of("valid", true));
+        }
+
+        return ResponseEntity.status(401).body(Map.of("valid", false));
     }
 
     @PostMapping("/confirm-registration")
@@ -175,6 +198,17 @@ public class AuthController {
         }
 
         String token = authService.generateToken(user);
-        return ResponseEntity.ok(Map.of("token", token));
+
+        ResponseCookie cookie = ResponseCookie.from("token", token)
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("None")
+            .path("/")
+            .maxAge(24 * 60 * 60)
+            .build();
+
+        return ResponseEntity.ok()
+            .header("Set-Cookie", cookie.toString())
+            .body(Map.of("message", "Login exitoso"));
     }
 }
