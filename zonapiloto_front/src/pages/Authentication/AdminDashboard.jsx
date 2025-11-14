@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../styles/admindashboard.css";
+import "../../styles/admin_dashboard/admindashboard.css";
 
 const AdminDashboard = () => {
     const [menuOpen, setMenuOpen] = useState(false);

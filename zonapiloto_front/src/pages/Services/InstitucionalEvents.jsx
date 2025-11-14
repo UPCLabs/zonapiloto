@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import "../styles/events.css";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import "../../styles/services/events.css";
 
 const EventosInstitucionales = () => {
     const [eventos, setEventos] = useState([]);

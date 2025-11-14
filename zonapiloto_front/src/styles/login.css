@@ -1,4 +1,4 @@
-.login-container {
+.loggin-container {
     display: flex;
     width: 100%;
     height: 100vh;
@@ -8,14 +8,14 @@
 }
 
 
-.login-left {
+.loggin-left {
     position: relative;
     width: 40%;
     clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
     overflow: hidden;
 }
 
-.login-left img {
+.loggin-left img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -28,7 +28,7 @@
     z-index: 1;
 }
 
-.login-title {
+.loggin-title {
     position: absolute;
     top: 20%;
     left: 10%;
@@ -39,7 +39,7 @@
     text-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
 }
 
-.login-slogan {
+.loggin-slogan {
     position: absolute;
     top: 32%;
     left: 10%;
@@ -50,7 +50,7 @@
 }
 
 
-.login-right {
+.loggin-right {
     width: 60%;
     display: flex;
     align-items: center;
@@ -59,7 +59,7 @@
     position: relative;
 }
 
-.login-form {
+.loggin-form {
     background: rgba(255, 255, 255, 0.9);
     padding: 3rem 4rem;
     border-radius: 20px;
@@ -111,7 +111,7 @@
 }
 
 
-.login-button {
+.loggin-button {
     width: 100%;
     padding: 0.9rem;
     background: linear-gradient(90deg, #ff0000, #b30000);
@@ -125,7 +125,7 @@
     box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
 }
 
-.login-button:hover {
+.loggin-button:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(255, 0, 0, 0.6);
 }

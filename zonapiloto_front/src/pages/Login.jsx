@@ -3,16 +3,16 @@ import "../styles/login.css";
 
 function Login() {
     return (
-        <div className="login-container">
-            <div className="login-left">
+        <div className="loggin-container">
+            <div className="loggin-left">
                 <BackgroundCarousel />
                 <div className="overlay"></div>
-                <h1 className="login-title">ZonaPiloto</h1>
-                <p className="login-slogan">Tu conexión con la vida universitaria</p>
+                <h1 className="loggin-title">ZonaPiloto</h1>
+                <p className="loggin-slogan">Tu conexión con la vida universitaria</p>
             </div>
 
-            <div className="login-right">
-                <form className="login-form">
+            <div className="loggin-right">
+                <form className="loggin-form">
                     <h2>Iniciar Sesión</h2>
                     <p className="form-subtitle">Bienvenido de nuevo 👋</p>
 
@@ -26,7 +26,7 @@ function Login() {
                         <input type="password" placeholder="••••••••" required />
                     </div>
 
-                    <button type="submit" className="login-button">
+                    <button type="submit" className="loggin-button">
                         Entrar
                     </button>
 
