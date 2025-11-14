@@ -18,17 +18,11 @@ public class GatewayConfig {
                     .filters(f -> f.stripPrefix(1))
                     .uri("http://auth-service:5001")
             )
-            .route("question-bank-service", r ->
+            .route("information-service", r ->
                 r
-                    .path("/api/question-bank/**")
+                    .path("/api/information/**")
                     .filters(f -> f.stripPrefix(1))
-                    .uri("http://question-bank-service:5002")
-            )
-            .route("calendar-service", r ->
-                r
-                    .path("/api/calendar-events/**")
-                    .filters(f -> f.stripPrefix(1))
-                    .uri("http://calendar-service:5003")
+                    .uri("http://information-service:5002")
             )
             .build();
     }
