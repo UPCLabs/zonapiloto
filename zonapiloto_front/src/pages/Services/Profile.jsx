@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import "../styles/profile.css";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import "../../styles/services/profile.css";
 
 const PerfilAcademico = () => {
     const [activeTab, setActiveTab] = useState("materias");

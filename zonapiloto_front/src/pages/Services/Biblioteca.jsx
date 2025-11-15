@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import "../styles/biblioteca.css";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import "../../styles/services/biblioteca.css";
 
 const Biblioteca = () => {
     const [currentIndex, setCurrentIndex] = useState(0);

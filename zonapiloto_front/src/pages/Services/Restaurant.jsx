@@ -1,7 +1,7 @@
 import React from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import "../styles/restaurant.css";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import "../../styles/services/restaurant.css";
 
 const Restaurant = () => {
     const pdfUrl = "https://drive.google.com/file/d/1_Bo1v7YijmewCZaa2om8CnV7iDXSVeQg/preview";

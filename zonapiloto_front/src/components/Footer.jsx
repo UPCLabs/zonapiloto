@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "../styles/footer.css";
+import "../styles/components/footer.css";
 import logo from "../assets/images/Logo_zona_piloto.png";
 
 function Footer() {
@@ -32,7 +32,7 @@ function Footer() {
                 </div>
                 <p className="footer-copyright">
                     Desarrollado con{" "}
-                    <Link to="/loglock" className="footer-heart">
+                    <Link to="/Loggin" className="footer-heart">
                         ❤️
                     </Link>{" "}
                     para la comunidad UniPiloto

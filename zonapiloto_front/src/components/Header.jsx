@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "../styles/header.css";
+import "../styles/components/header.css";
 import logo from "../assets/images/Logo_zona_piloto.png";
 
 function Header() {

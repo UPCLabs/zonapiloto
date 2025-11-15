@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "../styles/announcements.css";
+import "../styles/components/announcements.css";
 
 function Announcements() {
     const [anuncios, setAnuncios] = useState([]);
