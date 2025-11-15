@@ -200,12 +200,12 @@ const EventosInstitucionales = () => {
                                         </p>
                                         <div className="evento-info-card">
                                             <div className="evento-fecha-card">
-                                                <span className="icon">📅</span>
+                                                <span className="icon"><i class="fi fi-ss-calendar"></i></span>
                                                 {formatearFecha(evento.fecha_inicio, evento.fecha_fin)}
                                             </div>
                                             {evento.ubicacion && (
                                                 <div className="evento-ubicacion-card">
-                                                    <span className="icon">📍</span>
+                                                    <span className="icon"><i class="fi fi-ss-map-pin"></i></span>
                                                     {evento.ubicacion}
                                                 </div>
                                             )}
@@ -237,17 +237,17 @@ const EventosInstitucionales = () => {
                         </div>
                         <div className="modal-body">
                             <div className="modal-info-section">
-                                <h4>📅 Fecha</h4>
+                                <h4><i class="fi fi-ss-calendar"></i> Fecha</h4>
                                 <p>{formatearFecha(eventoSeleccionado.fecha_inicio, eventoSeleccionado.fecha_fin)}</p>
                             </div>
                             {eventoSeleccionado.ubicacion && (
                                 <div className="modal-info-section">
-                                    <h4>📍 Ubicación</h4>
+                                    <h4><i class="fi fi-ss-map-pin"></i> Ubicación</h4>
                                     <p>{eventoSeleccionado.ubicacion}</p>
                                 </div>
                             )}
                             <div className="modal-info-section">
-                                <h4>📋 Descripción</h4>
+                                <h4><i class="fi fi-rs-description-alt"></i> Descripción</h4>
                                 <p>{eventoSeleccionado.descripcion}</p>
                             </div>
                         </div>

@@ -64,12 +64,13 @@
 
 .footer-social {
     display: flex;
-    gap: 15px;
+    gap: 20px;
 }
 
 .social-icon {
     width: 45px;
     height: 45px;
+    font-size: 28px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 50%;
     display: flex;

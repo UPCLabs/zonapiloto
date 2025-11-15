@@ -131,7 +131,7 @@ function Announcements() {
         <section className="announcements">
             <div className="announcements-header">
                 <div className="announcements-title-container">
-                    <span className="announcements-icon">🔔</span>
+                    <span className="announcements-icon"><i class="fi fi-ss-bell"></i></span>
                     <h3 className="announcements-title">Anuncios y Eventos</h3>
                 </div>
             </div>

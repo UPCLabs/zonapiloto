@@ -2,9 +2,9 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "../styles/components/carouselBackground.css";
 
-import img1 from "../assets/images/carrusel1.png";
-import img2 from "../assets/images/carrusel2.png";
-import img3 from "../assets/images/carrusel3.jpeg";
+import img1 from "../assets/images/background_carousel/carrusel1.png";
+import img2 from "../assets/images/background_carousel/carrusel2.png";
+import img3 from "../assets/images/background_carousel/carrusel3.jpeg";
 
 function BackgroundCarousel() {
     return (
