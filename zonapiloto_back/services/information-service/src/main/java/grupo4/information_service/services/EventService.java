@@ -1,7 +1,7 @@
 package grupo4.information_service.services;
 
-import grupo4.information_service.entities.Event;
-import grupo4.information_service.entities.EventDTO;
+import grupo4.information_service.dtos.CalendaryEventDTO;
+import grupo4.information_service.entities.CalendaryEvent;
 import grupo4.information_service.interfaces.IEventService;
 import grupo4.information_service.repositories.IEventRepository;
 import java.util.List;
@@ -20,13 +20,16 @@ public class EventService implements IEventService {
     }
 
     @Override
-    public Event getEvent(Long event_id) {
+    public CalendaryEvent getEvent(Long event_id) {
         return eventRepository.findById(event_id).orElse(null);
     }
 
     @Override
-    public Event updateEvent(Long event_id, EventDTO eventDTO) {
-        Event event = eventRepository.findById(event_id).orElseThrow();
+    public CalendaryEvent updateEvent(
+        Long event_id,
+        CalendaryEventDTO eventDTO
+    ) {
+        CalendaryEvent event = eventRepository.findById(event_id).orElseThrow();
 
         event.setTitle(eventDTO.getTitle());
         event.setDescription(eventDTO.getDescription());
@@ -38,8 +41,8 @@ public class EventService implements IEventService {
     }
 
     @Override
-    public Event createEvent(EventDTO eventDTO) {
-        Event event = Event.builder()
+    public CalendaryEvent createEvent(CalendaryEventDTO eventDTO) {
+        CalendaryEvent event = CalendaryEvent.builder()
             .title(eventDTO.getTitle())
             .description(eventDTO.getDescription())
             .start_date(eventDTO.getStartDate())
@@ -56,7 +59,7 @@ public class EventService implements IEventService {
     }
 
     @Override
-    public List<Event> getAllEvents() {
+    public List<CalendaryEvent> getAllEvents() {
         return eventRepository.findAll();
     }
 }

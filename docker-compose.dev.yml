@@ -61,6 +61,24 @@ services:
     networks:
       - zonapiloto_net
 
+  profile-service:
+    build: ./zonapiloto_back/services/profile-service
+    container_name: profile-service
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+    ports:
+      - "5003"
+    networks:
+      - zonapiloto_net
+
   gateway:
     build: ./zonapiloto_back/gateway
     container_name: gateway
@@ -73,6 +91,8 @@ services:
       SERVICES_URLS: >
         auth-service=http://auth-service:5001/actuator/health,
         information-service=http://information-service:5002/actuator/health,
+        profile-service=http://profile-service:5003/actuator/health,
+
     ports:
       - "5000:5000"
     networks:
