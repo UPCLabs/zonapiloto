@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Header from "../../components/Header";
-import Footer from "../components/Footer";
+import Footer from "../../components/Footer";
 import "../../styles/services/banco.css";
 
 function BancoPreguntas() {
@@ -8,20 +8,20 @@ function BancoPreguntas() {
   const [busqueda, setBusqueda] = useState("");
   const [preguntaAbierta, setPreguntaAbierta] = useState(null);
 
-    useEffect(() => {
-        const API_URL = import.meta.env.VITE_API_BASE_URL;
-        fetch(`${API_URL}/question-bank/questions`)
-            .then(res => res.json())
-            .then(data => setPreguntas(data))
-            .catch(err => console.error("Error al cargar preguntas:", err));
-    }, []);
+  useEffect(() => {
+    const API_URL = import.meta.env.VITE_API_BASE_URL;
+    fetch(`${API_URL}/question-bank/questions`)
+      .then(res => res.json())
+      .then(data => setPreguntas(data))
+      .catch(err => console.error("Error al cargar preguntas:", err));
+  }, []);
 
 
-    const preguntasFiltradas = preguntas.filter(
-        (p) =>
-            p.question.toLowerCase().includes(busqueda.toLowerCase()) ||
-            p.categoryName.toLowerCase().includes(busqueda.toLowerCase())
-    );
+  const preguntasFiltradas = preguntas.filter(
+    (p) =>
+      p.question.toLowerCase().includes(busqueda.toLowerCase()) ||
+      p.categoryName.toLowerCase().includes(busqueda.toLowerCase())
+  );
 
   return (
     <>
