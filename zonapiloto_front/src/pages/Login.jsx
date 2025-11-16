@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import BackgroundCarousel from "../components/BackgroundCarousel";
 import "../styles/login.css";
 
@@ -7,11 +8,16 @@ function Login() {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsLoading(true);
         setTimeout(() => setIsLoading(false), 2000);
+    };
+
+    const goToHome = () => {
+        navigate("/");
     };
 
     return (
@@ -22,22 +28,22 @@ function Login() {
 
                 <div className="loggin-content">
                     <div className="brand-badge">
-                        <div className="badge-icon"><i class="fi fi-rr-membership"></i></div>
+                        <div className="badge-icon"><i className="fi fi-rr-membership"></i></div>
                     </div>
                     <h1 className="loggin-title">ZonaPiloto</h1>
                     <p className="loggin-slogan">Tu conexión con la vida universitaria</p>
 
                     <div className="features">
                         <div className="feature-item">
-                            <span className="feature-icon"><i class="fi fi-sr-books"></i></span>
+                            <span className="feature-icon"><i className="fi fi-sr-books"></i></span>
                             <span className="feature-text">Banco de Preguntas</span>
                         </div>
                         <div className="feature-item">
-                            <span className="feature-icon"><i class="fi fi-sr-handshake"></i></span>
+                            <span className="feature-icon"><i className="fi fi-sr-handshake"></i></span>
                             <span className="feature-text">Comunidad Activa</span>
                         </div>
                         <div className="feature-item">
-                            <span className="feature-icon"><i class="fi fi-ss-resources"></i></span>
+                            <span className="feature-icon"><i className="fi fi-ss-resources"></i></span>
                             <span className="feature-text">Recursos Académicos</span>
                         </div>
                     </div>
@@ -51,6 +57,10 @@ function Login() {
             </div>
 
             <div className="loggin-right">
+                <button onClick={goToHome} className="home-button" aria-label="Volver al inicio">
+                    <i className="fi fi-rr-home"></i>
+                </button>
+
                 <form className="loggin-form" onSubmit={handleSubmit}>
                     <div className="form-header">
                         <h2>Iniciar Sesión</h2>
@@ -60,7 +70,7 @@ function Login() {
                     <div className="form-content">
                         <div className="form-group">
                             <label htmlFor="email">
-                                <span className="label-icon"><i class="fi fi-sc-envelope"></i></span>
+                                <span className="label-icon"><i className="fi fi-sc-envelope"></i></span>
                                 Correo institucional
                             </label>
                             <div className="input-wrapper">
@@ -77,7 +87,7 @@ function Login() {
 
                         <div className="form-group">
                             <label htmlFor="password">
-                                <span className="label-icon"><i class="fi fi-sr-lock"></i></span>
+                                <span className="label-icon"><i className="fi fi-sr-lock"></i></span>
                                 Contraseña
                             </label>
                             <div className="input-wrapper password-wrapper">
@@ -95,7 +105,7 @@ function Login() {
                                     onClick={() => setShowPassword(!showPassword)}
                                     aria-label="Mostrar contraseña"
                                 >
-                                    {showPassword ? <i class="fi fi-rs-crossed-eye"></i> : <i class="fi fi-rr-eye"></i>}
+                                    {showPassword ? <i className="fi fi-rs-crossed-eye"></i> : <i className="fi fi-rr-eye"></i>}
                                 </button>
                             </div>
                         </div>

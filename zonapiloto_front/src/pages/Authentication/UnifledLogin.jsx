@@ -62,7 +62,7 @@ const UnifiedLogin = () => {
                 await setupMFA();
             } else {
                 // Ya tiene MFA, ir a verificación
-                setStep("verify-mfa");
+                handleMFASubmit("verify-mfa");
             }
 
         } catch (err) {
