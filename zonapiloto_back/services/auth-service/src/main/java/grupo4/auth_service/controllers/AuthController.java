@@ -60,8 +60,19 @@ public class AuthController {
         String username = req.get("username");
         String password = req.get("password");
 
+        User user = userService.getUser(username);
+
         if (authService.checkCredentials(username, password)) {
-            return ResponseEntity.ok(Map.of("valid", true));
+            return ResponseEntity.ok(
+                Map.of(
+                    "valid",
+                    true,
+                    "hasMfa",
+                    (user.getMfaSecret() != null) && (!user.isMfaPending())
+                        ? true
+                        : false
+                )
+            );
         }
 
         return ResponseEntity.status(401).body(Map.of("valid", false));
