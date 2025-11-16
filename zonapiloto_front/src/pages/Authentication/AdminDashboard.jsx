@@ -18,9 +18,6 @@ const AdminDashboard = () => {
 
     setUsername(user);
     setUserRole(role);
-
-    sessionStorage.removeItem("temp_username");
-    sessionStorage.removeItem("temp_password");
   }, []);
 
   const handleLogout = () => {
