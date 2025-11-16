@@ -8,6 +8,7 @@ const CalendarioAcademico = () => {
   const [eventos, setEventos] = useState([]);
   const [diaSeleccionado, setDiaSeleccionado] = useState(null);
   const [mostrarPanel, setMostrarPanel] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const months = [
     "Enero",
@@ -24,6 +25,10 @@ const CalendarioAcademico = () => {
     "Diciembre",
   ];
 
+  const diasSemana = isMobile
+    ? ["D", "L", "M", "X", "J", "V", "S"]
+    : ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
@@ -35,6 +40,17 @@ const CalendarioAcademico = () => {
   const days = [];
   for (let i = 0; i < startDay; i++) days.push(null);
   for (let i = 1; i <= daysInMonth; i++) days.push(new Date(year, month, i));
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 480);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const API_URL = import.meta.env.VITE_API_BASE_URL;
@@ -98,7 +114,6 @@ const CalendarioAcademico = () => {
       <Header />
       <div className="calendario-page">
         <div className="calendario-wrapper">
-          {/* Panel lateral con calendario mini y eventos */}
           <div className={`panel-lateral ${mostrarPanel ? "mostrar" : ""}`}>
             <div className="mini-calendario">
               <div className="mini-header">
@@ -166,7 +181,6 @@ const CalendarioAcademico = () => {
             )}
           </div>
 
-          {/* Calendario principal */}
           <div className="calendar-container">
             <div className="calendar-header">
               <button className="arrow left" onClick={handlePrevMonth}>
@@ -185,13 +199,11 @@ const CalendarioAcademico = () => {
             </button>
 
             <div className="calendar-grid">
-              {["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"].map(
-                (day, i) => (
-                  <div key={i} className="calendar-day-header">
-                    {day}
-                  </div>
-                ),
-              )}
+              {diasSemana.map((day, i) => (
+                <div key={i} className="calendar-day-header">
+                  {day}
+                </div>
+              ))}
 
               {days.map((day, i) => {
                 if (!day)
@@ -213,18 +225,18 @@ const CalendarioAcademico = () => {
 
                     {eventosDia.length > 0 && (
                       <div className="puntos-container">
-                        {eventosDia.slice(0, 3).map((evento, idx) => (
+                        {eventosDia.slice(0, isMobile ? 2 : 3).map((evento, idx) => (
                           <div
                             key={idx}
                             className="punto"
                             style={{
-                              backgroundColor: getTipoColor(evento.tipo_evento),
+                              backgroundColor: getTipoColor(evento.type),
                             }}
                           ></div>
                         ))}
-                        {eventosDia.length > 3 && (
+                        {eventosDia.length > (isMobile ? 2 : 3) && (
                           <span className="mas-eventos">
-                            +{eventosDia.length - 3}
+                            +{eventosDia.length - (isMobile ? 2 : 3)}
                           </span>
                         )}
                       </div>

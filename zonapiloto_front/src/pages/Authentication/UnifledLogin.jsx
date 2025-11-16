@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../styles/admin_dashboard/unifledlogin.css";
 import { QRCodeCanvas } from "qrcode.react";
 
@@ -13,6 +13,7 @@ const UnifiedLogin = () => {
     const [code, setCode] = useState(["", "", "", "", "", ""]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+
 
     // Manejo de cambios en credenciales
     const handleCredentialChange = (e) => {
@@ -211,7 +212,7 @@ const UnifiedLogin = () => {
                 if (data.user) {
                     localStorage.setItem("user", data.user);
                     localStorage.setItem("role", data.role);
-                    window.location.href = "/AdminDash";
+                    window.location.href = "/admindash";
                 }
             }
         } catch (err) {

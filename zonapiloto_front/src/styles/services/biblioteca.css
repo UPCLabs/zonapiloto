@@ -84,7 +84,6 @@
     opacity: 0.95;
 }
 
-/* Info Section */
 .info-section {
     padding: 80px 0;
     background: #fff;
@@ -196,7 +195,6 @@
     font-size: 0.95rem;
 }
 
-/* Carousel Section */
 .carousel-section {
     padding: 80px 0;
     background: linear-gradient(135deg, #f9f9f9 0%, #f5f5f5 100%);
@@ -416,7 +414,6 @@
     }
 }
 
-/* Servicios Section */
 .servicios-section {
     padding: 80px 0;
     background: #fff;
@@ -486,7 +483,6 @@
     font-size: 0.95rem;
 }
 
-/* Acceso Section */
 .acceso-section {
     padding: 80px 0;
     background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
@@ -608,7 +604,6 @@
     transform: translateX(8px);
 }
 
-/* Horarios Section */
 .horarios-section {
     padding: 80px 0;
     background: #fff;
@@ -679,7 +674,6 @@
     color: #333;
 }
 
-/* Responsive */
 @media (max-width: 1100px) {
     .carousel-btn.prev {
         left: 10px;
