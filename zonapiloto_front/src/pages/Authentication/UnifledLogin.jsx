@@ -193,6 +193,7 @@ const UnifiedLogin = () => {
         setTimeout(() => {
           document.getElementById("code-0")?.focus();
         }, 100);
+        await setupMFA();
         return;
       }
 
@@ -204,7 +205,6 @@ const UnifiedLogin = () => {
         setTimeout(() => {
           document.getElementById("code-0")?.focus();
         }, 100);
-        await setupMFA();
       } else {
         // Login exitoso, guardar token
         if (data.user) {
