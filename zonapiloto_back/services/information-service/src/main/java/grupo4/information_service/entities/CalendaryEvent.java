@@ -10,8 +10,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "academic_events")
-public class Event {
+@Table(name = "calendary_events")
+public class CalendaryEvent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

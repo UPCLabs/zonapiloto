@@ -1,11 +1,11 @@
-package grupo4.information_service.entities;
+package grupo4.information_service.dtos;
 
 import grupo4.information_service.enums.EventType;
 import java.time.LocalDate;
 import lombok.*;
 
 @Data
-public class EventDTO {
+public class CalendaryEventDTO {
 
     private String title;
     private String description;
