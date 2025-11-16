@@ -6,7 +6,7 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(155, 0, 0, 0.08);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
 }
 
 .header-scrolled {
@@ -25,7 +25,6 @@
     align-items: center;
 }
 
-
 .header-left {
     display: flex;
     align-items: center;
@@ -36,7 +35,7 @@
     align-items: center;
     gap: 1rem;
     text-decoration: none;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: transform 0.2s ease;
 }
 
 .logo-link:hover {
@@ -54,40 +53,19 @@
     height: 130%;
     position: relative;
     z-index: 2;
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Eliminamos la animación de rotación */
+    transition: transform 0.2s ease;
     filter: drop-shadow(0 2px 8px rgba(155, 0, 0, 0.2));
 }
 
+/* Eliminamos el glow y su animación pulse */
 .logo-glow {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle, rgba(155, 0, 0, 0.3), transparent 70%);
-    border-radius: 50%;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    animation: pulse 3s ease-in-out infinite;
+    display: none;
 }
 
+/* Hover simple sin rotación */
 .logo-link:hover .logo {
-    transform: rotate(360deg) scale(1.05);
-}
-
-.logo-link:hover .logo-glow {
-    opacity: 1;
-}
-
-@keyframes pulse {
-
-    0%,
-    100% {
-        transform: scale(1);
-        opacity: 0;
-    }
-
-    50% {
-        transform: scale(1.2);
-        opacity: 0.5;
-    }
+    transform: scale(1.05);
 }
 
 .brand-text {
@@ -100,17 +78,10 @@
     font-size: 1.5rem;
     font-weight: 800;
     background: linear-gradient(135deg, #9b0000 0%, #d32f2f 50%, #9b0000 100%);
-    background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     letter-spacing: -0.02em;
-}
-
-@keyframes shimmer {
-    to {
-        background-position: 200% center;
-    }
 }
 
 .site-subtitle {
@@ -136,7 +107,7 @@
     font-weight: 600;
     font-size: 0.95rem;
     padding: 0.5rem 0;
-    transition: color 0.3s ease;
+    transition: color 0.2s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -156,22 +127,8 @@
     width: 0;
     height: 3px;
     background: linear-gradient(90deg, #9b0000, #d32f2f, #9b0000);
-    background-size: 200% 100%;
     border-radius: 3px;
-    transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    animation: gradientMove 2s ease infinite;
-}
-
-@keyframes gradientMove {
-
-    0%,
-    100% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
+    transition: width 0.3s ease;
 }
 
 .nav-link:hover {
@@ -198,7 +155,7 @@
     border-radius: 8px;
     opacity: 0;
     transform: scale(0.8);
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .nav-link:hover::before {
