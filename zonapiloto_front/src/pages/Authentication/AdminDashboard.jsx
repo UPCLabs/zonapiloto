@@ -12,7 +12,7 @@ const AdminDashboard = () => {
     const role = localStorage.getItem("role");
 
     if (!user || !role) {
-      window.location.href = "/loglock";
+      window.location.href = "/Loggin";
       return;
     }
 
@@ -24,9 +24,10 @@ const AdminDashboard = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("auth_token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("role");
     sessionStorage.clear();
-    window.location.href = "/loglock";
+    window.location.href = "/Loggin";
   };
 
   // Servicios principales según la imagen
@@ -92,7 +93,7 @@ const AdminDashboard = () => {
       id: "configuracion",
       icon: "⚙️",
       label: "Configuración",
-      roles: ["ADMIN", "SUPERADMIN"],
+      roles: ["SUPERADMIN"],
     },
   ];
 
