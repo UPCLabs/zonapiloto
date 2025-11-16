@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import "../../styles/admin_dashboard/unifledlogin.css";
+import { QRCodeCanvas } from "qrcode.react";
 
 const UnifiedLogin = () => {
     // Estados principales
     const [step, setStep] = useState("credentials"); // credentials | setup-mfa | verify-mfa
-    const [credentials, setCredentials] = useState({ username: "", password: "" });
+    const [credentials, setCredentials] = useState({
+        username: "",
+        password: "",
+    });
     const [qrData, setQrData] = useState(null);
     const [code, setCode] = useState(["", "", "", "", "", ""]);
     const [loading, setLoading] = useState(false);
@@ -52,7 +56,7 @@ const UnifiedLogin = () => {
             }
 
             // data = { exists: true/false, hasMfa: true/false }
-            if (!data.exists) {
+            if (!data.valid) {
                 setError("Usuario no encontrado");
                 return;
             }
@@ -64,7 +68,6 @@ const UnifiedLogin = () => {
                 // Ya tiene MFA, ir a verificación
                 setStep("verify-mfa");
             }
-
         } catch (err) {
             console.error("Error:", err);
             setError("Error de conexión. Intenta nuevamente.");
@@ -101,7 +104,6 @@ const UnifiedLogin = () => {
                 secret: data.mfa_secret,
             });
             setStep("setup-mfa");
-
         } catch (err) {
             console.error("Error generando MFA:", err);
             setError("Error al generar código MFA");
@@ -192,6 +194,7 @@ const UnifiedLogin = () => {
                 setTimeout(() => {
                     document.getElementById("code-0")?.focus();
                 }, 100);
+                await setupMFA();
                 return;
             }
 
@@ -205,12 +208,12 @@ const UnifiedLogin = () => {
                 }, 100);
             } else {
                 // Login exitoso, guardar token
-                if (data.token) {
-                    localStorage.setItem("auth_token", data.token);
+                if (data.user) {
+                    localStorage.setItem("user", data.user);
+                    localStorage.setItem("role", data.role);
                     window.location.href = "/AdminDash";
                 }
             }
-
         } catch (err) {
             console.error("Error:", err);
             setError("Error de conexión. Intenta nuevamente.");
@@ -252,7 +255,10 @@ const UnifiedLogin = () => {
 
                     {/* Paso 1: Credenciales */}
                     {step === "credentials" && (
-                        <form onSubmit={handleCheckCredentials} className="credentials-form">
+                        <form
+                            onSubmit={handleCheckCredentials}
+                            className="credentials-form"
+                        >
                             <div className="form-group">
                                 <label htmlFor="username">Usuario</label>
                                 <div className="input-wrapper">
@@ -315,7 +321,9 @@ const UnifiedLogin = () => {
                     )}
 
                     {/* Panel MFA deslizante */}
-                    <div className={`mfa-panel ${step !== "credentials" ? "active" : ""}`}>
+                    <div
+                        className={`mfa-panel ${step !== "credentials" ? "active" : ""}`}
+                    >
                         <button className="back-btn" onClick={handleBack}>
                             ← Volver
                         </button>
@@ -327,7 +335,14 @@ const UnifiedLogin = () => {
                                 <p className="mfa-subtitle">Escanea el código QR con tu app</p>
 
                                 <div className="qr-container">
-                                    <img src={qrData.qrUrl} alt="QR Code" className="qr-image" />
+                                    <QRCodeCanvas
+                                        value={qrData.qrUrl}
+                                        size={200}
+                                        bgColor="#ffffff"
+                                        fgColor="#000000"
+                                        level="H"
+                                    />
+
                                 </div>
 
                                 <div className="secret-container">
@@ -352,8 +367,7 @@ const UnifiedLogin = () => {
                                 <h3 className="verify-title">
                                     {step === "setup-mfa"
                                         ? "Ingresa el código para activar"
-                                        : `Bienvenido, ${credentials.username}`
-                                    }
+                                        : `Bienvenido, ${credentials.username}`}
                                 </h3>
 
                                 <div className="code-inputs" onPaste={handlePaste}>
@@ -408,9 +422,7 @@ const UnifiedLogin = () => {
                             <span className="divider-text">Sistema Seguro</span>
                             <span className="divider-line"></span>
                         </div>
-                        <p className="security-note">
-                            🔒 Autenticación de dos factores
-                        </p>
+                        <p className="security-note">🔒 Autenticación de dos factores</p>
                     </div>
                 </div>
             </div>

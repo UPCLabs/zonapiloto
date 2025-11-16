@@ -15,10 +15,9 @@ function Footer() {
                 </div>
 
                 <div className="footer-social">
-                    <div className="social-icon" title="Facebook">📘</div>
-                    <div className="social-icon" title="Instagram">📷</div>
-                    <div className="social-icon" title="Twitter">🐦</div>
-                    <div className="social-icon" title="LinkedIn">💼</div>
+                    <div className="social-icon" title="Facebook"><i class="fi fi-brands-facebook"></i></div>
+                    <div className="social-icon" title="Instagram"><i class="fi fi-brands-instagram"></i></div>
+                    <div className="social-icon" title="X"><i class="fi fi-brands-twitter-alt-circle"></i></div>
                 </div>
             </div>
 
@@ -33,7 +32,7 @@ function Footer() {
                 <p className="footer-copyright">
                     Desarrollado con{" "}
                     <Link to="/Loggin" className="footer-heart">
-                        ❤️
+                        <i class="fi fi-sr-heart"></i>
                     </Link>{" "}
                     para la comunidad UniPiloto
                 </p>

@@ -1,7 +1,7 @@
 package grupo4.information_service.controllers;
 
-import grupo4.information_service.entities.Event;
-import grupo4.information_service.entities.EventDTO;
+import grupo4.information_service.dtos.CalendaryEventDTO;
+import grupo4.information_service.entities.CalendaryEvent;
 import grupo4.information_service.interfaces.IEventService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("information/calendar-events/events")
 @RequiredArgsConstructor
-public class EventController {
+public class CalendaryEventController {
 
     private final IEventService eventService;
 
     @GetMapping
     public ResponseEntity<?> getAllEvents() {
-        List<Event> events = eventService.getAllEvents();
+        List<CalendaryEvent> events = eventService.getAllEvents();
         return ResponseEntity.ok(events);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getEvent(@PathVariable Long id) {
-        Event event = eventService.getEvent(id);
+        CalendaryEvent event = eventService.getEvent(id);
 
         if (event == null) {
             return ResponseEntity.notFound().build();
@@ -36,8 +36,10 @@ public class EventController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
-    public ResponseEntity<?> createEvent(@RequestBody EventDTO eventDTO) {
-        Event event = eventService.createEvent(eventDTO);
+    public ResponseEntity<?> createEvent(
+        @RequestBody CalendaryEventDTO eventDTO
+    ) {
+        CalendaryEvent event = eventService.createEvent(eventDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(event);
     }
 
@@ -45,9 +47,9 @@ public class EventController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> updateEvent(
         @PathVariable Long id,
-        @RequestBody EventDTO eventDTO
+        @RequestBody CalendaryEventDTO eventDTO
     ) {
-        Event updated = eventService.updateEvent(id, eventDTO);
+        CalendaryEvent updated = eventService.updateEvent(id, eventDTO);
         return ResponseEntity.ok(updated);
     }
 

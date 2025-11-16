@@ -15,6 +15,11 @@ echo "🔧 Compilando Information service..."
 cd "$ROOT_DIR/zonapiloto_back/services/information-service"
 ./mvnw clean package -DskipTests
 
+echo "🔧 Compilando Profile service..."
+cd "$ROOT_DIR/zonapiloto_back/services/profile-service"
+./mvnw clean package -DskipTests
+
+
 cd "$ROOT_DIR"
 
 echo "Compilado todo"

@@ -5,42 +5,47 @@ const services = [
     {
         title: "Perfil Académico",
         desc: "Consulta tu información académica, notas y progreso",
-        icon: "👤"
+        icon: <i class="fi fi-sr-user"></i>
     },
     {
         title: "Calendario Académico",
         desc: "Horarios y fechas importantes",
-        icon: "📅"
+        icon: <i class="fi fi-sr-calendar"></i>
     },
     {
         title: "Banco de Preguntas",
         desc: "Practica y prepárate para tus evaluaciones",
-        icon: "📝"
+        icon: <i class="fi fi-sr-comment-alt"></i>
     },
     {
         title: "Eventos Institucionales",
         desc: "Entérate de los próximos eventos",
-        icon: "🎉"
+        icon: <i class="fi fi-sr-party-horn"></i>
     },
     {
         title: "Cafetería",
         desc: "Menú del día y servicios alimentarios",
-        icon: "🍽️"
+        icon: <i class="fi fi-sr-plate-utensils"></i>
     },
     {
         title: "Biblioteca",
         desc: "Catálogo y reserva de espacios",
-        icon: "📚"
+        icon: <i class="fi fi-sr-diary-bookmark-down"></i>
     },
     {
-        title: "Emergencias",
-        desc: "Contactos y recursos de emergencia",
-        icon: "🚨"
+        title: "Procedimientos",
+        desc: "Como hacer procedimientos comunes, como sacar el carnet estudiantil",
+        icon: <i class="fi fi-sr-book-alt"></i>
+    },
+    {
+        title: "Laboratorio",
+        desc: "Sistema de reservas para el laboratio",
+        icon: <i class="fi fi-sr-display-code"></i>
     },
     {
         title: "Comunidad UniPiloto",
         desc: "Conéctate con otros estudiantes",
-        icon: "👥"
+        icon: <i class="fi fi-sr-users-alt"></i>
     },
 ];
 

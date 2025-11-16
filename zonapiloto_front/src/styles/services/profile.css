@@ -1,8 +1,260 @@
+/* ============================================
+   ANIMACIONES KEYFRAMES
+============================================ */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes growBar {
+    from {
+        height: 0;
+    }
+}
+
+@keyframes rotateIn {
+    from {
+        opacity: 0;
+        transform: rotate(-180deg) scale(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: rotate(0) scale(1);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 5px rgba(184, 0, 0, 0.5);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(184, 0, 0, 0.8);
+    }
+}
+
+/* ============================================
+   CLASES DE ANIMACIÓN
+============================================ */
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+.scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.6s ease-out forwards;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.6s ease-out forwards;
+}
+
+.hover-lift {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 28px rgba(184, 0, 0, 0.25) !important;
+}
+
+.hover-scale {
+    transition: all 0.3s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+.hover-glow {
+    transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+    box-shadow: 0 0 20px rgba(184, 0, 0, 0.4) !important;
+}
+
+.hover-bounce {
+    transition: all 0.3s ease;
+}
+
+.hover-bounce:hover {
+    animation: bounce 0.6s ease;
+}
+
+.avatar-animate {
+    animation: rotateIn 0.8s ease-out, pulse 2s ease-in-out 1s infinite;
+}
+
+.badge-animate {
+    animation: scaleIn 0.5s ease-out;
+    animation-fill-mode: backwards;
+}
+
+.badge-animate:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.badge-animate:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.progress-fill-animate {
+    background: linear-gradient(90deg,
+            #b80000 0%,
+            #d32f2f 25%,
+            #ff4444 50%,
+            #d32f2f 75%,
+            #b80000 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+}
+
+.bar-grow {
+    animation: growBar 1s ease-out forwards;
+}
+
+.card-stagger:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.card-stagger:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.card-stagger:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.card-stagger:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.card-stagger:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.card-stagger:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+.table-row-hover {
+    transition: all 0.3s ease;
+}
+
+.table-row-hover:hover {
+    background: linear-gradient(90deg, transparent, rgba(184, 0, 0, 0.05), transparent) !important;
+    transform: translateX(5px);
+}
+
+/* ============================================
+   ESTILOS BASE
+============================================ */
+
 .perfil-page {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: #f5f5f5;
+    background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
 }
 
 .perfil-content {
@@ -16,12 +268,28 @@
     padding: 0 20px;
 }
 
+/* ============================================
+   HEADER DEL PERFIL
+============================================ */
 
 .perfil-header {
     background: linear-gradient(135deg, #8b0000 0%, #b80000 50%, #d32f2f 100%);
     padding: 50px 0;
     color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.perfil-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    animation: pulse 4s ease-in-out infinite;
 }
 
 .perfil-info-header {
@@ -29,6 +297,8 @@
     grid-template-columns: auto 1fr auto;
     gap: 30px;
     align-items: center;
+    position: relative;
+    z-index: 1;
 }
 
 .avatar-section {
@@ -40,12 +310,11 @@
     width: 120px;
     height: 120px;
     background: white;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 4rem;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     border: 5px solid rgba(255, 255, 255, 0.3);
 }
 
@@ -78,6 +347,7 @@
 .badge-semestre {
     background: rgba(255, 255, 255, 0.25);
     border: 2px solid white;
+    backdrop-filter: blur(10px);
 }
 
 .badge-estado {
@@ -105,8 +375,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
     border: 6px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
 }
 
 .promedio-valor {
@@ -123,6 +394,9 @@
     margin-top: 5px;
 }
 
+/* ============================================
+   RESUMEN CARDS
+============================================ */
 
 .resumen-section {
     padding: 40px 0;
@@ -138,18 +412,33 @@
 .resumen-card {
     background: white;
     padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
     gap: 20px;
-    transition: all 0.3s ease;
     border-left: 5px solid #b80000;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
 }
 
-.resumen-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(184, 0, 0, 0.2);
+.resumen-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.3),
+            transparent);
+    transition: left 0.5s;
+}
+
+.resumen-card:hover::after {
+    left: 100%;
 }
 
 .resumen-icon {
@@ -170,6 +459,9 @@
     font-size: 0.95rem;
 }
 
+/* ============================================
+   TABS
+============================================ */
 
 .tabs-section {
     padding: 40px 0 80px;
@@ -194,6 +486,19 @@
     transition: all 0.3s ease;
     border-bottom: 3px solid transparent;
     margin-bottom: -3px;
+    position: relative;
+}
+
+.tab-btn::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: #b80000;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
 }
 
 .tab-btn:hover {
@@ -201,10 +506,15 @@
     background: rgba(184, 0, 0, 0.05);
 }
 
+.tab-btn:hover::before {
+    width: 100%;
+}
+
 .tab-btn.active {
     color: #b80000;
     border-bottom-color: #b80000;
     background: rgba(184, 0, 0, 0.05);
+    transform: translateY(-2px);
 }
 
 .tab-content {
@@ -218,23 +528,75 @@
     font-weight: 600;
 }
 
+/* ============================================
+   SELECTOR DE SEMESTRE
+============================================ */
 
-.fade-in {
-    animation: fadeIn 0.5s ease-in;
+.selector-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.semestre-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
+.semestre-selector label {
+    font-weight: 600;
+    color: #666;
+}
+
+.semestre-selector select {
+    padding: 12px 24px;
+    font-size: 1rem;
+    border: 2px solid #b80000;
+    border-radius: 12px;
+    background: white;
+    color: #b80000;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(184, 0, 0, 0.1);
+}
+
+.semestre-selector select:hover {
+    box-shadow: 0 4px 12px rgba(184, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+
+.info-semestre-banner {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe0e0 100%);
+    padding: 25px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+    border-left: 5px solid #b80000;
+    box-shadow: 0 4px 12px rgba(184, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.info-item {
+    flex: 1;
+    min-width: 200px;
+}
+
+.info-item strong {
+    color: #b80000;
+    margin-right: 8px;
+}
+
+/* ============================================
+   MATERIAS
+============================================ */
 
 .materias-grid {
     display: grid;
@@ -244,16 +606,11 @@
 
 .materia-card {
     background: white;
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 25px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     border-left: 5px solid #b80000;
-    transition: all 0.3s ease;
-}
-
-.materia-card:hover {
-    transform: translateX(5px);
-    box-shadow: 0 6px 20px rgba(184, 0, 0, 0.15);
+    cursor: pointer;
 }
 
 .materia-header {
@@ -270,10 +627,10 @@
 
 .materia-codigo {
     display: inline-block;
-    background: #fff5f5;
+    background: linear-gradient(135deg, #fff5f5, #ffe0e0);
     color: #b80000;
-    padding: 5px 12px;
-    border-radius: 15px;
+    padding: 6px 14px;
+    border-radius: 20px;
     font-size: 0.85rem;
     font-weight: 600;
 }
@@ -311,6 +668,7 @@
     border-radius: 20px;
     font-weight: 700;
     font-size: 1.1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .nota-excelente {
@@ -339,7 +697,7 @@
 
 .progress-bar {
     width: 100%;
-    height: 8px;
+    height: 10px;
     background: #f0f0f0;
     border-radius: 10px;
     overflow: hidden;
@@ -347,11 +705,13 @@
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #b80000, #d32f2f);
-    transition: width 0.5s ease;
+    transition: width 1s ease;
     border-radius: 10px;
 }
 
+/* ============================================
+   HISTORIAL ACADÉMICO
+============================================ */
 
 .historico-container {
     display: grid;
@@ -362,9 +722,9 @@
 .grafico-promedios,
 .historico-tabla {
     background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 .chart-header h3,
@@ -379,9 +739,10 @@
     display: flex;
     justify-content: space-around;
     align-items: flex-end;
-    height: 300px;
+    height: 350px;
     gap: 15px;
     padding: 20px 0;
+    border-bottom: 2px solid #e0e0e0;
 }
 
 .bar-container {
@@ -395,34 +756,40 @@
 
 .bar {
     width: 100%;
-    max-width: 60px;
-    background: linear-gradient(180deg, #b80000, #d32f2f);
-    border-radius: 8px 8px 0 0;
+    max-width: 70px;
+    background: linear-gradient(180deg, #b80000, #d32f2f, #ff4444);
+    border-radius: 12px 12px 0 0;
     position: relative;
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding-top: 10px;
-    transition: all 0.3s ease;
-    min-height: 40px;
+    padding-top: 15px;
+    transition: all 0.4s ease;
+    min-height: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(184, 0, 0, 0.3);
 }
 
 .bar:hover {
     transform: scaleY(1.05);
-    box-shadow: 0 4px 12px rgba(184, 0, 0, 0.3);
+    box-shadow: 0 8px 20px rgba(184, 0, 0, 0.5);
 }
 
 .bar-value {
     color: white;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .bar-label {
-    margin-top: 10px;
-    font-size: 0.85rem;
-    color: #666;
-    font-weight: 600;
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #b80000;
+    font-weight: 700;
+    padding: 5px 10px;
+    background: #fff5f5;
+    border-radius: 8px;
 }
 
 .tabla-wrapper {
@@ -435,36 +802,40 @@ table {
 }
 
 thead {
-    background: #fff5f5;
+    background: linear-gradient(135deg, #fff5f5, #ffe0e0);
 }
 
 th {
-    padding: 15px;
+    padding: 20px;
     text-align: left;
-    font-weight: 600;
+    font-weight: 700;
     color: #b80000;
-    border-bottom: 2px solid #b80000;
+    border-bottom: 3px solid #b80000;
+    font-size: 1rem;
 }
 
 td {
-    padding: 15px;
+    padding: 18px;
     border-bottom: 1px solid #f0f0f0;
 }
 
-tbody tr:hover {
-    background: #fafafa;
+tbody tr {
+    transition: all 0.3s ease;
 }
 
 .semestre-badge {
     display: inline-block;
-    background: #fff5f5;
+    background: linear-gradient(135deg, #fff5f5, #ffe0e0);
     color: #b80000;
-    padding: 5px 12px;
-    border-radius: 15px;
+    padding: 6px 14px;
+    border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 600;
 }
 
+/* ============================================
+   PERMISOS
+============================================ */
 
 .permisos-grid {
     display: grid;
@@ -475,18 +846,13 @@ tbody tr:hover {
 .permiso-card {
     background: white;
     padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     display: flex;
     gap: 20px;
     align-items: flex-start;
-    transition: all 0.3s ease;
     border-left: 5px solid #b80000;
-}
-
-.permiso-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(184, 0, 0, 0.15);
+    cursor: pointer;
 }
 
 .permiso-icon {
@@ -524,6 +890,9 @@ tbody tr:hover {
     color: #856404;
 }
 
+/* ============================================
+   RESPONSIVE
+============================================ */
 
 @media (max-width: 968px) {
     .perfil-info-header {
@@ -599,6 +968,15 @@ tbody tr:hover {
     .permisos-grid {
         grid-template-columns: 1fr;
     }
+
+    .selector-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .info-semestre-banner {
+        flex-direction: column;
+    }
 }
 
 @media (max-width: 480px) {
@@ -623,5 +1001,10 @@ tbody tr:hover {
     th,
     td {
         padding: 10px 8px;
+    }
+
+    .grafico-promedios,
+    .historico-tabla {
+        padding: 20px;
     }
 }
