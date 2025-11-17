@@ -1,18 +1,18 @@
 package grupo4.information_service.services;
 
-import grupo4.information_service.dtos.CalendaryEventDTO;
-import grupo4.information_service.entities.CalendaryEvent;
-import grupo4.information_service.interfaces.IEventService;
-import grupo4.information_service.repositories.IEventRepo;
+import grupo4.information_service.dtos.InstitutionalEventDTO;
+import grupo4.information_service.entities.InstitutionalEvent;
+import grupo4.information_service.interfaces.IInstitutionalService;
+import grupo4.information_service.repositories.IInstitutionalRepo;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class EventService implements IEventService {
+public class InstitutionalEventsService implements IInstitutionalService {
 
-    private final IEventRepo eventRepository;
+    private final IInstitutionalRepo eventRepository;
 
     @Override
     public boolean eventExists(Long event_id) {
@@ -20,16 +20,18 @@ public class EventService implements IEventService {
     }
 
     @Override
-    public CalendaryEvent getEvent(Long event_id) {
+    public InstitutionalEvent getEvent(Long event_id) {
         return eventRepository.findById(event_id).orElse(null);
     }
 
     @Override
-    public CalendaryEvent updateEvent(
+    public InstitutionalEvent updateEvent(
         Long event_id,
-        CalendaryEventDTO eventDTO
+        InstitutionalEventDTO eventDTO
     ) {
-        CalendaryEvent event = eventRepository.findById(event_id).orElseThrow();
+        InstitutionalEvent event = eventRepository
+            .findById(event_id)
+            .orElseThrow();
 
         event.setTitle(eventDTO.getTitle());
         event.setDescription(eventDTO.getDescription());
@@ -41,8 +43,8 @@ public class EventService implements IEventService {
     }
 
     @Override
-    public CalendaryEvent createEvent(CalendaryEventDTO eventDTO) {
-        CalendaryEvent event = CalendaryEvent.builder()
+    public InstitutionalEvent createEvent(InstitutionalEventDTO eventDTO) {
+        InstitutionalEvent event = InstitutionalEvent.builder()
             .title(eventDTO.getTitle())
             .description(eventDTO.getDescription())
             .start_date(eventDTO.getStartDate())
@@ -59,7 +61,7 @@ public class EventService implements IEventService {
     }
 
     @Override
-    public List<CalendaryEvent> getAllEvents() {
+    public List<InstitutionalEvent> getAllEvents() {
         return eventRepository.findAll();
     }
 }
