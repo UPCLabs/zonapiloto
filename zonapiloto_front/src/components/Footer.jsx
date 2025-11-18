@@ -31,7 +31,7 @@ function Footer() {
                 </div>
                 <p className="footer-copyright">
                     Desarrollado con{" "}
-                    <Link to="/Loggin" className="footer-heart">
+                    <Link to="/loggin" className="footer-heart">
                         <i class="fi fi-sr-heart"></i>
                     </Link>{" "}
                     para la comunidad UniPiloto
