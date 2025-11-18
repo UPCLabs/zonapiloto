@@ -53,17 +53,14 @@
     height: 130%;
     position: relative;
     z-index: 2;
-    /* Eliminamos la animación de rotación */
     transition: transform 0.2s ease;
     filter: drop-shadow(0 2px 8px rgba(155, 0, 0, 0.2));
 }
 
-/* Eliminamos el glow y su animación pulse */
 .logo-glow {
     display: none;
 }
 
-/* Hover simple sin rotación */
 .logo-link:hover .logo {
     transform: scale(1.05);
 }
@@ -93,7 +90,6 @@
     opacity: 0.8;
 }
 
-/* Navigation */
 .header-right {
     display: flex;
     gap: 2.5rem;
@@ -163,7 +159,7 @@
     transform: scale(1);
 }
 
-/* Responsive */
+
 @media (max-width: 968px) {
     .header-container {
         padding: 1rem 2rem;

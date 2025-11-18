@@ -6,6 +6,7 @@ import grupo4.auth_service.services.AuthService;
 import grupo4.auth_service.services.MfaService;
 import grupo4.auth_service.services.MfaService.MfaSetup;
 import grupo4.auth_service.services.UserService;
+import grupo4.auth_service.util.UserUtil;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
@@ -22,7 +23,21 @@ public class AuthController {
     private final MfaService mfaService;
     private final UserService userService;
 
-    @PostMapping("/register")
+    @GetMapping("/users/me")
+    public ResponseEntity<?> userInfo(
+        @RequestHeader("X-User") String user,
+        @RequestHeader("X-Role") String role
+    ) {
+        return ResponseEntity.ok(Map.of("user", user, "role", role));
+    }
+
+    @GetMapping("/users")
+    @PreAuthorize("hasAuthority('SUPERADMIN')")
+    public ResponseEntity<?> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @PostMapping("/users")
     @PreAuthorize("hasAuthority('SUPERADMIN')")
     public ResponseEntity<?> register(@RequestBody Map<String, String> req) {
         String username = req.get("username");
@@ -45,12 +60,61 @@ public class AuthController {
         );
     }
 
-    @PostMapping("/me")
-    public ResponseEntity<?> userInfo(
-        @RequestHeader("X-User") String user,
-        @RequestHeader("X-Role") String role
+    @PutMapping("/users/{user_id}")
+    @PreAuthorize("hasAuthority('SUPERADMIN')")
+    public ResponseEntity<?> updateUser(
+        @RequestBody Map<String, String> req,
+        @PathVariable Long user_id
     ) {
-        return ResponseEntity.ok(Map.of("user", user, "role", role));
+        String newUsername = req.get("username");
+        String newPassword = req.get("password");
+        String newRole = req.get("role");
+
+        User user = userService.getUser(user_id);
+        if (user == null) {
+            return ResponseEntity.status(404).body(
+                Map.of("error", "Usuario no encontrado")
+            );
+        }
+
+        user.setUsername(newUsername);
+        user.setPassword(UserUtil.encryptPassword(newPassword));
+        user.setRole(UserRole.valueOf(newRole));
+
+        userService.updateUser(user);
+        return ResponseEntity.ok(Map.of("message", "Usuario actualizado"));
+    }
+
+    @DeleteMapping("/users/{user_id}")
+    @PreAuthorize("hasAuthority('SUPERADMIN')")
+    public ResponseEntity<?> deleteUser(
+        @RequestHeader("X-User") String requester,
+        @PathVariable Long user_id
+    ) {
+        User user = userService.getUser(user_id);
+
+        if (user == null) {
+            return ResponseEntity.status(404).body(
+                Map.of("error", "Usuario no encontrado")
+            );
+        }
+
+        if (requester.equals(user.getUsername())) {
+            return ResponseEntity.status(400).body(
+                Map.of("error", "No puedes eliminar tu propio usuario")
+            );
+        }
+
+        userService.deleteUser(user.getId());
+
+        return ResponseEntity.ok(
+            Map.of(
+                "message",
+                "Usuario eliminado correctamente",
+                "deletedUser",
+                user.getUsername()
+            )
+        );
     }
 
     @PostMapping("/check-credentials")

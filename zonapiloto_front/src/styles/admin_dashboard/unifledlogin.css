@@ -108,7 +108,7 @@
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: 500px;
+    max-width: 650px;
     padding: 20px;
 }
 
@@ -118,12 +118,32 @@
     backdrop-filter: blur(30px);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 28px;
-    padding: 50px 40px;
+    padding: 50px 50px;
     box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6),
         0 0 0 1px rgba(0, 255, 255, 0.1) inset;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 90vh;
     min-height: 500px;
+    max-width: 100%;
+}
+
+.login-card::-webkit-scrollbar {
+    width: 8px;
+}
+
+.login-card::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.login-card::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.login-card::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 255, 255, 0.5);
 }
 
 .card-glow {
@@ -274,30 +294,29 @@
 
 /* MFA Panel (deslizante desde abajo) */
 .mfa-panel {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    position: static;
+    width: 100%;
     background: rgba(15, 15, 15, 0.95);
     backdrop-filter: blur(30px);
     border-top: 2px solid rgba(0, 255, 255, 0.3);
-    border-radius: 28px 28px 0 0;
+    border-radius: 20px;
     padding: 40px;
-    transform: translateY(100%);
+    margin-top: 20px;
+    max-height: 0;
     opacity: 0;
     transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     z-index: 10;
+    overflow: hidden;
 }
 
 .mfa-panel.active {
-    transform: translateY(0);
+    max-height: 1000px;
     opacity: 1;
 }
 
 .back-btn {
-    position: absolute;
-    top: 20px;
-    left: 20px;
+    position: static;
+    margin-bottom: 20px;
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 10px;
@@ -306,6 +325,7 @@
     font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.3s ease;
+    display: block;
 }
 
 .back-btn:hover {
@@ -334,11 +354,11 @@
 }
 
 .qr-container {
-    width: 220px;
-    height: 220px;
+    width: 250px;
+    height: 250px;
     margin: 0 auto 20px;
     background: #fff;
-    padding: 15px;
+    padding: 20px;
     border-radius: 18px;
     box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
 }
