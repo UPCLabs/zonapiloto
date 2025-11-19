@@ -2,7 +2,7 @@ services:
   postgres:
     image: postgres:15
     container_name: postgres-zonapiloto
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -23,7 +23,7 @@ services:
   auth-service:
     build: ./zonapiloto_back/services/auth-service
     container_name: auth-service
-    restart: always
+    restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
@@ -46,7 +46,7 @@ services:
   information-service:
     build: ./zonapiloto_back/services/information-service
     container_name: information-service
-    restart: always
+    restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
@@ -64,7 +64,7 @@ services:
   profile-service:
     build: ./zonapiloto_back/services/profile-service
     container_name: profile-service
-    restart: always
+    restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
@@ -82,7 +82,7 @@ services:
   gateway:
     build: ./zonapiloto_back/gateway
     container_name: gateway
-    restart: always
+    restart: unless-stopped
     depends_on:
       auth-service:
         condition: service_started
@@ -105,7 +105,7 @@ services:
       args:
         VITE_API_BASE_URL: "https://zonapiloto.com/api"
     container_name: zonapiloto-frontend
-    restart: always
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
@@ -114,7 +114,6 @@ services:
       - /etc/ssl/zonapiloto.com_ssl_certificate.cer:/etc/ssl/zonapiloto.com_ssl_certificate.cer:ro
     networks:
       - frontend_net
-      - zonapiloto_net
     depends_on:
       - gateway
 
