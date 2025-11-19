@@ -279,7 +279,7 @@ public class AuthController {
             .secure(true)
             .sameSite("None")
             .path("/")
-            .maxAge(24 * 60 * 60)
+            .maxAge(86400)
             .build();
 
         return ResponseEntity.ok()
@@ -292,5 +292,20 @@ public class AuthController {
                     user.getRole().toString()
                 )
             );
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        ResponseCookie cookie = ResponseCookie.from("token", "")
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("None")
+            .path("/")
+            .maxAge(0)
+            .build();
+
+        return ResponseEntity.ok()
+            .header("Set-Cookie", cookie.toString())
+            .body(Map.of("message", "Sesión cerrada correctamente"));
     }
 }
