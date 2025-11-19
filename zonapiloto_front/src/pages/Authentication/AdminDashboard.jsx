@@ -2,10 +2,21 @@ import React, { useState, useEffect } from "react";
 import "../../styles/admin_dashboard/admindashboard.css";
 
 const AdminDashboard = () => {
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("inicio");
   const [username, setUsername] = useState("");
   const [userRole, setUserRole] = useState("");
+  const [calendarEvents, setCalendarEvents] = useState([]);
+  const [questions, setQuestions] = useState([]);
+  const [institutionalEvents, setInstitutionalEvents] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [editModal, setEditModal] = useState({
+    isOpen: false,
+    type: '',
+    data: null
+  });
 
   useEffect(() => {
     const user = localStorage.getItem("user");
@@ -20,90 +31,209 @@ const AdminDashboard = () => {
     setUserRole(role);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("role");
-    sessionStorage.clear();
-    window.location.href = "/loggin";
+  useEffect(() => {
+    if (activeSection === "calendario-academico") {
+      fetchCalendarEvents();
+    } else if (activeSection === "banco-preguntas") {
+      fetchQuestions();
+    } else if (activeSection === "eventos-institucionales") {
+      fetchInstitutionalEvents();
+    }
+  }, [activeSection]);
+
+  const handleLogout = async () => {
+    try {
+      const API_URL = import.meta.env.VITE_API_BASE_URL;
+
+      const res = await fetch(`${API_URL}/logout`, {
+        method: "POST",
+        credentials: "include"
+      });
+      if (!res.ok) {
+        console.error("Error al cerrar sesión");
+        return;
+      }
+      localStorage.removeItem("user");
+      localStorage.removeItem("role");
+      sessionStorage.clear();
+      window.location.href = "/loggin";
+    } catch (err) {
+      console.error("Error en logout:", err);
+    }
+  };
+
+
+  // ============================================
+  // FUNCIONES DE CARGA DE DATOS
+  // ============================================
+  const fetchCalendarEvents = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/information/calendar-events/events`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setCalendarEvents(data);
+      }
+    } catch (error) {
+      console.error('Error al cargar eventos del calendario:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchQuestions = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/information/question-bank/questions`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setQuestions(data);
+      }
+    } catch (error) {
+      console.error('Error al cargar preguntas:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchInstitutionalEvents = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/information/institutional-events/events`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setInstitutionalEvents(data);
+      }
+    } catch (error) {
+      console.error('Error al cargar eventos institucionales:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // ============================================
   // FUNCIONES CRUD PARA BACKEND
   // ============================================
   const handleCreate = async (endpoint, data) => {
+    setLoading(true);
     try {
-      // TODO: Implementar llamada al backend
-      // const response = await fetch(endpoint, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   credentials: 'include', 
-      //   body: JSON.stringify(data)
-      // });
-      // const result = await response.json();
-      // if (response.ok) {
-      //   alert('Elemento creado exitosamente');
-      //   // Recargar datos
-      // } else {
-      //   alert('Error: ' + result.message);
-      // }
-      console.log('Crear:', endpoint, data);
-      alert('Elemento creado exitosamente');
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        alert('Elemento creado exitosamente');
+        // Recargar datos según el endpoint
+        if (endpoint.includes('calendar-events')) {
+          fetchCalendarEvents();
+        } else if (endpoint.includes('question-bank')) {
+          fetchQuestions();
+        } else if (endpoint.includes('institutional-events')) {
+          fetchInstitutionalEvents();
+        }
+        return result;
+      } else {
+        const error = await response.json();
+        alert('Error: ' + (error.message || 'No se pudo crear el elemento'));
+      }
     } catch (error) {
       console.error('Error al crear:', error);
       alert('Error al crear el elemento');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleUpdate = async (endpoint, id, data) => {
+    setLoading(true);
     try {
-      // TODO: Implementar llamada al backend
-      // const response = await fetch(`${endpoint}/${id}`, {
-      //   method: 'PUT',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   credentials: 'include',
-      //   body: JSON.stringify(data)
-      // });
-      // const result = await response.json();
-      // if (response.ok) {
-      //   alert('Elemento actualizado exitosamente');
-      //   // Recargar datos
-      // } else {
-      //   alert('Error: ' + result.message);
-      // }
-      console.log('Actualizar:', endpoint, id, data);
-      alert('Elemento actualizado exitosamente');
+      const response = await fetch(`${API_URL}${endpoint}/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        alert('Elemento actualizado exitosamente');
+        // Recargar datos según el endpoint
+        if (endpoint.includes('calendar-events')) {
+          fetchCalendarEvents();
+        } else if (endpoint.includes('question-bank')) {
+          fetchQuestions();
+        } else if (endpoint.includes('institutional-events')) {
+          fetchInstitutionalEvents();
+        }
+        setEditModal({ isOpen: false, type: '', data: null });
+      } else {
+        const error = await response.json();
+        alert('Error: ' + (error.message || 'No se pudo actualizar'));
+      }
     } catch (error) {
       console.error('Error al actualizar:', error);
       alert('Error al actualizar el elemento');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDelete = async (endpoint, id) => {
     if (!window.confirm('¿Estás seguro de eliminar este elemento?')) return;
 
+    setLoading(true);
     try {
-      // TODO: Implementar llamada al backend
-      // const response = await fetch(`${endpoint}/${id}`, {
-      //   method: 'DELETE',
-      //   credentials: 'include'
-      // });
-      // if (response.ok) {
-      //   alert('Elemento eliminado exitosamente');
-      //   // Recargar datos
-      // } else {
-      //   const result = await response.json();
-      //   alert('Error: ' + result.message);
-      // }
-      console.log('Eliminar:', endpoint, id);
-      alert('Elemento eliminado exitosamente');
+      const response = await fetch(`${API_URL}${endpoint}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (response.ok) {
+        alert('Elemento eliminado exitosamente');
+        // Recargar datos según el endpoint
+        if (endpoint.includes('calendar-events')) {
+          fetchCalendarEvents();
+        } else if (endpoint.includes('question-bank')) {
+          fetchQuestions();
+        } else if (endpoint.includes('institutional-events')) {
+          fetchInstitutionalEvents();
+        }
+      } else {
+        const error = await response.json();
+        alert('Error: ' + (error.message || 'No se pudo eliminar'));
+      }
     } catch (error) {
       console.error('Error al eliminar:', error);
       alert('Error al eliminar el elemento');
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const openEditModal = (type, data) => {
+    setEditModal({ isOpen: true, type, data });
   };
 
   // Servicios principales
@@ -176,6 +306,151 @@ const AdminDashboard = () => {
     item.roles.includes(userRole),
   );
 
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
+  };
+
+  const renderEditModal = () => {
+    if (!editModal.isOpen) return null;
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      let data = {};
+
+      if (editModal.type === 'calendar') {
+        data = {
+          title: formData.get('title'),
+          description: formData.get('description'),
+          type: formData.get('type'),
+          startDate: formData.get('startDate'),
+          finalDate: formData.get('finalDate')
+        };
+        handleUpdate('/information/calendar-events/events', editModal.data.id, data);
+      } else if (editModal.type === 'question') {
+        data = {
+          question: formData.get('question'),
+          categoryName: formData.get('categoryName'),
+          answer: formData.get('answer')
+        };
+        handleUpdate('/information/question-bank/questions', editModal.data.id, data);
+      } else if (editModal.type === 'institutional') {
+        data = {
+          titulo_evento: formData.get('titulo_evento'),
+          descripcion: formData.get('descripcion'),
+          fecha_inicio: formData.get('fecha_inicio'),
+          fecha_fin: formData.get('fecha_fin'),
+          tipo_evento: formData.get('tipo_evento'),
+          ubicacion: formData.get('ubicacion')
+        };
+        handleUpdate('/information/institutional-events/events', editModal.data.id, data);
+      }
+    };
+
+    return (
+      <div className="modal-overlay" onClick={() => setEditModal({ isOpen: false, type: '', data: null })}>
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-header">
+            <h3>Editar {editModal.type === 'calendar' ? 'Evento del Calendario' : editModal.type === 'question' ? 'Pregunta' : 'Evento Institucional'}</h3>
+            <button className="modal-close" onClick={() => setEditModal({ isOpen: false, type: '', data: null })}>✕</button>
+          </div>
+
+          <form className="modal-form" onSubmit={handleSubmit}>
+            {editModal.type === 'calendar' && (
+              <>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Título del Evento *</label>
+                    <input type="text" name="title" defaultValue={editModal.data?.title} required />
+                  </div>
+                  <div className="form-group">
+                    <label>Tipo *</label>
+                    <input type="text" name="type" defaultValue={editModal.data?.type} required />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Fecha de Inicio *</label>
+                    <input type="date" name="startDate" defaultValue={editModal.data?.startDate} required />
+                  </div>
+                  <div className="form-group">
+                    <label>Fecha Final *</label>
+                    <input type="date" name="finalDate" defaultValue={editModal.data?.finalDate} required />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Descripción *</label>
+                  <textarea name="description" rows="3" defaultValue={editModal.data?.description} required></textarea>
+                </div>
+              </>
+            )}
+
+            {editModal.type === 'question' && (
+              <>
+                <div className="form-group">
+                  <label>Pregunta *</label>
+                  <textarea name="question" rows="3" defaultValue={editModal.data?.question} required></textarea>
+                </div>
+                <div className="form-group">
+                  <label>Categoría *</label>
+                  <input type="text" name="categoryName" defaultValue={editModal.data?.categoryName} required />
+                </div>
+                <div className="form-group">
+                  <label>Respuesta *</label>
+                  <textarea name="answer" rows="4" defaultValue={editModal.data?.answer} required></textarea>
+                </div>
+              </>
+            )}
+
+            {editModal.type === 'institutional' && (
+              <>
+                <div className="form-group">
+                  <label>Título del Evento *</label>
+                  <input type="text" name="titulo_evento" defaultValue={editModal.data?.titulo_evento} required />
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Fecha de Inicio *</label>
+                    <input type="date" name="fecha_inicio" defaultValue={editModal.data?.fecha_inicio} required />
+                  </div>
+                  <div className="form-group">
+                    <label>Fecha de Fin *</label>
+                    <input type="date" name="fecha_fin" defaultValue={editModal.data?.fecha_fin} required />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Tipo de Evento *</label>
+                    <input type="text" name="tipo_evento" defaultValue={editModal.data?.tipo_evento} required />
+                  </div>
+                  <div className="form-group">
+                    <label>Ubicación *</label>
+                    <input type="text" name="ubicacion" defaultValue={editModal.data?.ubicacion} required />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Descripción *</label>
+                  <textarea name="descripcion" rows="4" defaultValue={editModal.data?.descripcion} required></textarea>
+                </div>
+              </>
+            )}
+
+            <div className="modal-actions">
+              <button type="button" className="secondary-btn" onClick={() => setEditModal({ isOpen: false, type: '', data: null })}>
+                Cancelar
+              </button>
+              <button type="submit" className="primary-btn" disabled={loading}>
+                {loading ? 'Guardando...' : 'Guardar Cambios'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
   const renderContent = () => {
     switch (activeSection) {
       case "inicio":
@@ -204,7 +479,7 @@ const AdminDashboard = () => {
                   <div className="stat-icon">❓</div>
                 </div>
                 <div className="stat-content">
-                  <h3>567</h3>
+                  <h3>{questions.length}</h3>
                   <p>Preguntas Activas</p>
                   <span className="stat-trend positive">+8% este mes</span>
                 </div>
@@ -214,7 +489,7 @@ const AdminDashboard = () => {
                   <div className="stat-icon">📅</div>
                 </div>
                 <div className="stat-content">
-                  <h3>42</h3>
+                  <h3>{calendarEvents.length}</h3>
                   <p>Eventos Activos</p>
                   <span className="stat-trend neutral">Sin cambios</span>
                 </div>
@@ -319,11 +594,6 @@ const AdminDashboard = () => {
           </div>
         );
 
-      // ============================================
-      // CALENDARIO ACADÉMICO
-      // Endpoint: /api/calendario-academico
-      // Campos: title, description, type, start_date, final_date
-      // ============================================
       case "calendario-academico":
         return (
           <div className="dashboard-section">
@@ -346,10 +616,10 @@ const AdminDashboard = () => {
                   title: formData.get('title'),
                   description: formData.get('description'),
                   type: formData.get('type'),
-                  start_date: formData.get('start_date'),
-                  final_date: formData.get('final_date')
+                  startDate: formData.get('startDate'),
+                  finalDate: formData.get('finalDate')
                 };
-                handleCreate('/api/calendario-academico', data);
+                handleCreate('/information/calendar-events/events', data);
                 e.target.reset();
               }}>
                 <div className="form-row">
@@ -359,17 +629,17 @@ const AdminDashboard = () => {
                   </div>
                   <div className="form-group">
                     <label>Tipo *</label>
-                    <input type="text" name="tipo" placeholder="Ej: Fechas,eventos,examenes" required />
+                    <input type="text" name="type" placeholder="Ej: Fechas, eventos, examenes" required />
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group">
                     <label>Fecha de Inicio *</label>
-                    <input type="date" name="start_date" required />
+                    <input type="date" name="startDate" required />
                   </div>
                   <div className="form-group">
                     <label>Fecha Final *</label>
-                    <input type="date" name="final_date" required />
+                    <input type="date" name="finalDate" required />
                   </div>
                 </div>
                 <div className="form-group">
@@ -381,58 +651,53 @@ const AdminDashboard = () => {
                     required
                   ></textarea>
                 </div>
-                <button type="submit" className="submit-btn">
-                  Agregar al Calendario
+                <button type="submit" className="submit-btn" disabled={loading}>
+                  {loading ? 'Guardando...' : 'Agregar al Calendario'}
                 </button>
               </form>
             </div>
 
             <div className="list-container">
               <h3 className="form-title">Eventos Registrados</h3>
-              <div className="event-list">
-                {/* Ejemplo de evento - TODO: Reemplazar con datos del backend */}
-                <div className="event-item">
-                  <div className="event-date">
-                    <span className="day">10</span>
-                    <span className="month">FEB</span>
-                  </div>
-                  <div className="event-details">
-                    <h4>Inicio de clases</h4>
-                    <p>Académico - Del 10/02/2025 al 18/02/2025</p>
-                    <p style={{ fontSize: '0.85rem', color: '#999' }}>Primer día del semestre</p>
-                  </div>
-                  <div className="event-actions">
-                    <button
-                      className="icon-btn edit"
-                      onClick={() => {
-                        const newData = {
-                          title: prompt('Nuevo título:', 'Inicio de clases'),
-                          description: prompt('Nueva descripción:', 'Primer día del semestre'),
-                          type: 'Académico',
-                          start_date: '2025-02-10',
-                          final_date: '2025-02-18'
-                        };
-                        if (newData.title) handleUpdate('/api/calendario-academico', 1, newData);
-                      }}
-                    >
-                      ✏️
-                    </button>
-                    <button
-                      className="icon-btn delete"
-                      onClick={() => handleDelete('/api/calendario-academico', 1)}
-                    >
-                      🗑️
-                    </button>
-                  </div>
+              {loading ? (
+                <div className="loading-state">Cargando eventos...</div>
+              ) : calendarEvents.length === 0 ? (
+                <div className="empty-state">No hay eventos registrados</div>
+              ) : (
+                <div className="event-list">
+                  {calendarEvents.map((event) => (
+                    <div key={event.id} className="event-item">
+                      <div className="event-date">
+                        <span className="day">{formatDate(event.startDate).split(' ')[0]}</span>
+                        <span className="month">{formatDate(event.startDate).split(' ')[1]}</span>
+                      </div>
+                      <div className="event-details">
+                        <h4>{event.title}</h4>
+                        <p>{event.type} - Del {new Date(event.startDate).toLocaleDateString('es-ES')} al {new Date(event.finalDate).toLocaleDateString('es-ES')}</p>
+                        <p style={{ fontSize: '0.85rem', color: '#999' }}>{event.description}</p>
+                      </div>
+                      <div className="event-actions">
+                        <button
+                          className="icon-btn edit"
+                          onClick={() => openEditModal('calendar', event)}
+                        >
+                          ✏️
+                        </button>
+                        <button
+                          className="icon-btn delete"
+                          onClick={() => handleDelete('/information/calendar-events/events', event.id)}
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              )}
             </div>
           </div>
         );
 
-      // ============================================
-      // BANCO DE PREGUNTAS
-      // ============================================
       case "banco-preguntas":
         return (
           <div className="dashboard-section">
@@ -456,7 +721,7 @@ const AdminDashboard = () => {
                   categoryName: formData.get('categoryName'),
                   answer: formData.get('answer')
                 };
-                handleCreate('/api/banco-preguntas', data);
+                handleCreate('/information/question-bank/questions', data);
                 e.target.reset();
               }}>
                 <div className="form-group">
@@ -486,66 +751,63 @@ const AdminDashboard = () => {
                     required
                   ></textarea>
                 </div>
-                <button type="submit" className="submit-btn">
-                  Agregar Pregunta
+                <button type="submit" className="submit-btn" disabled={loading}>
+                  {loading ? 'Guardando...' : 'Agregar Pregunta'}
                 </button>
               </form>
             </div>
 
             <div className="list-container">
               <h3 className="form-title">Preguntas Registradas</h3>
-              <div className="data-table">
-                <div className="table-header">
-                  <span>Pregunta</span>
-                  <span>Categoría</span>
-                  <span>Respuesta</span>
-                  <span>Acciones</span>
-                </div>
-                {/* Ejemplo - TODO: Reemplazar con datos del backend */}
-                <div className="table-row">
-                  <span style={{ maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    ¿Cuál es la fórmula del teorema de Pitágoras?
-                  </span>
-                  <span className="highlight-text">Matemáticas</span>
-                  <span style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    a² + b² = c²
-                  </span>
-                  <div className="row-actions">
-                    <button
-                      className="icon-btn edit"
-                      onClick={() => {
-                        const newData = {
-                          question: prompt('Nueva pregunta:', '¿Cuál es la fórmula del teorema de Pitágoras?'),
-                          categoryName: prompt('Nueva categoría:', 'Matemáticas'),
-                          answer: prompt('Nueva respuesta:', 'a² + b² = c²')
-                        };
-                        if (newData.question) handleUpdate('/api/banco-preguntas', 1, newData);
-                      }}
-                    >
-                      ✏️
-                    </button>
-                    <button
-                      className="icon-btn view"
-                      onClick={() => alert('Pregunta: ¿Cuál es la fórmula del teorema de Pitágoras?\n\nCategoría: Matemáticas\n\nRespuesta: a² + b² = c²')}
-                    >
-                      👁️
-                    </button>
-                    <button
-                      className="icon-btn delete"
-                      onClick={() => handleDelete('/api/banco-preguntas', 1)}
-                    >
-                      🗑️
-                    </button>
+              {loading ? (
+                <div className="loading-state">Cargando preguntas...</div>
+              ) : questions.length === 0 ? (
+                <div className="empty-state">No hay preguntas registradas</div>
+              ) : (
+                <div className="data-table">
+                  <div className="table-header">
+                    <span>Pregunta</span>
+                    <span>Categoría</span>
+                    <span>Respuesta</span>
+                    <span>Acciones</span>
                   </div>
+                  {questions.map((q) => (
+                    <div key={q.id} className="table-row">
+                      <span style={{ maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {q.question}
+                      </span>
+                      <span className="highlight-text">{q.categoryName}</span>
+                      <span style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {q.answer}
+                      </span>
+                      <div className="row-actions">
+                        <button
+                          className="icon-btn edit"
+                          onClick={() => openEditModal('question', q)}
+                        >
+                          ✏️
+                        </button>
+                        <button
+                          className="icon-btn view"
+                          onClick={() => alert(`Pregunta: ${q.question}\n\nCategoría: ${q.categoryName}\n\nRespuesta: ${q.answer}`)}
+                        >
+                          👁️
+                        </button>
+                        <button
+                          className="icon-btn delete"
+                          onClick={() => handleDelete('/information/question-bank/questions', q.id)}
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              )}
             </div>
           </div>
         );
 
-      // ============================================
-      // EVENTOS INSTITUCIONALES
-      // ============================================
       case "eventos-institucionales":
         return (
           <div className="dashboard-section">
@@ -572,7 +834,7 @@ const AdminDashboard = () => {
                   tipo_evento: formData.get('tipo_evento'),
                   ubicacion: formData.get('ubicacion')
                 };
-                handleCreate('/api/eventos-institucionales', data);
+                handleCreate('/information/institutional-events/events', data);
                 e.target.reset();
               }}>
                 <div className="form-group">
@@ -597,7 +859,7 @@ const AdminDashboard = () => {
                 <div className="form-row">
                   <div className="form-group">
                     <label>Tipo de Evento *</label>
-                    <input type="text" name="tipo" placeholder="Ej: Academico, cultural, deportivo" required />
+                    <input type="text" name="tipo_evento" placeholder="Ej: Academico, cultural, deportivo" required />
                   </div>
                   <div className="form-group">
                     <label>Ubicación *</label>
@@ -618,64 +880,58 @@ const AdminDashboard = () => {
                     required
                   ></textarea>
                 </div>
-                <button type="submit" className="submit-btn">
-                  Crear Evento
+                <button type="submit" className="submit-btn" disabled={loading}>
+                  {loading ? 'Guardando...' : 'Crear Evento'}
                 </button>
               </form>
             </div>
 
             <div className="list-container">
               <h3 className="form-title">Eventos Programados</h3>
-              <div className="event-list">
-                {/* Ejemplo - TODO: Reemplazar con datos del backend */}
-                <div className="event-item">
-                  <div className="event-date">
-                    <span className="day">20</span>
-                    <span className="month">NOV</span>
-                  </div>
-                  <div className="event-details">
-                    <h4>Feria de Ciencia y Tecnología 2025</h4>
-                    <p><strong>Tipo:</strong> Académico | <strong>Ubicación:</strong> Campus Principal - Auditorio Central</p>
-                    <p style={{ fontSize: '0.85rem', color: '#999', marginTop: '8px' }}>
-                      Del 20/11/2025 al 22/11/2025
-                    </p>
-                    <p style={{ fontSize: '0.85rem', color: '#999', marginTop: '4px' }}>
-                      Muestra anual de proyectos de investigación estudiantil...
-                    </p>
-                  </div>
-                  <div className="event-actions">
-                    <button
-                      className="icon-btn edit"
-                      onClick={() => {
-                        const newData = {
-                          titulo_evento: prompt('Nuevo título:', 'Feria de Ciencia y Tecnología 2025'),
-                          descripcion: prompt('Nueva descripción:', 'Muestra anual de proyectos...'),
-                          fecha_inicio: '2025-11-20',
-                          fecha_fin: '2025-11-22',
-                          tipo_evento: 'Académico',
-                          ubicacion: 'Campus Principal - Auditorio Central'
-                        };
-                        if (newData.titulo_evento) handleUpdate('/api/eventos-institucionales', 1, newData);
-                      }}
-                    >
-                      ✏️
-                    </button>
-                    <button
-                      className="icon-btn delete"
-                      onClick={() => handleDelete('/api/eventos-institucionales', 1)}
-                    >
-                      🗑️
-                    </button>
-                  </div>
+              {loading ? (
+                <div className="loading-state">Cargando eventos...</div>
+              ) : institutionalEvents.length === 0 ? (
+                <div className="empty-state">No hay eventos programados</div>
+              ) : (
+                <div className="event-list">
+                  {institutionalEvents.map((event) => (
+                    <div key={event.id} className="event-item">
+                      <div className="event-date">
+                        <span className="day">{formatDate(event.fecha_inicio).split(' ')[0]}</span>
+                        <span className="month">{formatDate(event.fecha_inicio).split(' ')[1]}</span>
+                      </div>
+                      <div className="event-details">
+                        <h4>{event.titulo_evento}</h4>
+                        <p><strong>Tipo:</strong> {event.tipo_evento} | <strong>Ubicación:</strong> {event.ubicacion}</p>
+                        <p style={{ fontSize: '0.85rem', color: '#999', marginTop: '8px' }}>
+                          Del {new Date(event.fecha_inicio).toLocaleDateString('es-ES')} al {new Date(event.fecha_fin).toLocaleDateString('es-ES')}
+                        </p>
+                        <p style={{ fontSize: '0.85rem', color: '#999', marginTop: '4px' }}>
+                          {event.descripcion}
+                        </p>
+                      </div>
+                      <div className="event-actions">
+                        <button
+                          className="icon-btn edit"
+                          onClick={() => openEditModal('institutional', event)}
+                        >
+                          ✏️
+                        </button>
+                        <button
+                          className="icon-btn delete"
+                          onClick={() => handleDelete('/information/institutional-events/events', event.id)}
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              )}
             </div>
           </div>
         );
 
-      // ============================================
-      // ANUNCIOS (Eventos Página Principal)
-      // ============================================
       case "anuncios":
         return (
           <div className="dashboard-section">
@@ -742,8 +998,8 @@ const AdminDashboard = () => {
                     required
                   ></textarea>
                 </div>
-                <button type="submit" className="submit-btn">
-                  Publicar Anuncio
+                <button type="submit" className="submit-btn" disabled={loading}>
+                  {loading ? 'Guardando...' : 'Publicar Anuncio'}
                 </button>
               </form>
             </div>
@@ -758,7 +1014,6 @@ const AdminDashboard = () => {
                   <span>Fecha</span>
                   <span>Acciones</span>
                 </div>
-                {/* Ejemplo - TODO: Reemplazar con datos del backend */}
                 <div className="table-row">
                   <span style={{ fontSize: '1.5rem' }}>📚</span>
                   <span style={{ maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -769,33 +1024,9 @@ const AdminDashboard = () => {
                   </span>
                   <span>08/11/2025</span>
                   <div className="row-actions">
-                    <button
-                      className="icon-btn edit"
-                      onClick={() => {
-                        const newData = {
-                          titulo: prompt('Nuevo título:', 'Inscripciones abiertas...'),
-                          descripcion: prompt('Nueva descripción:', 'Las inscripciones...'),
-                          fecha: '2025-11-08',
-                          tipo: 'importante',
-                          icono: '📚'
-                        };
-                        if (newData.titulo) handleUpdate('/api/anuncios', 1, newData);
-                      }}
-                    >
-                      ✏️
-                    </button>
-                    <button
-                      className="icon-btn view"
-                      onClick={() => alert('Título: Inscripciones abiertas para el próximo semestre\n\nTipo: importante\n\nFecha: 08/11/2025\n\nDescripción: Las inscripciones para el semestre 2025-2 estarán disponibles del 15 al 30 de noviembre.')}
-                    >
-                      👁️
-                    </button>
-                    <button
-                      className="icon-btn delete"
-                      onClick={() => handleDelete('/api/anuncios', 1)}
-                    >
-                      🗑️
-                    </button>
+                    <button className="icon-btn edit">✏️</button>
+                    <button className="icon-btn view">👁️</button>
+                    <button className="icon-btn delete">🗑️</button>
                   </div>
                 </div>
               </div>
@@ -860,7 +1091,6 @@ const AdminDashboard = () => {
                   </div>
                   <div className="table-row">
                     <span>admin_user</span>
-                    <span>admin@zona.edu</span>
                     <span className="role-badge admin">ADMIN</span>
                     <span className="status-badge active">Activo</span>
                     <div className="row-actions">
@@ -870,7 +1100,6 @@ const AdminDashboard = () => {
                   </div>
                   <div className="table-row">
                     <span>user_demo</span>
-                    <span>demo@zona.edu</span>
                     <span className="role-badge user">USER</span>
                     <span className="status-badge active">Activo</span>
                     <div className="row-actions">
@@ -1025,6 +1254,8 @@ const AdminDashboard = () => {
           onClick={() => setMenuOpen(false)}
         ></div>
       )}
+
+      {renderEditModal()}
     </div>
   );
 };
