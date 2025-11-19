@@ -10,5 +10,5 @@ public class QuestionRequest {
 
     private String question;
     private String answer;
-    private Long categoryId;
+    private String categoryName;
 }

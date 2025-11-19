@@ -12,23 +12,44 @@ const AdminDashboard = () => {
   const [questions, setQuestions] = useState([]);
   const [institutionalEvents, setInstitutionalEvents] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [fullLoading, setFullLoading] = useState(true);
   const [editModal, setEditModal] = useState({
     isOpen: false,
-    type: '',
-    data: null
+    type: "",
+    data: null,
   });
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    const role = localStorage.getItem("role");
+    const fetchUser = async () => {
+      try {
+        const resp = await fetch(`${API_URL}/auth/users/me`, {
+          method: "GET",
+          credentials: "include",
+        });
 
-    if (!user || !role) {
-      window.location.href = "/loggin";
-      return;
-    }
+        if (!resp.ok) {
+          sessionStorage.clear();
+          window.location.href = "/loggin";
+          return;
+        }
 
-    setUsername(user);
-    setUserRole(role);
+        const data = await resp.json();
+
+        sessionStorage.setItem("user", data.user);
+        sessionStorage.setItem("role", data.role);
+
+        setUsername(data.user);
+        setUserRole(data.role);
+      } catch (error) {
+        console.error("ERROR en auth/me:", error);
+        sessionStorage.clear();
+        window.location.href = "/loggin";
+      } finally {
+        setFullLoading(false);
+      }
+    };
+
+    fetchUser();
   }, []);
 
   useEffect(() => {
@@ -45,16 +66,14 @@ const AdminDashboard = () => {
     try {
       const API_URL = import.meta.env.VITE_API_BASE_URL;
 
-      const res = await fetch(`${API_URL}/logout`, {
+      const res = await fetch(`${API_URL}/auth/logout`, {
         method: "POST",
-        credentials: "include"
+        credentials: "include",
       });
       if (!res.ok) {
         console.error("Error al cerrar sesión");
         return;
       }
-      localStorage.removeItem("user");
-      localStorage.removeItem("role");
       sessionStorage.clear();
       window.location.href = "/loggin";
     } catch (err) {
@@ -62,25 +81,27 @@ const AdminDashboard = () => {
     }
   };
 
-
   // ============================================
   // FUNCIONES DE CARGA DE DATOS
   // ============================================
   const fetchCalendarEvents = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/information/calendar-events/events`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
+      const response = await fetch(
+        `${API_URL}/information/calendar-events/events`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
       if (response.ok) {
         const data = await response.json();
         setCalendarEvents(data);
       }
     } catch (error) {
-      console.error('Error al cargar eventos del calendario:', error);
+      console.error("Error al cargar eventos del calendario:", error);
     } finally {
       setLoading(false);
     }
@@ -89,18 +110,21 @@ const AdminDashboard = () => {
   const fetchQuestions = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/information/question-bank/questions`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
+      const response = await fetch(
+        `${API_URL}/information/question-bank/questions`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
       if (response.ok) {
         const data = await response.json();
         setQuestions(data);
       }
     } catch (error) {
-      console.error('Error al cargar preguntas:', error);
+      console.error("Error al cargar preguntas:", error);
     } finally {
       setLoading(false);
     }
@@ -109,18 +133,21 @@ const AdminDashboard = () => {
   const fetchInstitutionalEvents = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/information/institutional-events/events`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
+      const response = await fetch(
+        `${API_URL}/information/institutional-events/events`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
       if (response.ok) {
         const data = await response.json();
         setInstitutionalEvents(data);
       }
     } catch (error) {
-      console.error('Error al cargar eventos institucionales:', error);
+      console.error("Error al cargar eventos institucionales:", error);
     } finally {
       setLoading(false);
     }
@@ -133,32 +160,32 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const response = await fetch(`${API_URL}${endpoint}`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
 
       if (response.ok) {
         const result = await response.json();
-        alert('Elemento creado exitosamente');
+        alert("Elemento creado exitosamente");
         // Recargar datos según el endpoint
-        if (endpoint.includes('calendar-events')) {
+        if (endpoint.includes("calendar-events")) {
           fetchCalendarEvents();
-        } else if (endpoint.includes('question-bank')) {
+        } else if (endpoint.includes("question-bank")) {
           fetchQuestions();
-        } else if (endpoint.includes('institutional-events')) {
+        } else if (endpoint.includes("institutional-events")) {
           fetchInstitutionalEvents();
         }
         return result;
       } else {
         const error = await response.json();
-        alert('Error: ' + (error.message || 'No se pudo crear el elemento'));
+        alert("Error: " + (error.message || "No se pudo crear el elemento"));
       }
     } catch (error) {
-      console.error('Error al crear:', error);
-      alert('Error al crear el elemento');
+      console.error("Error al crear:", error);
+      alert("Error al crear el elemento");
     } finally {
       setLoading(false);
     }
@@ -168,65 +195,65 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const response = await fetch(`${API_URL}${endpoint}/${id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
 
       if (response.ok) {
-        alert('Elemento actualizado exitosamente');
+        alert("Elemento actualizado exitosamente");
         // Recargar datos según el endpoint
-        if (endpoint.includes('calendar-events')) {
+        if (endpoint.includes("calendar-events")) {
           fetchCalendarEvents();
-        } else if (endpoint.includes('question-bank')) {
+        } else if (endpoint.includes("question-bank")) {
           fetchQuestions();
-        } else if (endpoint.includes('institutional-events')) {
+        } else if (endpoint.includes("institutional-events")) {
           fetchInstitutionalEvents();
         }
-        setEditModal({ isOpen: false, type: '', data: null });
+        setEditModal({ isOpen: false, type: "", data: null });
       } else {
         const error = await response.json();
-        alert('Error: ' + (error.message || 'No se pudo actualizar'));
+        alert("Error: " + (error.message || "No se pudo actualizar"));
       }
     } catch (error) {
-      console.error('Error al actualizar:', error);
-      alert('Error al actualizar el elemento');
+      console.error("Error al actualizar:", error);
+      alert("Error al actualizar el elemento");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (endpoint, id) => {
-    if (!window.confirm('¿Estás seguro de eliminar este elemento?')) return;
+    if (!window.confirm("¿Estás seguro de eliminar este elemento?")) return;
 
     setLoading(true);
     try {
       const response = await fetch(`${API_URL}${endpoint}/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
-        }
+          "Content-Type": "application/json",
+        },
       });
 
       if (response.ok) {
-        alert('Elemento eliminado exitosamente');
+        alert("Elemento eliminado exitosamente");
         // Recargar datos según el endpoint
-        if (endpoint.includes('calendar-events')) {
+        if (endpoint.includes("calendar-events")) {
           fetchCalendarEvents();
-        } else if (endpoint.includes('question-bank')) {
+        } else if (endpoint.includes("question-bank")) {
           fetchQuestions();
-        } else if (endpoint.includes('institutional-events')) {
+        } else if (endpoint.includes("institutional-events")) {
           fetchInstitutionalEvents();
         }
       } else {
         const error = await response.json();
-        alert('Error: ' + (error.message || 'No se pudo eliminar'));
+        alert("Error: " + (error.message || "No se pudo eliminar"));
       }
     } catch (error) {
-      console.error('Error al eliminar:', error);
-      alert('Error al eliminar el elemento');
+      console.error("Error al eliminar:", error);
+      alert("Error al eliminar el elemento");
     } finally {
       setLoading(false);
     }
@@ -307,9 +334,9 @@ const AdminDashboard = () => {
   );
 
   const formatDate = (dateString) => {
-    if (!dateString) return '';
+    if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
+    return date.toLocaleDateString("es-ES", { day: "2-digit", month: "short" });
   };
 
   const renderEditModal = () => {
@@ -319,130 +346,239 @@ const AdminDashboard = () => {
       e.preventDefault();
       const formData = new FormData(e.target);
       let data = {};
-
-      if (editModal.type === 'calendar') {
+      if (editModal.type === "calendar") {
         data = {
-          title: formData.get('title'),
-          description: formData.get('description'),
-          type: formData.get('type'),
-          startDate: formData.get('startDate'),
-          finalDate: formData.get('finalDate')
+          title: formData.get("title"),
+          description: formData.get("description"),
+          type: formData.get("type"),
+          start_date: formData.get("start_date"),
+          end_date: formData.get("end_date"),
         };
-        handleUpdate('/information/calendar-events/events', editModal.data.id, data);
-      } else if (editModal.type === 'question') {
+        handleUpdate(
+          "/information/calendar-events/events",
+          editModal.data.id,
+          data,
+        );
+      } else if (editModal.type === "question") {
         data = {
-          question: formData.get('question'),
-          categoryName: formData.get('categoryName'),
-          answer: formData.get('answer')
+          question: formData.get("question"),
+          categoryName: formData.get("categoryName"),
+          answer: formData.get("answer"),
         };
-        handleUpdate('/information/question-bank/questions', editModal.data.id, data);
-      } else if (editModal.type === 'institutional') {
+        handleUpdate(
+          "/information/question-bank/questions",
+          editModal.data.questionId,
+          data,
+        );
+      } else if (editModal.type === "institutional") {
         data = {
-          titulo_evento: formData.get('titulo_evento'),
-          descripcion: formData.get('descripcion'),
-          fecha_inicio: formData.get('fecha_inicio'),
-          fecha_fin: formData.get('fecha_fin'),
-          tipo_evento: formData.get('tipo_evento'),
-          ubicacion: formData.get('ubicacion')
+          title: formData.get("title"),
+          description: formData.get("description"),
+          start_date: formData.get("start_date"),
+          end_date: formData.get("end_date"),
+          type: formData.get("type"),
+          location: formData.get("location"),
         };
-        handleUpdate('/information/institutional-events/events', editModal.data.id, data);
+        handleUpdate(
+          "/information/institutional-events/events",
+          editModal.data.id,
+          data,
+        );
       }
     };
 
+    if (fullLoading) {
+      console.log("Esperando");
+      return <div className="loader">Cargando...</div>;
+    }
+
     return (
-      <div className="modal-overlay" onClick={() => setEditModal({ isOpen: false, type: '', data: null })}>
+      <div
+        className="modal-overlay"
+        onClick={() => setEditModal({ isOpen: false, type: "", data: null })}
+      >
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <div className="modal-header">
-            <h3>Editar {editModal.type === 'calendar' ? 'Evento del Calendario' : editModal.type === 'question' ? 'Pregunta' : 'Evento Institucional'}</h3>
-            <button className="modal-close" onClick={() => setEditModal({ isOpen: false, type: '', data: null })}>✕</button>
+            <h3>
+              Editar{" "}
+              {editModal.type === "calendar"
+                ? "Evento del Calendario"
+                : editModal.type === "question"
+                  ? "Pregunta"
+                  : "Evento Institucional"}
+            </h3>
+            <button
+              className="modal-close"
+              onClick={() =>
+                setEditModal({ isOpen: false, type: "", data: null })
+              }
+            >
+              ✕
+            </button>
           </div>
 
           <form className="modal-form" onSubmit={handleSubmit}>
-            {editModal.type === 'calendar' && (
+            {editModal.type === "calendar" && (
               <>
                 <div className="form-row">
                   <div className="form-group">
                     <label>Título del Evento *</label>
-                    <input type="text" name="title" defaultValue={editModal.data?.title} required />
+                    <input
+                      type="text"
+                      name="title"
+                      defaultValue={editModal.data?.title}
+                      required
+                    />
                   </div>
                   <div className="form-group">
                     <label>Tipo *</label>
-                    <input type="text" name="type" defaultValue={editModal.data?.type} required />
+                    <input
+                      type="text"
+                      name="type"
+                      defaultValue={editModal.data?.type}
+                      required
+                    />
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group">
                     <label>Fecha de Inicio *</label>
-                    <input type="date" name="startDate" defaultValue={editModal.data?.startDate} required />
+                    <input
+                      type="date"
+                      name="start_date"
+                      defaultValue={editModal.data?.start_date}
+                      required
+                    />
                   </div>
                   <div className="form-group">
                     <label>Fecha Final *</label>
-                    <input type="date" name="finalDate" defaultValue={editModal.data?.finalDate} required />
+                    <input
+                      type="date"
+                      name="end_date"
+                      defaultValue={editModal.data?.end_date}
+                      required
+                    />
                   </div>
                 </div>
                 <div className="form-group">
                   <label>Descripción *</label>
-                  <textarea name="description" rows="3" defaultValue={editModal.data?.description} required></textarea>
+                  <textarea
+                    name="description"
+                    rows="3"
+                    defaultValue={editModal.data?.description}
+                    required
+                  ></textarea>
                 </div>
               </>
             )}
 
-            {editModal.type === 'question' && (
+            {editModal.type === "question" && (
               <>
                 <div className="form-group">
                   <label>Pregunta *</label>
-                  <textarea name="question" rows="3" defaultValue={editModal.data?.question} required></textarea>
+                  <textarea
+                    name="question"
+                    rows="3"
+                    defaultValue={editModal.data?.question}
+                    required
+                  ></textarea>
                 </div>
                 <div className="form-group">
                   <label>Categoría *</label>
-                  <input type="text" name="categoryName" defaultValue={editModal.data?.categoryName} required />
+                  <input
+                    type="text"
+                    name="categoryName"
+                    defaultValue={editModal.data?.categoryName}
+                    required
+                  />
                 </div>
                 <div className="form-group">
                   <label>Respuesta *</label>
-                  <textarea name="answer" rows="4" defaultValue={editModal.data?.answer} required></textarea>
+                  <textarea
+                    name="answer"
+                    rows="4"
+                    defaultValue={editModal.data?.answer}
+                    required
+                  ></textarea>
                 </div>
               </>
             )}
 
-            {editModal.type === 'institutional' && (
+            {editModal.type === "institutional" && (
               <>
                 <div className="form-group">
                   <label>Título del Evento *</label>
-                  <input type="text" name="titulo_evento" defaultValue={editModal.data?.titulo_evento} required />
+                  <input
+                    type="text"
+                    name="title"
+                    defaultValue={editModal.data?.title}
+                    required
+                  />
                 </div>
                 <div className="form-row">
                   <div className="form-group">
                     <label>Fecha de Inicio *</label>
-                    <input type="date" name="fecha_inicio" defaultValue={editModal.data?.fecha_inicio} required />
+                    <input
+                      type="date"
+                      name="start_date"
+                      defaultValue={editModal.data?.start_date}
+                      required
+                    />
                   </div>
                   <div className="form-group">
                     <label>Fecha de Fin *</label>
-                    <input type="date" name="fecha_fin" defaultValue={editModal.data?.fecha_fin} required />
+                    <input
+                      type="date"
+                      name="end_date"
+                      defaultValue={editModal.data?.end_date}
+                      required
+                    />
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group">
                     <label>Tipo de Evento *</label>
-                    <input type="text" name="tipo_evento" defaultValue={editModal.data?.tipo_evento} required />
+                    <input
+                      type="text"
+                      name="type"
+                      defaultValue={editModal.data?.type}
+                      required
+                    />
                   </div>
                   <div className="form-group">
                     <label>Ubicación *</label>
-                    <input type="text" name="ubicacion" defaultValue={editModal.data?.ubicacion} required />
+                    <input
+                      type="text"
+                      name="location"
+                      defaultValue={editModal.data?.location}
+                      required
+                    />
                   </div>
                 </div>
                 <div className="form-group">
                   <label>Descripción *</label>
-                  <textarea name="descripcion" rows="4" defaultValue={editModal.data?.descripcion} required></textarea>
+                  <textarea
+                    name="description"
+                    rows="4"
+                    defaultValue={editModal.data?.description}
+                    required
+                  ></textarea>
                 </div>
               </>
             )}
 
             <div className="modal-actions">
-              <button type="button" className="secondary-btn" onClick={() => setEditModal({ isOpen: false, type: '', data: null })}>
+              <button
+                type="button"
+                className="secondary-btn"
+                onClick={() =>
+                  setEditModal({ isOpen: false, type: "", data: null })
+                }
+              >
                 Cancelar
               </button>
               <button type="submit" className="primary-btn" disabled={loading}>
-                {loading ? 'Guardando...' : 'Guardar Cambios'}
+                {loading ? "Guardando..." : "Guardar Cambios"}
               </button>
             </div>
           </form>
@@ -458,54 +594,7 @@ const AdminDashboard = () => {
           <div className="dashboard-section">
             <div className="section-header">
               <h2 className="section-title">Panel de Control</h2>
-              <p className="section-subtitle">
-                Gestión de servicios académicos
-              </p>
             </div>
-
-            <div className="stats-grid">
-              <div className="stat-card">
-                <div className="stat-icon-wrapper">
-                  <div className="stat-icon">📚</div>
-                </div>
-                <div className="stat-content">
-                  <h3>1,234</h3>
-                  <p>Recursos Biblioteca</p>
-                  <span className="stat-trend positive">+12% este mes</span>
-                </div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-icon-wrapper">
-                  <div className="stat-icon">❓</div>
-                </div>
-                <div className="stat-content">
-                  <h3>{questions.length}</h3>
-                  <p>Preguntas Activas</p>
-                  <span className="stat-trend positive">+8% este mes</span>
-                </div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-icon-wrapper">
-                  <div className="stat-icon">📅</div>
-                </div>
-                <div className="stat-content">
-                  <h3>{calendarEvents.length}</h3>
-                  <p>Eventos Activos</p>
-                  <span className="stat-trend neutral">Sin cambios</span>
-                </div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-icon-wrapper">
-                  <div className="stat-icon">👥</div>
-                </div>
-                <div className="stat-content">
-                  <h3>89</h3>
-                  <p>Usuarios Registrados</p>
-                  <span className="stat-trend positive">+5 nuevos</span>
-                </div>
-              </div>
-            </div>
-
             <div className="services-overview">
               <h3 className="subsection-title">Servicios Disponibles</h3>
               <div className="services-grid">
@@ -609,37 +698,50 @@ const AdminDashboard = () => {
 
             <div className="form-container">
               <h3 className="form-title">Agregar Fecha Importante</h3>
-              <form className="data-form" onSubmit={(e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const data = {
-                  title: formData.get('title'),
-                  description: formData.get('description'),
-                  type: formData.get('type'),
-                  startDate: formData.get('startDate'),
-                  finalDate: formData.get('finalDate')
-                };
-                handleCreate('/information/calendar-events/events', data);
-                e.target.reset();
-              }}>
+              <form
+                className="data-form"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const formData = new FormData(e.target);
+                  const data = {
+                    title: formData.get("title"),
+                    description: formData.get("description"),
+                    type: formData.get("type"),
+                    start_date: formData.get("start_date"),
+                    end_date: formData.get("end_date"),
+                  };
+                  handleCreate("/information/calendar-events/events", data);
+                  e.target.reset();
+                }}
+              >
                 <div className="form-row">
                   <div className="form-group">
                     <label>Título del Evento *</label>
-                    <input type="text" name="title" placeholder="Ej: Inicio de clases" required />
+                    <input
+                      type="text"
+                      name="title"
+                      placeholder="Ej: Inicio de clases"
+                      required
+                    />
                   </div>
                   <div className="form-group">
                     <label>Tipo *</label>
-                    <input type="text" name="type" placeholder="Ej: Fechas, eventos, examenes" required />
+                    <input
+                      type="text"
+                      name="type"
+                      placeholder="Ej: Fechas, eventos, examenes"
+                      required
+                    />
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group">
                     <label>Fecha de Inicio *</label>
-                    <input type="date" name="startDate" required />
+                    <input type="date" name="start_date" required />
                   </div>
                   <div className="form-group">
                     <label>Fecha Final *</label>
-                    <input type="date" name="finalDate" required />
+                    <input type="date" name="end_date" required />
                   </div>
                 </div>
                 <div className="form-group">
@@ -652,7 +754,7 @@ const AdminDashboard = () => {
                   ></textarea>
                 </div>
                 <button type="submit" className="submit-btn" disabled={loading}>
-                  {loading ? 'Guardando...' : 'Agregar al Calendario'}
+                  {loading ? "Guardando..." : "Agregar al Calendario"}
                 </button>
               </form>
             </div>
@@ -668,24 +770,42 @@ const AdminDashboard = () => {
                   {calendarEvents.map((event) => (
                     <div key={event.id} className="event-item">
                       <div className="event-date">
-                        <span className="day">{formatDate(event.startDate).split(' ')[0]}</span>
-                        <span className="month">{formatDate(event.startDate).split(' ')[1]}</span>
+                        <span className="day">
+                          {formatDate(event.start_date).split(" ")[0]}
+                        </span>
+                        <span className="month">
+                          {formatDate(event.start_date).split(" ")[1]}
+                        </span>
                       </div>
                       <div className="event-details">
                         <h4>{event.title}</h4>
-                        <p>{event.type} - Del {new Date(event.startDate).toLocaleDateString('es-ES')} al {new Date(event.finalDate).toLocaleDateString('es-ES')}</p>
-                        <p style={{ fontSize: '0.85rem', color: '#999' }}>{event.description}</p>
+                        <p>
+                          {event.type} - Del{" "}
+                          {new Date(event.start_date).toLocaleDateString(
+                            "es-ES",
+                          )}{" "}
+                          al{" "}
+                          {new Date(event.end_date).toLocaleDateString("es-ES")}
+                        </p>
+                        <p style={{ fontSize: "0.85rem", color: "#999" }}>
+                          {event.description}
+                        </p>
                       </div>
                       <div className="event-actions">
                         <button
                           className="icon-btn edit"
-                          onClick={() => openEditModal('calendar', event)}
+                          onClick={() => openEditModal("calendar", event)}
                         >
                           ✏️
                         </button>
                         <button
                           className="icon-btn delete"
-                          onClick={() => handleDelete('/information/calendar-events/events', event.id)}
+                          onClick={() =>
+                            handleDelete(
+                              "/information/calendar-events/events",
+                              event.id,
+                            )
+                          }
                         >
                           🗑️
                         </button>
@@ -713,17 +833,20 @@ const AdminDashboard = () => {
 
             <div className="form-container">
               <h3 className="form-title">Nueva Pregunta</h3>
-              <form className="data-form" onSubmit={(e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const data = {
-                  question: formData.get('question'),
-                  categoryName: formData.get('categoryName'),
-                  answer: formData.get('answer')
-                };
-                handleCreate('/information/question-bank/questions', data);
-                e.target.reset();
-              }}>
+              <form
+                className="data-form"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const formData = new FormData(e.target);
+                  const data = {
+                    question: formData.get("question"),
+                    categoryName: formData.get("categoryName"),
+                    answer: formData.get("answer"),
+                  };
+                  handleCreate("/information/question-bank/questions", data);
+                  e.target.reset();
+                }}
+              >
                 <div className="form-group">
                   <label>Pregunta *</label>
                   <textarea
@@ -752,7 +875,7 @@ const AdminDashboard = () => {
                   ></textarea>
                 </div>
                 <button type="submit" className="submit-btn" disabled={loading}>
-                  {loading ? 'Guardando...' : 'Agregar Pregunta'}
+                  {loading ? "Guardando..." : "Agregar Pregunta"}
                 </button>
               </form>
             </div>
@@ -772,30 +895,53 @@ const AdminDashboard = () => {
                     <span>Acciones</span>
                   </div>
                   {questions.map((q) => (
-                    <div key={q.id} className="table-row">
-                      <span style={{ maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <div key={q.questionId} className="table-row">
+                      <span
+                        style={{
+                          maxWidth: "300px",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
                         {q.question}
                       </span>
                       <span className="highlight-text">{q.categoryName}</span>
-                      <span style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <span
+                        style={{
+                          maxWidth: "200px",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
                         {q.answer}
                       </span>
                       <div className="row-actions">
                         <button
                           className="icon-btn edit"
-                          onClick={() => openEditModal('question', q)}
+                          onClick={() => openEditModal("question", q)}
                         >
                           ✏️
                         </button>
                         <button
                           className="icon-btn view"
-                          onClick={() => alert(`Pregunta: ${q.question}\n\nCategoría: ${q.categoryName}\n\nRespuesta: ${q.answer}`)}
+                          onClick={() =>
+                            alert(
+                              `Pregunta: ${q.question}\n\nCategoría: ${q.categoryName}\n\nRespuesta: ${q.answer}`,
+                            )
+                          }
                         >
                           👁️
                         </button>
                         <button
                           className="icon-btn delete"
-                          onClick={() => handleDelete('/information/question-bank/questions', q.id)}
+                          onClick={() =>
+                            handleDelete(
+                              "/information/question-bank/questions",
+                              q.questionId,
+                            )
+                          }
                         >
                           🗑️
                         </button>
@@ -823,25 +969,31 @@ const AdminDashboard = () => {
 
             <div className="form-container">
               <h3 className="form-title">Crear Nuevo Evento</h3>
-              <form className="data-form" onSubmit={(e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const data = {
-                  titulo_evento: formData.get('titulo_evento'),
-                  descripcion: formData.get('descripcion'),
-                  fecha_inicio: formData.get('fecha_inicio'),
-                  fecha_fin: formData.get('fecha_fin'),
-                  tipo_evento: formData.get('tipo_evento'),
-                  ubicacion: formData.get('ubicacion')
-                };
-                handleCreate('/information/institutional-events/events', data);
-                e.target.reset();
-              }}>
+              <form
+                className="data-form"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const formData = new FormData(e.target);
+                  const data = {
+                    title: formData.get("title"),
+                    description: formData.get("description"),
+                    start_date: formData.get("start_date"),
+                    end_date: formData.get("end_date"),
+                    type: formData.get("type"),
+                    location: formData.get("location"),
+                  };
+                  handleCreate(
+                    "/information/institutional-events/events",
+                    data,
+                  );
+                  e.target.reset();
+                }}
+              >
                 <div className="form-group">
                   <label>Título del Evento *</label>
                   <input
                     type="text"
-                    name="titulo_evento"
+                    name="title"
                     placeholder="Ej: Feria de Ciencia y Tecnología 2025"
                     required
                   />
@@ -849,23 +1001,28 @@ const AdminDashboard = () => {
                 <div className="form-row">
                   <div className="form-group">
                     <label>Fecha de Inicio *</label>
-                    <input type="date" name="fecha_inicio" required />
+                    <input type="date" name="start_date" required />
                   </div>
                   <div className="form-group">
                     <label>Fecha de Fin *</label>
-                    <input type="date" name="fecha_fin" required />
+                    <input type="date" name="end_date" required />
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group">
                     <label>Tipo de Evento *</label>
-                    <input type="text" name="tipo_evento" placeholder="Ej: Academico, cultural, deportivo" required />
+                    <input
+                      type="text"
+                      name="type"
+                      placeholder="Ej: Academico, cultural, deportivo"
+                      required
+                    />
                   </div>
                   <div className="form-group">
                     <label>Ubicación *</label>
                     <input
                       type="text"
-                      name="ubicacion"
+                      name="location"
                       placeholder="Campus Principal - Auditorio Central"
                       required
                     />
@@ -874,14 +1031,14 @@ const AdminDashboard = () => {
                 <div className="form-group">
                   <label>Descripción *</label>
                   <textarea
-                    name="descripcion"
+                    name="description"
                     rows="4"
                     placeholder="Describe el evento en detalle..."
                     required
                   ></textarea>
                 </div>
                 <button type="submit" className="submit-btn" disabled={loading}>
-                  {loading ? 'Guardando...' : 'Crear Evento'}
+                  {loading ? "Guardando..." : "Crear Evento"}
                 </button>
               </form>
             </div>
@@ -897,29 +1054,58 @@ const AdminDashboard = () => {
                   {institutionalEvents.map((event) => (
                     <div key={event.id} className="event-item">
                       <div className="event-date">
-                        <span className="day">{formatDate(event.fecha_inicio).split(' ')[0]}</span>
-                        <span className="month">{formatDate(event.fecha_inicio).split(' ')[1]}</span>
+                        <span className="day">
+                          {formatDate(event.start_date).split(" ")[0]}
+                        </span>
+                        <span className="month">
+                          {formatDate(event.start_date).split(" ")[1]}
+                        </span>
                       </div>
                       <div className="event-details">
-                        <h4>{event.titulo_evento}</h4>
-                        <p><strong>Tipo:</strong> {event.tipo_evento} | <strong>Ubicación:</strong> {event.ubicacion}</p>
-                        <p style={{ fontSize: '0.85rem', color: '#999', marginTop: '8px' }}>
-                          Del {new Date(event.fecha_inicio).toLocaleDateString('es-ES')} al {new Date(event.fecha_fin).toLocaleDateString('es-ES')}
+                        <h4>{event.title}</h4>
+                        <p>
+                          <strong>Tipo:</strong> {event.type} |{" "}
+                          <strong>Ubicación:</strong> {event.location}
                         </p>
-                        <p style={{ fontSize: '0.85rem', color: '#999', marginTop: '4px' }}>
-                          {event.descripcion}
+                        <p
+                          style={{
+                            fontSize: "0.85rem",
+                            color: "#999",
+                            marginTop: "8px",
+                          }}
+                        >
+                          Del{" "}
+                          {new Date(event.start_date).toLocaleDateString(
+                            "es-ES",
+                          )}{" "}
+                          al{" "}
+                          {new Date(event.end_date).toLocaleDateString("es-ES")}
+                        </p>
+                        <p
+                          style={{
+                            fontSize: "0.85rem",
+                            color: "#999",
+                            marginTop: "4px",
+                          }}
+                        >
+                          {event.description}
                         </p>
                       </div>
                       <div className="event-actions">
                         <button
                           className="icon-btn edit"
-                          onClick={() => openEditModal('institutional', event)}
+                          onClick={() => openEditModal("institutional", event)}
                         >
                           ✏️
                         </button>
                         <button
                           className="icon-btn delete"
-                          onClick={() => handleDelete('/information/institutional-events/events', event.id)}
+                          onClick={() =>
+                            handleDelete(
+                              "/information/institutional-events/events",
+                              event.id,
+                            )
+                          }
                         >
                           🗑️
                         </button>
@@ -947,24 +1133,26 @@ const AdminDashboard = () => {
 
             <div className="form-container">
               <h3 className="form-title">Crear Nuevo Anuncio</h3>
-              <form className="data-form" onSubmit={(e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const data = {
-                  titulo: formData.get('titulo'),
-                  descripcion: formData.get('descripcion'),
-                  fecha: formData.get('fecha'),
-                  tipo: formData.get('tipo'),
-                  icono: formData.get('icono')
-                };
-                handleCreate('/api/anuncios', data);
-                e.target.reset();
-              }}>
+              <form
+                className="data-form"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const formData = new FormData(e.target);
+                  const data = {
+                    title: formData.get("title"),
+                    description: formData.get("description"),
+                    date: formData.get("date"),
+                    type: formData.get("type"),
+                  };
+                  handleCreate("/api/anuncios", data);
+                  e.target.reset();
+                }}
+              >
                 <div className="form-group">
                   <label>Título del Anuncio *</label>
                   <input
                     type="text"
-                    name="titulo"
+                    name="title"
                     placeholder="Ej: Inscripciones abiertas para el próximo semestre"
                     required
                   />
@@ -972,34 +1160,29 @@ const AdminDashboard = () => {
                 <div className="form-row">
                   <div className="form-group">
                     <label>Fecha *</label>
-                    <input type="date" name="fecha" required />
+                    <input type="date" name="date" required />
                   </div>
                   <div className="form-group">
                     <label>Tipo *</label>
-                    <input type="text" name="tipo" placeholder="Ej: Importante, informativo, urgente" required />
+                    <input
+                      type="text"
+                      name="type"
+                      placeholder="Ej: Importante, informativo, urgente"
+                      required
+                    />
                   </div>
-                </div>
-                <div className="form-group">
-                  <label>Icono (Emoji) *</label>
-                  <input
-                    type="text"
-                    name="icono"
-                    placeholder="Ej: 📚, 🎓, 📢, 🎉"
-                    maxLength="2"
-                    required
-                  />
                 </div>
                 <div className="form-group">
                   <label>Descripción *</label>
                   <textarea
-                    name="descripcion"
+                    name="description"
                     rows="4"
                     placeholder="Describe el anuncio en detalle..."
                     required
                   ></textarea>
                 </div>
                 <button type="submit" className="submit-btn" disabled={loading}>
-                  {loading ? 'Guardando...' : 'Publicar Anuncio'}
+                  {loading ? "Guardando..." : "Publicar Anuncio"}
                 </button>
               </form>
             </div>
@@ -1008,18 +1191,30 @@ const AdminDashboard = () => {
               <h3 className="form-title">Anuncios Publicados</h3>
               <div className="data-table">
                 <div className="table-header">
-                  <span>Icono</span>
                   <span>Título</span>
                   <span>Tipo</span>
                   <span>Fecha</span>
                   <span>Acciones</span>
                 </div>
                 <div className="table-row">
-                  <span style={{ fontSize: '1.5rem' }}>📚</span>
-                  <span style={{ maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <span style={{ fontSize: "1.5rem" }}>📚</span>
+                  <span
+                    style={{
+                      maxWidth: "300px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
                     Inscripciones abiertas para el próximo semestre
                   </span>
-                  <span className="role-badge" style={{ background: 'rgba(255, 136, 0, 0.2)', color: '#ffa500' }}>
+                  <span
+                    className="role-badge"
+                    style={{
+                      background: "rgba(255, 136, 0, 0.2)",
+                      color: "#ffa500",
+                    }}
+                  >
                     Importante
                   </span>
                   <span>08/11/2025</span>
@@ -1071,7 +1266,9 @@ const AdminDashboard = () => {
                         <select>
                           <option>Seleccionar...</option>
                           <option value="ADMIN">Administrador</option>
-                          <option value="SUPERADMIN">Super Administrador</option>
+                          <option value="SUPERADMIN">
+                            Super Administrador
+                          </option>
                         </select>
                       </div>
                     </div>
