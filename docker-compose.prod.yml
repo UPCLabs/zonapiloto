@@ -7,7 +7,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    ports:
+    expose:
       - "5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -38,14 +38,14 @@ services:
 
       SUPERADMIN_USERNAME: ${SUPERADMIN_USERNAME}
       SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD}
-    ports:
+    expose:
       - "5001"
     networks:
       - zonapiloto_net
 
-  question-bank-service:
-    build: ./zonapiloto_back/services/question-bank-service
-    container_name: question-bank-service
+  information-service:
+    build: ./zonapiloto_back/services/information-service
+    container_name: information-service
     restart: always
     depends_on:
       postgres:
@@ -56,14 +56,14 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
-    ports:
+    expose:
       - "5002"
     networks:
       - zonapiloto_net
 
-  calendar-service:
-    build: ./zonapiloto_back/services/calendar-service
-    container_name: calendar-service
+  profile-service:
+    build: ./zonapiloto_back/services/profile-service
+    container_name: profile-service
     restart: always
     depends_on:
       postgres:
@@ -74,7 +74,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
-    ports:
+    expose:
       - "5003"
     networks:
       - zonapiloto_net
@@ -92,8 +92,8 @@ services:
         auth-service=http://auth-service:5001/actuator/health,
         question-bank-service=http://question-bank-service:5002/actuator/health,
         calendar-service=http://calendar-service:5003/actuator/health,
-    ports:
-      - "5000:5000"
+    expose:
+      - "5000"
     networks:
       - zonapiloto_net
       - frontend_net

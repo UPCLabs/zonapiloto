@@ -4,12 +4,12 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -26,6 +26,18 @@ public class JwtAuthFilter implements GlobalFilter {
     @Value("${jwt.secret}")
     private String secret;
 
+    private final List<String> PRIVATE_GET = List.of(
+        "/auth/users/me",
+        "/auth/users"
+    );
+
+    private final List<String> PUBLIC_POST = List.of(
+        "/auth/login",
+        "/auth/check-credentials",
+        "/auth/confirm-registration",
+        "/auth/verify-registration"
+    );
+
     @Override
     public Mono<Void> filter(
         ServerWebExchange exchange,
@@ -34,39 +46,38 @@ public class JwtAuthFilter implements GlobalFilter {
         String path = exchange.getRequest().getURI().getPath();
         HttpMethod method = exchange.getRequest().getMethod();
 
-        if (HttpMethod.GET.equals(method)) {
-            logger.info("Allowed GET method: " + path);
+        if (HttpMethod.OPTIONS.equals(method)) {
             return chain.filter(exchange);
         }
 
-        if (path.startsWith("/auth/") && !path.equals("/auth/register")) {
-            logger.info("Public route (auth module): " + path);
+        if (HttpMethod.GET.equals(method) && !PRIVATE_GET.contains(path)) {
+            logger.info("Public GET method request, redirecting");
             return chain.filter(exchange);
         }
 
-        String header = exchange
-            .getRequest()
-            .getHeaders()
-            .getFirst(HttpHeaders.AUTHORIZATION);
-        if (header == null || !header.startsWith("Bearer ")) {
-            logger.warning(
-                "Missing or invalid Authorization header on " + path
-            );
+        if (HttpMethod.POST.equals(method) && PUBLIC_POST.contains(path)) {
+            logger.info("Public POST method request, redirecting");
+            return chain.filter(exchange);
+        }
+
+        var cookie = exchange.getRequest().getCookies().getFirst("token");
+        if (cookie == null) {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
 
         try {
-            String token = header.substring(7);
             SecretKey key = Keys.hmacShaKeyFor(
                 secret.getBytes(StandardCharsets.UTF_8)
             );
-
             Claims claims = Jwts.parser()
                 .verifyWith(key)
                 .build()
-                .parseSignedClaims(token)
+                .parseSignedClaims(cookie.getValue())
                 .getPayload();
+
+            String user = claims.getSubject();
+            String role = (String) claims.get("role");
 
             exchange = exchange
                 .mutate()
@@ -80,9 +91,15 @@ public class JwtAuthFilter implements GlobalFilter {
                 )
                 .build();
 
-            logger.info("Valid token for user: " + claims.getSubject());
+            logger.info(
+                String.format(
+                    "User: %s, role: %s - request: %s",
+                    user,
+                    role,
+                    path
+                )
+            );
         } catch (Exception e) {
-            logger.warning("Invalid or expired token: " + e.getMessage());
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }

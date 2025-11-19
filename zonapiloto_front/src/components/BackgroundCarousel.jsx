@@ -1,10 +1,10 @@
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import "../styles/carouselBackground.css";
+import "../styles/components/carouselBackground.css";
 
-import img1 from "../assets/images/carrusel1.png";
-import img2 from "../assets/images/carrusel2.png";
-import img3 from "../assets/images/carrusel3.jpeg";
+import img1 from "../assets/images/background_carousel/carrusel1.png";
+import img2 from "../assets/images/background_carousel/carrusel2.png";
+import img3 from "../assets/images/background_carousel/carrusel3.jpeg";
 
 function BackgroundCarousel() {
     return (
@@ -14,15 +14,17 @@ function BackgroundCarousel() {
                 infiniteLoop
                 showThumbs={false}
                 showStatus={false}
-                interval={4000}
-                transitionTime={1000}
+                interval={5000}
+                transitionTime={600}
                 showArrows={false}
                 swipeable={false}
                 emulateTouch={false}
+                stopOnHover={false}
+                dynamicHeight={false}
             >
-                <div><img src={img1} alt="Imagen 1" /></div>
-                <div><img src={img2} alt="Imagen 2" /></div>
-                <div><img src={img3} alt="Imagen 3" /></div>
+                <div><img src={img1} alt="Imagen 1" loading="eager" /></div>
+                <div><img src={img2} alt="Imagen 2" loading="lazy" /></div>
+                <div><img src={img3} alt="Imagen 3" loading="lazy" /></div>
             </Carousel>
         </div>
     );

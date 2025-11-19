@@ -11,12 +11,12 @@ echo "🔧 Compilando Auth Service..."
 cd "$ROOT_DIR/zonapiloto_back//services/auth-service"
 ./mvnw clean package -DskipTests
 
-echo "🔧 Compilando Question bank..."
-cd "$ROOT_DIR/zonapiloto_back/services/question-bank-service"
+echo "🔧 Compilando Information service..."
+cd "$ROOT_DIR/zonapiloto_back/services/information-service"
 ./mvnw clean package -DskipTests
 
-echo "🔧 Compilando Calendar service..."
-cd "$ROOT_DIR/zonapiloto_back/services/calendar-service"
+echo "🔧 Compilando Profile service..."
+cd "$ROOT_DIR/zonapiloto_back/services/profile-service"
 ./mvnw clean package -DskipTests
 
 cd "$ROOT_DIR"
