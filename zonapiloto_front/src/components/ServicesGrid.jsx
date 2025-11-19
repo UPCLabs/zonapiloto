@@ -14,7 +14,7 @@ const services = [
     },
     {
         title: "Banco de Preguntas",
-        desc: "Practica y prepárate para tus evaluaciones",
+        desc: "Preguntas generales de la instituciones",
         icon: <i class="fi fi-sr-comment-alt"></i>
     },
     {
@@ -55,7 +55,7 @@ function ServicesGrid() {
     const handleClick = (title) => {
         switch (title) {
             case "Perfil Académico":
-                navigate("/perfil-academico");
+                navigate("/login");
                 break;
             case "Banco de Preguntas":
                 navigate("/banco-preguntas");

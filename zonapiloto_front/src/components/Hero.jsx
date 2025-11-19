@@ -21,9 +21,6 @@ function Hero() {
                 <p className="hero-subtitle">
                     Tu espacio para conectar, aprender y crecer dentro de la comunidad Unipiloto.
                 </p>
-                <button className="hero-button" onClick={handleLogin}>
-                    Iniciar Sesión
-                </button>
             </div>
         </section>
     );

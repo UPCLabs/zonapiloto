@@ -10,10 +10,18 @@ function Login() {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
+
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsLoading(true);
-        setTimeout(() => setIsLoading(false), 2000);
+
+        // 🔹 Simulación de autenticación
+        setTimeout(() => {
+            setIsLoading(false);
+
+            // Redirigir al perfil académico
+            navigate("/perfil-academico");
+        }, 1500);
     };
 
     const goToHome = () => {
@@ -115,7 +123,11 @@ function Login() {
                                 <input type="checkbox" />
                                 <span>Recordarme</span>
                             </label>
-                            <a href="https://cronos.unipiloto.edu.co/authorization.do" className="forgot-password">¿Olvidaste tu contraseña?</a>
+                            <a
+                                href="https://cronos.unipiloto.edu.co/authorization.do"
+                                className="forgot-password">
+                                ¿Olvidaste tu contraseña?
+                            </a>
                         </div>
 
                         <button
@@ -136,7 +148,6 @@ function Login() {
                             )}
                         </button>
                     </div>
-
                 </form>
 
                 <div className="decorative-shape"></div>
