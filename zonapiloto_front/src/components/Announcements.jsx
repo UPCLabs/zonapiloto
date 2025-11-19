@@ -6,6 +6,7 @@ function Announcements() {
   const [imagenesCarrusel, setImagenesCarrusel] = useState([]);
   const [indiceActivo, setIndiceActivo] = useState(0);
 
+  //TODO
   /*
     Conexión con back para imágenes del carrusel (mendizzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz)
     useEffect(() => {
