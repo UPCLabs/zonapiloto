@@ -33,18 +33,13 @@ const services = [
     icon: <i class="fi fi-sr-diary-bookmark-down"></i>,
   },
   {
-    title: "Procedimientos",
-    desc: "Como hacer procedimientos comunes, como sacar el carnet estudiantil",
-    icon: <i class="fi fi-sr-book-alt"></i>,
-  },
-  {
     title: "Laboratorio",
     desc: "Sistema de reservas para el laboratio",
     icon: <i class="fi fi-sr-display-code"></i>,
   },
   {
-    title: "Comunidad UniPiloto",
-    desc: "Conéctate con otros estudiantes",
+    title: "Contatos",
+    desc: "Conécta con nosotros",
     icon: <i class="fi fi-sr-users-alt"></i>,
   },
 ];
