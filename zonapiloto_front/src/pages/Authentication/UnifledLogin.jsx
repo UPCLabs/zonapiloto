@@ -13,6 +13,26 @@ const UnifiedLogin = () => {
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
+
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const resp = await fetch(`${API_URL}/auth/users/me`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (resp.ok) {
+          window.location.href = "/admindash";
+        }
+      } catch (error) {
+        console.error("Error en checkUser()", error);
+      }
+    };
+
+    checkUser();
+  }, []);
 
   // Manejo de cambios en credenciales
   const handleCredentialChange = (e) => {
@@ -36,8 +56,6 @@ const UnifiedLogin = () => {
     setError("");
 
     try {
-      const API_URL = import.meta.env.VITE_API_BASE_URL;
-
       // Endpoint: /auth/check-credentials
       const response = await fetch(`${API_URL}/auth/check-credentials`, {
         method: "POST",
@@ -79,8 +97,6 @@ const UnifiedLogin = () => {
   // Paso 2: Configurar MFA (generar QR)
   const setupMFA = async () => {
     try {
-      const API_URL = import.meta.env.VITE_API_BASE_URL;
-
       // Endpoint: /auth/confirm-registration
       const response = await fetch(`${API_URL}/auth/confirm-registration`, {
         method: "POST",
@@ -164,7 +180,6 @@ const UnifiedLogin = () => {
     setError("");
 
     try {
-      const API_URL = import.meta.env.VITE_API_BASE_URL;
       let endpoint, successMessage;
 
       if (step === "setup-mfa") {

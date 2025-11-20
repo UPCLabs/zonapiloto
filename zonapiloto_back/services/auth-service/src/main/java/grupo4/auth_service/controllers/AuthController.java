@@ -28,6 +28,22 @@ public class AuthController {
         @RequestHeader("X-User") String user,
         @RequestHeader("X-Role") String role
     ) {
+        User usuario = userService.getUser(user);
+
+        if (usuario == null) {
+            ResponseCookie cookie = ResponseCookie.from("token", "")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(0)
+                .build();
+
+            return ResponseEntity.status(401)
+                .header("Set-Cookie", cookie.toString())
+                .body("Sesión inválida");
+        }
+
         return ResponseEntity.ok(Map.of("user", user, "role", role));
     }
 
@@ -77,8 +93,12 @@ public class AuthController {
             );
         }
 
+        if (newPassword != null) {
+            user.setPassword(UserUtil.encryptPassword(newPassword));
+        }
+
         user.setUsername(newUsername);
-        user.setPassword(UserUtil.encryptPassword(newPassword));
+
         user.setRole(UserRole.valueOf(newRole));
 
         userService.updateUser(user);
@@ -163,7 +183,7 @@ public class AuthController {
             );
         }
 
-        if (user.getMfaSecret() != null) {
+        if (!user.isMfaPending()) {
             return ResponseEntity.badRequest().body(
                 Map.of("error", "El usuario ya tiene MFA configurado")
             );

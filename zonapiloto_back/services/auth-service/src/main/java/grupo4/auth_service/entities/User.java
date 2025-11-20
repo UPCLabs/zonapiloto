@@ -22,6 +22,7 @@ public class User {
     @Column(nullable = true)
     private String mfaSecret;
 
+    @Column(nullable = false)
     private String password;
 
     private boolean mfaPending;
