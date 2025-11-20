@@ -4,4 +4,5 @@ public enum AdvertisementType {
     IMPORTANT,
     ALERT,
     NEWS,
+    GENERAL,
 }
