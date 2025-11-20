@@ -98,12 +98,15 @@ const AdminDashboard = () => {
   const fetchCalendarEvents = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/information/calendar-events`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${API_URL}/information/calendar-events/events/admin`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (response.ok) {
         const data = await response.json();
         setCalendarEvents(data);
@@ -165,7 +168,7 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${API_URL}/information/institutional-events`,
+        `${API_URL}/information/institutional-events/events/admin`,
         {
           method: "GET",
           headers: {
@@ -187,7 +190,7 @@ const AdminDashboard = () => {
   const fetchAnnouncements = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/information/advertisements`, {
+      const response = await fetch(`${API_URL}/information/advertisements/admin`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -208,7 +211,7 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${API_URL}/information/announcements-photos`,
+        `${API_URL}/information/announcements-photos/admin`,
         {
           method: "GET",
           headers: {
@@ -675,12 +678,11 @@ const AdminDashboard = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Fecha Final *</label>
+                    <label>URL *</label>
                     <input
-                      type="date"
-                      name="end_date"
-                      defaultValue={editModal.data?.end_date}
-                      required
+                      type="url"
+                      name="url"
+                      defaultValue={editModal.data?.url}
                     />
                   </div>
                 </div>
@@ -1716,14 +1718,8 @@ const AdminDashboard = () => {
                     required
                     className="file-input"
                   />
-                  <p
-                    style={{
-                      fontSize: "0.85rem",
-                      color: "#999",
-                      marginTop: "8px",
-                    }}
-                  >
-                    Formatos: JPG, PNG, GIF (Máx. 5MB)
+                  <p style={{ fontSize: "0.85rem", color: "#999", marginTop: "8px" }}>
+                    Formatos: JPG, PNG(Máx. 20MB)
                   </p>
                 </div>
                 {imagePreview && (

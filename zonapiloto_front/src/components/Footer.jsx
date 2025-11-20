@@ -17,16 +17,39 @@ function Footer() {
         </div>
 
         <div className="footer-social">
+
           <div className="social-icon" title="Facebook">
-            <i class="fi fi-brands-facebook"></i>
+            <a
+              href="https://www.facebook.com/share/1BoYn5dcaE/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i className="fi fi-brands-facebook"></i>
+            </a>
           </div>
+
           <div className="social-icon" title="Instagram">
-            <i class="fi fi-brands-instagram"></i>
+            <a
+              href="https://www.instagram.com/unipiloto?igsh=MWc0dHFpYTQ5eTM3aw=="
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i className="fi fi-brands-instagram"></i>
+            </a>
           </div>
+
           <div className="social-icon" title="X">
-            <i class="fi fi-brands-twitter-alt-circle"></i>
+            <a
+              href="https://x.com/unipiloto"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i className="fi fi-brands-twitter-alt-circle"></i>
+            </a>
           </div>
+
         </div>
+
       </div>
 
       <div className="footer-bottom">

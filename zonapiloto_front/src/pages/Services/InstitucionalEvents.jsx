@@ -5,7 +5,7 @@ import "../../styles/services/events.css";
 
 const EventosInstitucionales = () => {
   const [eventos, setEventos] = useState([]);
-  const [filtroTipo, setFiltroTipo] = useState("Todos");
+  const [filtroTipo, setFiltroTipo] = useState("TODOS");
   const [busqueda, setBusqueda] = useState("");
   const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
 
@@ -18,12 +18,12 @@ const EventosInstitucionales = () => {
   }, []);
 
   const tiposEvento = [
-    "Todos",
-    "ACADEMIC",
-    "SPORT",
+    "TODOS",
+    "ACADEMICO",
+    "DEPORTIVO",
     "CULTURAL",
-    "HOLIDAY",
-    "MEETING",
+    "FESTIVO",
+    "REUNIÓN",
   ];
 
   const getTipoColor = (tipo) => {
@@ -37,13 +37,22 @@ const EventosInstitucionales = () => {
     return colores[tipo] || "#9b0000";
   };
 
-  const eventosFiltrados = eventos.filter((evento) => {
-    const cumpleTipo = filtroTipo === "Todos" || evento.type === filtroTipo;
-    const cumpleBusqueda =
-      evento.title.toLowerCase().includes(busqueda.toLowerCase()) ||
-      evento.description.toLowerCase().includes(busqueda.toLowerCase());
-    return cumpleTipo && cumpleBusqueda;
-  });
+  const formatearFecha = (fecha) => {
+    const [year, month, day] = fecha.split("-");
+    const date = new Date(year, month - 1, day);
+    const opciones = { day: "numeric", month: "long", year: "numeric" };
+    return date.toLocaleDateString("es-ES", opciones);
+  };
+
+  const eventosFiltrados = eventos
+    .filter((evento) => {
+      const cumpleTipo = filtroTipo === "TODOS" || evento.type === filtroTipo;
+      const cumpleBusqueda =
+        evento.title.toLowerCase().includes(busqueda.toLowerCase()) ||
+        evento.description.toLowerCase().includes(busqueda.toLowerCase());
+      return cumpleTipo && cumpleBusqueda;
+    })
+    .sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
 
   const abrirModal = (evento) => {
     setEventoSeleccionado(evento);
@@ -124,14 +133,14 @@ const EventosInstitucionales = () => {
                     <div className="evento-info-card">
                       <div className="evento-fecha-card">
                         <span className="icon">
-                          <i class="fi fi-ss-calendar"></i>
+                          <i className="fi fi-ss-calendar"></i>
                         </span>
-                        {evento.start_date}
+                        {formatearFecha(evento.start_date)}
                       </div>
                       {evento.location && (
                         <div className="evento-ubicacion-card">
                           <span className="icon">
-                            <i class="fi fi-ss-map-pin"></i>
+                            <i className="fi fi-ss-map-pin"></i>
                           </span>
                           {evento.location}
                         </div>
@@ -170,38 +179,39 @@ const EventosInstitucionales = () => {
             <div className="modal-body">
               <div className="modal-info-section">
                 <h4>
-                  <i class="fi fi-ss-calendar"></i> Fecha
+                  <i className="fi fi-ss-calendar"></i> Fecha
                 </h4>
-                <p>{eventoSeleccionado.start_date}</p>
+                <p>
+                  {formatearFecha(eventoSeleccionado.start_date)}
+                </p>
               </div>
               {eventoSeleccionado.location && (
                 <div className="modal-info-section">
                   <h4>
-                    <i class="fi fi-ss-map-pin"></i> Ubicación
+                    <i className="fi fi-ss-map-pin"></i> Ubicación
                   </h4>
                   <p>{eventoSeleccionado.location}</p>
                 </div>
               )}
               <div className="modal-info-section">
                 <h4>
-                  <i class="fi fi-rs-description-alt"></i> Descripción
+                  <i className="fi fi-rs-description-alt"></i> Descripción
                 </h4>
                 <p>{eventoSeleccionado.description}</p>
               </div>
             </div>
             <div className="modal-footer">
-              {eventoSeleccionado?.url && (
+              {eventoSeleccionado.url && (
                 <button
                   className="modal-btn-primary"
                   style={{
                     backgroundColor: getTipoColor(eventoSeleccionado.type),
                   }}
-                  onClick={() => window.open(eventoSeleccionado.url, "_blank")}
+                  onClick={() => window.open(eventoSeleccionado.url, '_blank')}
                 >
-                  Detalles
+                  Más información
                 </button>
               )}
-
               <button className="modal-btn-secondary" onClick={cerrarModal}>
                 Cerrar
               </button>
