@@ -37,6 +37,8 @@ public class InstitutionalEventsService implements IInstitutionalService {
         event.setDescription(eventDTO.getDescription());
         event.setStart_date(eventDTO.getStartDate());
         event.setType(eventDTO.getType());
+        event.setLocation(eventDTO.getLocation());
+        event.setActive(eventDTO.isActive());
 
         return eventRepository.save(event);
     }
@@ -48,6 +50,8 @@ public class InstitutionalEventsService implements IInstitutionalService {
             .description(eventDTO.getDescription())
             .start_date(eventDTO.getStartDate())
             .type(eventDTO.getType())
+            .location(eventDTO.getLocation())
+            .url(eventDTO.getUrl())
             .build();
 
         return eventRepository.save(event);
