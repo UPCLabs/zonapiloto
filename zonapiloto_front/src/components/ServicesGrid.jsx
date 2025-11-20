@@ -33,18 +33,13 @@ const services = [
     icon: <i class="fi fi-sr-diary-bookmark-down"></i>,
   },
   {
-    title: "Procedimientos",
-    desc: "Como hacer procedimientos comunes, como sacar el carnet estudiantil",
-    icon: <i class="fi fi-sr-book-alt"></i>,
-  },
-  {
     title: "Laboratorio",
     desc: "Sistema de reservas para el laboratio",
     icon: <i class="fi fi-sr-display-code"></i>,
   },
   {
-    title: "Comunidad UniPiloto",
-    desc: "Conéctate con otros estudiantes",
+    title: "Contacto",
+    desc: "Conéctate con nosotros",
     icon: <i class="fi fi-sr-users-alt"></i>,
   },
 ];
@@ -74,6 +69,9 @@ function ServicesGrid() {
         break;
       case "Laboratorio":
         window.location.href = "https://labpiloto.com/";
+        break;
+      case "Contacto":
+        navigate("/contacto");
         break;
       default:
         alert(`Haz clic en: ${title}`);
