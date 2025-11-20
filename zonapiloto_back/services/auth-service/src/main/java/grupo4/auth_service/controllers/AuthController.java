@@ -77,8 +77,12 @@ public class AuthController {
             );
         }
 
+        if (newPassword != null) {
+            user.setPassword(UserUtil.encryptPassword(newPassword));
+        }
+
         user.setUsername(newUsername);
-        user.setPassword(UserUtil.encryptPassword(newPassword));
+
         user.setRole(UserRole.valueOf(newRole));
 
         userService.updateUser(user);

@@ -37,6 +37,7 @@ public class AdvertisementService implements IAdvertisementService {
         advertisement.setDescription(advertisementDTO.getDescription());
         advertisement.setDate(advertisementDTO.getDate());
         advertisement.setType(advertisementDTO.getType());
+        advertisement.setState(advertisementDTO.isState());
 
         return advertisementRepo.save(advertisement);
     }
@@ -63,5 +64,10 @@ public class AdvertisementService implements IAdvertisementService {
     @Override
     public List<Advertisement> getAllAdvertisements() {
         return advertisementRepo.findAll();
+    }
+
+    @Override
+    public List<Advertisement> getAllAdminAdvertisements() {
+        return advertisementRepo.findAllIncludingInactive();
     }
 }

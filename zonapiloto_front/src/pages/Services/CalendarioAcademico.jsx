@@ -47,14 +47,14 @@ const CalendarioAcademico = () => {
     };
 
     checkMobile();
-    window.addEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
 
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   useEffect(() => {
     const API_URL = import.meta.env.VITE_API_BASE_URL;
-    fetch(`${API_URL}/information/calendar-events/events`)
+    fetch(`${API_URL}/information/calendar-events`)
       .then((res) => res.json())
       .then((data) => setEventos(data))
       .catch((err) => console.error("Error al cargar eventos:", err));
@@ -225,15 +225,17 @@ const CalendarioAcademico = () => {
 
                     {eventosDia.length > 0 && (
                       <div className="puntos-container">
-                        {eventosDia.slice(0, isMobile ? 2 : 3).map((evento, idx) => (
-                          <div
-                            key={idx}
-                            className="punto"
-                            style={{
-                              backgroundColor: getTipoColor(evento.type),
-                            }}
-                          ></div>
-                        ))}
+                        {eventosDia
+                          .slice(0, isMobile ? 2 : 3)
+                          .map((evento, idx) => (
+                            <div
+                              key={idx}
+                              className="punto"
+                              style={{
+                                backgroundColor: getTipoColor(evento.type),
+                              }}
+                            ></div>
+                          ))}
                         {eventosDia.length > (isMobile ? 2 : 3) && (
                           <span className="mas-eventos">
                             +{eventosDia.length - (isMobile ? 2 : 3)}

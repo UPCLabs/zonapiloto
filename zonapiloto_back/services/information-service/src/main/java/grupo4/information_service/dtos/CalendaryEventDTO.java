@@ -1,5 +1,6 @@
 package grupo4.information_service.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import grupo4.information_service.enums.EventType;
 import java.time.LocalDate;
 import lombok.*;
@@ -9,7 +10,13 @@ public class CalendaryEventDTO {
 
     private String title;
     private String description;
+
+    @JsonProperty("start_date")
     private LocalDate startDate;
+
+    @JsonProperty("end_date")
     private LocalDate endDate;
+
     private EventType type;
+    private boolean state;
 }

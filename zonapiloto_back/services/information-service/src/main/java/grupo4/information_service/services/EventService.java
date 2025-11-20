@@ -36,6 +36,7 @@ public class EventService implements IEventService {
         event.setStart_date(eventDTO.getStartDate());
         event.setEnd_date(eventDTO.getEndDate());
         event.setType(eventDTO.getType());
+        event.setState(eventDTO.isState());
 
         return eventRepository.save(event);
     }
@@ -61,5 +62,10 @@ public class EventService implements IEventService {
     @Override
     public List<CalendaryEvent> getAllEvents() {
         return eventRepository.findAll();
+    }
+
+    @Override
+    public List<CalendaryEvent> getAllAdminEvents() {
+        return eventRepository.findAllIncludingInactive();
     }
 }

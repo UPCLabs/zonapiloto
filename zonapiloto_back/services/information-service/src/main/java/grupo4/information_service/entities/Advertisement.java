@@ -12,8 +12,7 @@ import org.hibernate.annotations.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@SQLDelete(sql = "UPDATE advertisements SET active = false WHERE id = ?")
-@Where(clause = "active = true")
+@Where(clause = "state = true")
 @Table(name = "advertisements")
 public class Advertisement {
 
@@ -24,13 +23,16 @@ public class Advertisement {
     @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String description;
 
+    @Column(nullable = false)
     private LocalDate date;
 
     @Builder.Default
-    private boolean active = true;
+    private boolean state = true;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private AdvertisementType type;
 }

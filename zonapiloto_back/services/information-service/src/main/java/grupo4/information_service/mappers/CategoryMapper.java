@@ -3,7 +3,6 @@ package grupo4.information_service.mappers;
 import grupo4.information_service.dtos.CategoryRequest;
 import grupo4.information_service.dtos.CategoryResponse;
 import grupo4.information_service.entities.Category;
-import java.util.stream.Collectors;
 
 public class CategoryMapper {
 
@@ -25,13 +24,6 @@ public class CategoryMapper {
             .categoryId(category.getCategoryId())
             .name(category.getName())
             .description(category.getDescription())
-            .questions(
-                category
-                    .getQuestions()
-                    .stream()
-                    .map(QuestionMapper::toResponse)
-                    .collect(Collectors.toList())
-            )
             .build();
     }
 }
