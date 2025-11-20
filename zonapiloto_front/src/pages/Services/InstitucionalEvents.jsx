@@ -5,58 +5,54 @@ import "../../styles/services/events.css";
 
 const EventosInstitucionales = () => {
   const [eventos, setEventos] = useState([]);
-  const [filtroTipo, setFiltroTipo] = useState("Todos");
+  const [filtroTipo, setFiltroTipo] = useState("TODOS");
   const [busqueda, setBusqueda] = useState("");
   const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
 
   useEffect(() => {
     const API_URL = import.meta.env.VITE_API_BASE_URL;
-    fetch(`${API_URL}/information/institutional-events/events`)
+    fetch(`${API_URL}/information/institutional-events`)
       .then((res) => res.json())
       .then((data) => setEventos(data))
       .catch((err) => console.error("Error al cargar eventos:", err));
   }, []);
 
   const tiposEvento = [
-    "Todos",
-    "Academic",
-    "Deportivo",
-    "Cultural",
-    "Festivo",
-    "Reunión",
+    "TODOS",
+    "ACADEMICO",
+    "DEPORTIVO",
+    "CULTURAL",
+    "FESTIVO",
+    "REUNIÓN",
   ];
 
   const getTipoColor = (tipo) => {
     const colores = {
-      Academic: "#9b0000",
-      Deportivo: "#2980b9",
-      Cultural: "#8e44ad",
-      Festivo: "#27ae60",
-      Reunión: "#d35400",
+      ACADEMIC: "#9b0000",
+      SPORT: "#2980b9",
+      CULTURAL: "#8e44ad",
+      HOLIDAY: "#27ae60",
+      MEETING: "#d35400",
     };
     return colores[tipo] || "#9b0000";
   };
 
-  const formatearFecha = (fechaInicio, fechaFin) => {
-    const inicio = new Date(fechaInicio + "T00:00:00");
-    const fin = new Date(fechaFin + "T00:00:00");
-
+  const formatearFecha = (fecha) => {
+    const [year, month, day] = fecha.split("-");
+    const date = new Date(year, month - 1, day);
     const opciones = { day: "numeric", month: "long", year: "numeric" };
-
-    if (fechaInicio === fechaFin) {
-      return inicio.toLocaleDateString("es-ES", opciones);
-    } else {
-      return `${inicio.toLocaleDateString("es-ES", { day: "numeric", month: "long" })} - ${fin.toLocaleDateString("es-ES", opciones)}`;
-    }
+    return date.toLocaleDateString("es-ES", opciones);
   };
 
-  const eventosFiltrados = eventos.filter((evento) => {
-    const cumpleTipo = filtroTipo === "Todos" || evento.type === filtroTipo;
-    const cumpleBusqueda =
-      evento.title.toLowerCase().includes(busqueda.toLowerCase()) ||
-      evento.description.toLowerCase().includes(busqueda.toLowerCase());
-    return cumpleTipo && cumpleBusqueda;
-  });
+  const eventosFiltrados = eventos
+    .filter((evento) => {
+      const cumpleTipo = filtroTipo === "TODOS" || evento.type === filtroTipo;
+      const cumpleBusqueda =
+        evento.title.toLowerCase().includes(busqueda.toLowerCase()) ||
+        evento.description.toLowerCase().includes(busqueda.toLowerCase());
+      return cumpleTipo && cumpleBusqueda;
+    })
+    .sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
 
   const abrirModal = (evento) => {
     setEventoSeleccionado(evento);
@@ -137,14 +133,14 @@ const EventosInstitucionales = () => {
                     <div className="evento-info-card">
                       <div className="evento-fecha-card">
                         <span className="icon">
-                          <i class="fi fi-ss-calendar"></i>
+                          <i className="fi fi-ss-calendar"></i>
                         </span>
-                        {formatearFecha(evento.start_date, evento.end_date)}
+                        {formatearFecha(evento.start_date)}
                       </div>
                       {evento.location && (
                         <div className="evento-ubicacion-card">
                           <span className="icon">
-                            <i class="fi fi-ss-map-pin"></i>
+                            <i className="fi fi-ss-map-pin"></i>
                           </span>
                           {evento.location}
                         </div>
@@ -183,39 +179,39 @@ const EventosInstitucionales = () => {
             <div className="modal-body">
               <div className="modal-info-section">
                 <h4>
-                  <i class="fi fi-ss-calendar"></i> Fecha
+                  <i className="fi fi-ss-calendar"></i> Fecha
                 </h4>
                 <p>
-                  {formatearFecha(
-                    eventoSeleccionado.start_date,
-                    eventoSeleccionado.end_date,
-                  )}
+                  {formatearFecha(eventoSeleccionado.start_date)}
                 </p>
               </div>
               {eventoSeleccionado.location && (
                 <div className="modal-info-section">
                   <h4>
-                    <i class="fi fi-ss-map-pin"></i> Ubicación
+                    <i className="fi fi-ss-map-pin"></i> Ubicación
                   </h4>
                   <p>{eventoSeleccionado.location}</p>
                 </div>
               )}
               <div className="modal-info-section">
                 <h4>
-                  <i class="fi fi-rs-description-alt"></i> Descripción
+                  <i className="fi fi-rs-description-alt"></i> Descripción
                 </h4>
                 <p>{eventoSeleccionado.description}</p>
               </div>
             </div>
             <div className="modal-footer">
-              <button
-                className="modal-btn-primary"
-                style={{
-                  backgroundColor: getTipoColor(eventoSeleccionado.type),
-                }}
-              >
-                Registrarme
-              </button>
+              {eventoSeleccionado.url && (
+                <button
+                  className="modal-btn-primary"
+                  style={{
+                    backgroundColor: getTipoColor(eventoSeleccionado.type),
+                  }}
+                  onClick={() => window.open(eventoSeleccionado.url, '_blank')}
+                >
+                  Más información
+                </button>
+              )}
               <button className="modal-btn-secondary" onClick={cerrarModal}>
                 Cerrar
               </button>

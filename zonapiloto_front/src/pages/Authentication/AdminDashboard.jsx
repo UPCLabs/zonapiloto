@@ -99,7 +99,7 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${API_URL}/information/calendar-events/events`,
+        `${API_URL}/information/calendar-events/events/admin`,
         {
           method: "GET",
           headers: {
@@ -168,7 +168,7 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${API_URL}/information/institutional-events/events`,
+        `${API_URL}/information/institutional-events/events/admin`,
         {
           method: "GET",
           headers: {
@@ -190,7 +190,7 @@ const AdminDashboard = () => {
   const fetchAnnouncements = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/information/announcements`, {
+      const response = await fetch(`${API_URL}/information/announcements/admin`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -211,7 +211,7 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${API_URL}/information/announcements-photos`,
+        `${API_URL}/information/announcements-photos/admin`,
         {
           method: "GET",
           headers: {
@@ -673,12 +673,11 @@ const AdminDashboard = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Fecha Final *</label>
+                    <label>URL *</label>
                     <input
-                      type="date"
-                      name="end_date"
-                      defaultValue={editModal.data?.end_date}
-                      required
+                      type="url"
+                      name="url"
+                      defaultValue={editModal.data?.url}
                     />
                   </div>
                 </div>
@@ -1691,7 +1690,7 @@ const AdminDashboard = () => {
                     className="file-input"
                   />
                   <p style={{ fontSize: "0.85rem", color: "#999", marginTop: "8px" }}>
-                    Formatos: JPG, PNG, GIF (Máx. 5MB)
+                    Formatos: JPG, PNG(Máx. 20MB)
                   </p>
                 </div>
                 {imagePreview && (

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import PerfilAcademico from "./pages/Services/Profile.jsx";
 import BancoPreguntas from "./pages/Services/BancoPreguntas.jsx";
@@ -11,6 +11,16 @@ import AdminDash from "./pages/Authentication/AdminDashboard.jsx";
 import Loggin from "./pages/Authentication/UnifledLogin.jsx";
 import SecretLoginTrigger from "./components/SecretLoginTrigger";
 
+function ConditionalSecretTrigger() {
+  const location = useLocation();
+  const hiddenRoutes = ["/login", "/loggin", "/admindash"];
+
+  if (hiddenRoutes.includes(location.pathname)) {
+    return null;
+  }
+
+  return <SecretLoginTrigger />;
+}
 
 function App() {
   return (
@@ -29,6 +39,7 @@ function App() {
           <Route path="/admindash" element={<AdminDash />} />
           <Route path="/loggin" element={<Loggin />} />
         </Routes>
+
       </Router>
     </>
   );

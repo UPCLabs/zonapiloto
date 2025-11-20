@@ -46,10 +46,10 @@ function Announcements() {
 
   const getTipoClase = (tipo) => {
     const clases = {
-      important: "importante",
-      alert: "alerta",
-      news: "novedad",
-      general: "general",
+      IMPORTANT: "importante",
+      ALERT: "alerta",
+      NEWS: "novedad",
+      GENERAL: "general",
     };
     return clases[tipo] || "general";
   };
@@ -58,8 +58,8 @@ function Announcements() {
     const clases = {
       IMPORTANT: "❗",
       ALERT: "⚠️",
-      NEWS: "novedad",
-      general: "general",
+      NEWS: "📰",
+      GENERAL: "📢",
     };
     return clases[tipo] || "general";
   };
