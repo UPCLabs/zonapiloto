@@ -29,10 +29,19 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const data = {
-          user: "admin_user",
-          role: "SUPERADMIN",
+        const resp = await fetch(`${API_URL}/auth/users/me`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!resp.ok) {
+          sessionStorage.clear();
+          window.location.href = "/loggin";
+          return;
         }
+
+        const data = await resp.json();
+
         sessionStorage.setItem("user", data.user);
         sessionStorage.setItem("role", data.role);
 
@@ -48,7 +57,7 @@ const AdminDashboard = () => {
     };
 
     fetchUser();
-  }, [API_URL]);
+  }, []);
 
   useEffect(() => {
     if (activeSection === "calendario-academico") {
