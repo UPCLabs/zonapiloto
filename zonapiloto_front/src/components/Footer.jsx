@@ -51,7 +51,6 @@ function Footer() {
 
       <div className="footer-bottom">
         <div className="footer-links">
-          <Link to="/servicios">Servicios</Link>
           <Link to="/soporte">Soporte</Link>
           <Link to="/privacidad">Privacidad</Link>
           <Link to="/terminos">Términos</Link>

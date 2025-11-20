@@ -38,8 +38,8 @@ const services = [
     icon: <i class="fi fi-sr-display-code"></i>,
   },
   {
-    title: "Contactos",
-    desc: "Conécta con nosotros",
+    title: "Contacto",
+    desc: "Conéctate con nosotros",
     icon: <i class="fi fi-sr-users-alt"></i>,
   },
 ];
@@ -70,8 +70,8 @@ function ServicesGrid() {
       case "Laboratorio":
         window.location.href = "https://labpiloto.com/";
         break;
-      case "Contactos":
-        navigate("/contactos");
+      case "Contacto":
+        navigate("/contacto");
         break;
       default:
         alert(`Haz clic en: ${title}`);
