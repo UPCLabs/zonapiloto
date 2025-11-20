@@ -58,12 +58,16 @@ public class JwtAuthFilter implements GlobalFilter {
             pathMatcher.match(pattern, path)
         );
         if (HttpMethod.GET.equals(method) && !isPrivateGet) {
-            logger.info("Public GET method request, redirecting");
+            logger.info(
+                String.format("Public GET method: [%s], redirecting", path)
+            );
             return chain.filter(exchange);
         }
 
         if (HttpMethod.POST.equals(method) && PUBLIC_POST.contains(path)) {
-            logger.info("Public POST method request, redirecting");
+            logger.info(
+                String.format("Public POST method: [%s], redirecting", path)
+            );
             return chain.filter(exchange);
         }
 
