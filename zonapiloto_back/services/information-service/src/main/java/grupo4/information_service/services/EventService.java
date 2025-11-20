@@ -36,7 +36,7 @@ public class EventService implements IEventService {
         event.setStart_date(eventDTO.getStartDate());
         event.setEnd_date(eventDTO.getEndDate());
         event.setType(eventDTO.getType());
-        event.setActive(eventDTO.isActive());
+        event.setState(eventDTO.isState());
 
         return eventRepository.save(event);
     }

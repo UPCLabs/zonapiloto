@@ -38,7 +38,7 @@ public class InstitutionalEventsService implements IInstitutionalService {
         event.setStart_date(eventDTO.getStartDate());
         event.setType(eventDTO.getType());
         event.setLocation(eventDTO.getLocation());
-        event.setActive(eventDTO.isActive());
+        event.setState(eventDTO.isState());
 
         return eventRepository.save(event);
     }

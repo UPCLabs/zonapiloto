@@ -12,7 +12,7 @@ import org.hibernate.annotations.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Where(clause = "active = true")
+@Where(clause = "state = true")
 @Table(name = "advertisements")
 public class Advertisement {
 
@@ -30,7 +30,7 @@ public class Advertisement {
     private LocalDate date;
 
     @Builder.Default
-    private boolean active = true;
+    private boolean state = true;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

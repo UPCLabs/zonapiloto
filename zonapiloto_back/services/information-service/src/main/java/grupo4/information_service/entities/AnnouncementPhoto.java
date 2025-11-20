@@ -17,7 +17,7 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Where(clause = "active = true")
+@Where(clause = "state = true")
 @Table(name = "announcements_photos")
 public class AnnouncementPhoto {
 
@@ -29,7 +29,7 @@ public class AnnouncementPhoto {
     private String title;
 
     @Builder.Default
-    private boolean active = true;
+    private boolean state = true;
 
     @Column(nullable = false)
     private String url;

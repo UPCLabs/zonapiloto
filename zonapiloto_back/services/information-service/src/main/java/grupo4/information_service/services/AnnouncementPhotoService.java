@@ -57,7 +57,7 @@ public class AnnouncementPhotoService implements IAnnouncementPhotoService {
             );
 
         photo.setTitle(title);
-        photo.setActive(active);
+        photo.setState(active);
 
         if (file != null && !file.isEmpty()) {
             if (photo.getUrl() != null) {

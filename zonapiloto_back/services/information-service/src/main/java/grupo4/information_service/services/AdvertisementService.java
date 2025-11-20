@@ -37,7 +37,7 @@ public class AdvertisementService implements IAdvertisementService {
         advertisement.setDescription(advertisementDTO.getDescription());
         advertisement.setDate(advertisementDTO.getDate());
         advertisement.setType(advertisementDTO.getType());
-        advertisement.setActive(advertisementDTO.isActive());
+        advertisement.setState(advertisementDTO.isState());
 
         return advertisementRepo.save(advertisement);
     }

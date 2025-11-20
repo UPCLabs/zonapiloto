@@ -13,7 +13,7 @@ import org.hibernate.annotations.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "calendary_events")
-@Where(clause = "active = true")
+@Where(clause = "state = true")
 public class CalendaryEvent {
 
     @Id
@@ -33,7 +33,7 @@ public class CalendaryEvent {
     private LocalDate end_date;
 
     @Builder.Default
-    private boolean active = true;
+    private boolean state = true;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

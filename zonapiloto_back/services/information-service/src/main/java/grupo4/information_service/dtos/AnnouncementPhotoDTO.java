@@ -14,5 +14,5 @@ public class AnnouncementPhotoDTO {
     private Long id;
     private String title;
     private String url;
-    private boolean active;
+    private boolean state;
 }

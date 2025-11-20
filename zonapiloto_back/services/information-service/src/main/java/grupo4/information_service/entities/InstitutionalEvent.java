@@ -12,7 +12,7 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @Builder
 @Table(name = "institutional_events")
-@Where(clause = "active = true")
+@Where(clause = "state = true")
 public class InstitutionalEvent {
 
     @Id
@@ -35,7 +35,7 @@ public class InstitutionalEvent {
     private String url;
 
     @Builder.Default
-    private boolean active = true;
+    private boolean state = true;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

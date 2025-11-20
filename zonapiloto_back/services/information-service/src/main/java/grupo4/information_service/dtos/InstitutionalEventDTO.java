@@ -19,6 +19,6 @@ public class InstitutionalEventDTO {
     private LocalDate endDate;
 
     private EventType type;
-    private boolean active;
+    private boolean state;
     private String url;
 }

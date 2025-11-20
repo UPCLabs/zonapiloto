@@ -11,5 +11,5 @@ public class AdvertisementDTO {
     private String description;
     private LocalDate date;
     private AdvertisementType type;
-    private boolean active;
+    private boolean state;
 }

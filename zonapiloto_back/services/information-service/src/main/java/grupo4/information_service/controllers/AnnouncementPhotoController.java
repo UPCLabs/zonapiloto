@@ -49,15 +49,10 @@ public class AnnouncementPhotoController {
     public ResponseEntity<AnnouncementPhoto> update(
         @PathVariable Long id,
         @RequestParam("title") String title,
-        @RequestParam("active") boolean active,
+        @RequestParam("state") boolean state,
         @RequestParam(value = "file", required = false) MultipartFile file
     ) throws IOException {
-        AnnouncementPhoto updated = service.updatePhoto(
-            id,
-            title,
-            active,
-            file
-        );
+        AnnouncementPhoto updated = service.updatePhoto(id, title, state, file);
         return ResponseEntity.ok(updated);
     }
 
