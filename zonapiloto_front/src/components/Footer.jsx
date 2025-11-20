@@ -17,10 +17,9 @@ function Footer() {
         </div>
 
         <div className="footer-social">
-
           <div className="social-icon" title="Facebook">
             <a
-              href="https://www.facebook.com/share/1BoYn5dcaE/"
+              href="https://www.facebook.com/UniPilotoOficial/?locale=es_LA"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -47,9 +46,7 @@ function Footer() {
               <i className="fi fi-brands-twitter-alt-circle"></i>
             </a>
           </div>
-
         </div>
-
       </div>
 
       <div className="footer-bottom">

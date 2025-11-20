@@ -38,7 +38,7 @@ const UnifiedLogin = () => {
   const handleCredentialChange = (e) => {
     setCredentials({
       ...credentials,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value.toLowerCase(),
     });
     setError("");
   };
