@@ -28,6 +28,22 @@ public class AuthController {
         @RequestHeader("X-User") String user,
         @RequestHeader("X-Role") String role
     ) {
+        User usuario = userService.getUser(user);
+
+        if (usuario == null) {
+            ResponseCookie cookie = ResponseCookie.from("token", "")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(0)
+                .build();
+
+            return ResponseEntity.status(401)
+                .header("Set-Cookie", cookie.toString())
+                .body("Sesión inválida");
+        }
+
         return ResponseEntity.ok(Map.of("user", user, "role", role));
     }
 
