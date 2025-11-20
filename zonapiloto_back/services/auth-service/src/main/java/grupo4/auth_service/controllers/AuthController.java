@@ -183,7 +183,7 @@ public class AuthController {
             );
         }
 
-        if (user.getMfaSecret() != null) {
+        if (!user.isMfaPending()) {
             return ResponseEntity.badRequest().body(
                 Map.of("error", "El usuario ya tiene MFA configurado")
             );
