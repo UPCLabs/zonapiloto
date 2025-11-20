@@ -25,6 +25,8 @@ const AdminDashboard = () => {
     type: "",
     data: null,
   });
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -41,7 +43,6 @@ const AdminDashboard = () => {
         }
 
         const data = await resp.json();
-
         sessionStorage.setItem("user", data.user);
         sessionStorage.setItem("role", data.role);
 
@@ -128,7 +129,7 @@ const AdminDashboard = () => {
           headers: {
             "Content-Type": "application/json",
           },
-        },
+        }
       );
       if (response.ok) {
         const data = await response.json();
@@ -142,7 +143,6 @@ const AdminDashboard = () => {
   };
 
   const fetchCategories = async () => {
-    setLoading(true);
     try {
       const response = await fetch(
         `${API_URL}/information/question-bank/categories`,
@@ -151,7 +151,7 @@ const AdminDashboard = () => {
           headers: {
             "Content-Type": "application/json",
           },
-        },
+        }
       );
       if (response.ok) {
         const data = await response.json();
@@ -159,8 +159,6 @@ const AdminDashboard = () => {
       }
     } catch (error) {
       console.error("Error al cargar categorías:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -174,7 +172,7 @@ const AdminDashboard = () => {
           headers: {
             "Content-Type": "application/json",
           },
-        },
+        }
       );
       if (response.ok) {
         const data = await response.json();
@@ -190,7 +188,7 @@ const AdminDashboard = () => {
   const fetchAnnouncements = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/information/advertisements/admin`, {
+      const response = await fetch(`${API_URL}/information/announcements/admin`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -217,7 +215,7 @@ const AdminDashboard = () => {
           headers: {
             "Content-Type": "application/json",
           },
-        },
+        }
       );
       if (response.ok) {
         const data = await response.json();
@@ -285,15 +283,15 @@ const AdminDashboard = () => {
           method: "POST",
           credentials: "include",
           body: formData,
-        },
+        }
       );
 
       if (response.ok) {
         alert("Imagen subida exitosamente");
-        fetchCarouselImages();
         e.target.reset();
         setSelectedFile(null);
         setImagePreview(null);
+        await fetchCarouselImages();
       } else {
         const error = await response.json();
         alert("Error: " + (error.message || "No se pudo subir la imagen"));
@@ -321,22 +319,19 @@ const AdminDashboard = () => {
       if (response.ok) {
         alert("Elemento creado exitosamente");
         if (endpoint.includes("calendar-events")) {
-          fetchCalendarEvents();
+          await fetchCalendarEvents();
         } else if (endpoint.includes("question-bank/questions")) {
-          fetchQuestions();
+          await fetchQuestions();
         } else if (endpoint.includes("question-bank/categories")) {
-          fetchCategories();
+          await fetchCategories();
         } else if (endpoint.includes("institutional-events")) {
-          fetchInstitutionalEvents();
+          await fetchInstitutionalEvents();
         } else if (endpoint.includes("announcements")) {
-          fetchAnnouncements();
+          await fetchAnnouncements();
         }
       } else {
         const error = await response.json();
-        alert(
-          "Error: " +
-            (error.message || error.error || "No se pudo crear el elemento"),
-        );
+        alert("Error: " + (error.message || error.error || "No se pudo crear el elemento"));
       }
     } catch (error) {
       console.error("Error al crear:", error);
@@ -361,15 +356,17 @@ const AdminDashboard = () => {
       if (response.ok) {
         alert("Elemento actualizado exitosamente");
         if (endpoint.includes("calendar-events")) {
-          fetchCalendarEvents();
+          await fetchCalendarEvents();
         } else if (endpoint.includes("question-bank/questions")) {
-          fetchQuestions();
+          await fetchQuestions();
         } else if (endpoint.includes("question-bank/categories")) {
-          fetchCategories();
+          await fetchCategories();
         } else if (endpoint.includes("institutional-events")) {
-          fetchInstitutionalEvents();
+          await fetchInstitutionalEvents();
+        } else if (endpoint.includes("announcements-photos")) {
+          await fetchCarouselImages();
         } else if (endpoint.includes("auth/users")) {
-          fetchUsers();
+          await fetchUsers();
         }
         setEditModal({ isOpen: false, type: "", data: null });
       } else {
@@ -399,13 +396,13 @@ const AdminDashboard = () => {
       if (response.ok) {
         alert("Estado actualizado exitosamente");
         if (endpoint.includes("calendar-events")) {
-          fetchCalendarEvents();
+          await fetchCalendarEvents();
         } else if (endpoint.includes("institutional-events")) {
-          fetchInstitutionalEvents();
+          await fetchInstitutionalEvents();
         } else if (endpoint.includes("announcements-photos")) {
-          fetchCarouselImages();
+          await fetchCarouselImages();
         } else if (endpoint.includes("announcements")) {
-          fetchAnnouncements();
+          await fetchAnnouncements();
         }
       } else {
         const error = await response.json();
@@ -435,19 +432,19 @@ const AdminDashboard = () => {
       if (response.ok) {
         alert("Elemento eliminado exitosamente");
         if (endpoint.includes("calendar-events")) {
-          fetchCalendarEvents();
+          await fetchCalendarEvents();
         } else if (endpoint.includes("question-bank/questions")) {
-          fetchQuestions();
+          await fetchQuestions();
         } else if (endpoint.includes("question-bank/categories")) {
-          fetchCategories();
+          await fetchCategories();
         } else if (endpoint.includes("institutional-events")) {
-          fetchInstitutionalEvents();
+          await fetchInstitutionalEvents();
         } else if (endpoint.includes("announcements-photos")) {
-          fetchCarouselImages();
+          await fetchCarouselImages();
         } else if (endpoint.includes("announcements")) {
-          fetchAnnouncements();
+          await fetchAnnouncements();
         } else if (endpoint.includes("auth/users")) {
-          fetchUsers();
+          await fetchUsers();
         }
       } else {
         const error = await response.json();
@@ -463,19 +460,18 @@ const AdminDashboard = () => {
 
   const openEditModal = (type, data) => {
     setEditModal({ isOpen: true, type, data });
+    setPasswordConfirm("");
+    setPasswordError("");
   };
 
   // Filtrado de búsqueda
   const filterItems = (items, searchFields) => {
     if (!searchTerm) return items;
 
-    return items.filter((item) => {
-      return searchFields.some((field) => {
-        const value = field.split(".").reduce((obj, key) => obj?.[key], item);
-        return value
-          ?.toString()
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
+    return items.filter(item => {
+      return searchFields.some(field => {
+        const value = field.split('.').reduce((obj, key) => obj?.[key], item);
+        return value?.toString().toLowerCase().includes(searchTerm.toLowerCase());
       });
     });
   };
@@ -540,7 +536,7 @@ const AdminDashboard = () => {
   ];
 
   const filteredMenuItems = allMenuItems.filter((item) =>
-    item.roles.includes(userRole),
+    item.roles.includes(userRole)
   );
 
   const formatDate = (dateString) => {
@@ -558,14 +554,60 @@ const AdminDashboard = () => {
       let data = {};
 
       if (editModal.type === "calendar") {
+        const title = formData.get("title");
         data = {
-          title: formData.get("title"),
+          title: title.toUpperCase(),
           description: formData.get("description"),
           type: formData.get("type"),
           start_date: formData.get("start_date"),
           end_date: formData.get("end_date"),
+          url: formData.get("url") || undefined,
+          state: editModal.data.state,
         };
-        handleUpdate("/information/calendar-events", editModal.data.id, data);
+        handleUpdate(
+          "/information/calendar-events/events",
+          editModal.data.id,
+          data
+        );
+      } else if (editModal.type === "institutional") {
+        data = {
+          title: formData.get("title"),
+          description: formData.get("description"),
+          start_date: formData.get("start_date"),
+          end_date: formData.get("end_date"),
+          type: formData.get("type"),
+          location: formData.get("location"),
+          url: formData.get("url") || undefined,
+          state: editModal.data.state,
+        };
+        handleUpdate(
+          "/information/institutional-events/events",
+          editModal.data.id,
+          data
+        );
+      } else if (editModal.type === "carousel") {
+        data = {
+          title: formData.get("title"),
+          state: editModal.data.state,
+        };
+        handleUpdate(
+          "/information/announcements-photos",
+          editModal.data.id,
+          data
+        );
+      } else if (editModal.type === "announcement") {
+        data = {
+          title: formData.get("title"),
+          description: formData.get("description"),
+          date: formData.get("date"),
+          type: formData.get("type"),
+          state: editModal.data.state,
+        };
+        handleUpdate(
+          "/information/announcements",
+          editModal.data.id,
+          data
+        );
       } else if (editModal.type === "question") {
         data = {
           question: formData.get("question"),
@@ -575,7 +617,7 @@ const AdminDashboard = () => {
         handleUpdate(
           "/information/question-bank/questions",
           editModal.data.questionId,
-          data,
+          data
         );
       } else if (editModal.type === "category") {
         data = {
@@ -584,26 +626,21 @@ const AdminDashboard = () => {
         };
         handleUpdate(
           "/information/question-bank/categories",
-          editModal.data.categoryId,
-          data,
-        );
-      } else if (editModal.type === "institutional") {
-        data = {
-          title: formData.get("title"),
-          description: formData.get("description"),
-          start_date: formData.get("start_date"),
-          type: formData.get("type"),
-          location: formData.get("location"),
-        };
-        handleUpdate(
-          "/information/institutional-events",
           editModal.data.id,
-          data,
+          data
         );
       } else if (editModal.type === "user") {
+        const password = formData.get("password");
+        const confirmPassword = formData.get("confirmPassword");
+
+        if (password && password !== confirmPassword) {
+          setPasswordError("Las contraseñas no coinciden");
+          return;
+        }
+
         data = {
           username: formData.get("username"),
-          password: formData.get("password") || null,
+          password: password || undefined,
           role: formData.get("role"),
         };
         handleUpdate("/auth/users", editModal.data.id, data);
@@ -613,7 +650,10 @@ const AdminDashboard = () => {
     return (
       <div
         className="modal-overlay"
-        onClick={() => setEditModal({ isOpen: false, type: "", data: null })}
+        onClick={() => {
+          setEditModal({ isOpen: false, type: "", data: null });
+          setPasswordError("");
+        }}
       >
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <div className="modal-header">
@@ -621,19 +661,24 @@ const AdminDashboard = () => {
               Editar{" "}
               {editModal.type === "calendar"
                 ? "Evento del Calendario"
-                : editModal.type === "question"
-                  ? "Pregunta"
-                  : editModal.type === "category"
-                    ? "Categoría"
-                    : editModal.type === "institutional"
-                      ? "Evento Institucional"
-                      : "Usuario"}
+                : editModal.type === "institutional"
+                  ? "Evento Institucional"
+                  : editModal.type === "carousel"
+                    ? "Imagen del Carrusel"
+                    : editModal.type === "announcement"
+                      ? "Anuncio"
+                      : editModal.type === "question"
+                        ? "Pregunta"
+                        : editModal.type === "category"
+                          ? "Categoría"
+                          : "Usuario"}
             </h3>
             <button
               className="modal-close"
-              onClick={() =>
-                setEditModal({ isOpen: false, type: "", data: null })
-              }
+              onClick={() => {
+                setEditModal({ isOpen: false, type: "", data: null });
+                setPasswordError("");
+              }}
             >
               ✕
             </button>
@@ -654,16 +699,12 @@ const AdminDashboard = () => {
                   </div>
                   <div className="form-group">
                     <label>Tipo *</label>
-                    <select
-                      name="type"
-                      defaultValue={editModal.data?.type}
-                      required
-                    >
+                    <select name="type" defaultValue={editModal.data?.type} required>
                       <option value="">Seleccionar...</option>
-                      <option value="ACADEMIC">Académico</option>
-                      <option value="EVALUATION">Evaluación</option>
-                      <option value="HOLIDAY">Festivo</option>
-                      <option value="MEETING">Reunión</option>
+                      <option value="Academico">Académico</option>
+                      <option value="Evaluacion">Evaluación</option>
+                      <option value="Festivo">Festivo</option>
+                      <option value="Reunion">Reunión</option>
                     </select>
                   </div>
                 </div>
@@ -678,19 +719,166 @@ const AdminDashboard = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label>URL *</label>
+                    <label>Fecha de Fin *</label>
                     <input
-                      type="url"
-                      name="url"
-                      defaultValue={editModal.data?.url}
+                      type="date"
+                      name="end_date"
+                      defaultValue={editModal.data?.end_date}
+                      required
                     />
                   </div>
+                </div>
+                <div className="form-group">
+                  <label>URL (Opcional)</label>
+                  <input
+                    type="url"
+                    name="url"
+                    defaultValue={editModal.data?.url}
+                    placeholder="https://ejemplo.com"
+                  />
                 </div>
                 <div className="form-group">
                   <label>Descripción *</label>
                   <textarea
                     name="description"
                     rows="3"
+                    defaultValue={editModal.data?.description}
+                    required
+                  ></textarea>
+                </div>
+              </>
+            )}
+
+            {editModal.type === "institutional" && (
+              <>
+                <div className="form-group">
+                  <label>Título del Evento *</label>
+                  <input
+                    type="text"
+                    name="title"
+                    defaultValue={editModal.data?.title}
+                    required
+                  />
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Fecha de Inicio *</label>
+                    <input
+                      type="date"
+                      name="start_date"
+                      defaultValue={editModal.data?.start_date}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Fecha de Fin *</label>
+                    <input
+                      type="date"
+                      name="end_date"
+                      defaultValue={editModal.data?.end_date}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Tipo *</label>
+                    <select name="type" defaultValue={editModal.data?.type} required>
+                      <option value="">Seleccionar...</option>
+                      <option value="Academic">Académico</option>
+                      <option value="Deportivo">Deportivo</option>
+                      <option value="Cultural">Cultural</option>
+                      <option value="Reunion">Reunión</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Ubicación *</label>
+                    <input
+                      type="text"
+                      name="location"
+                      defaultValue={editModal.data?.location}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>URL (Opcional)</label>
+                  <input
+                    type="url"
+                    name="url"
+                    defaultValue={editModal.data?.url}
+                    placeholder="https://ejemplo.com"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Descripción *</label>
+                  <textarea
+                    name="description"
+                    rows="4"
+                    defaultValue={editModal.data?.description}
+                    required
+                  ></textarea>
+                </div>
+              </>
+            )}
+
+            {editModal.type === "carousel" && (
+              <>
+                <div className="form-group">
+                  <label>Título de la Imagen *</label>
+                  <input
+                    type="text"
+                    name="title"
+                    defaultValue={editModal.data?.title}
+                    required
+                  />
+                </div>
+                <div className="image-preview-container">
+                  <label>Imagen Actual:</label>
+                  <div className="image-preview">
+                    <img src={editModal.data?.imageUrl} alt={editModal.data?.title} />
+                  </div>
+                </div>
+              </>
+            )}
+
+            {editModal.type === "announcement" && (
+              <>
+                <div className="form-group">
+                  <label>Título del Anuncio *</label>
+                  <input
+                    type="text"
+                    name="title"
+                    defaultValue={editModal.data?.title}
+                    required
+                  />
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Fecha *</label>
+                    <input
+                      type="date"
+                      name="date"
+                      defaultValue={editModal.data?.date}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Tipo *</label>
+                    <select name="type" defaultValue={editModal.data?.type} required>
+                      <option value="">Seleccionar...</option>
+                      <option value="important">Importante</option>
+                      <option value="alert">Alerta</option>
+                      <option value="news">Novedad</option>
+                      <option value="general">General</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Descripción *</label>
+                  <textarea
+                    name="description"
+                    rows="4"
                     defaultValue={editModal.data?.description}
                     required
                   ></textarea>
@@ -711,12 +899,18 @@ const AdminDashboard = () => {
                 </div>
                 <div className="form-group">
                   <label>Categoría *</label>
-                  <input
-                    type="text"
+                  <select
                     name="categoryName"
                     defaultValue={editModal.data?.categoryName}
                     required
-                  />
+                  >
+                    <option value="">Seleccionar categoría...</option>
+                    {categories.map((cat) => (
+                      <option key={cat.id} value={cat.name}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="form-group">
                   <label>Respuesta *</label>
@@ -753,65 +947,6 @@ const AdminDashboard = () => {
               </>
             )}
 
-            {editModal.type === "institutional" && (
-              <>
-                <div className="form-group">
-                  <label>Título del Evento *</label>
-                  <input
-                    type="text"
-                    name="title"
-                    defaultValue={editModal.data?.title}
-                    required
-                  />
-                </div>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Fecha de Inicio *</label>
-                    <input
-                      type="date"
-                      name="start_date"
-                      defaultValue={editModal.data?.start_date}
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Tipo *</label>
-                    <select
-                      name="type"
-                      defaultValue={editModal.data?.type}
-                      required
-                    >
-                      <option value="">Seleccionar...</option>
-                      <option value="ACADEMIC">Académico</option>
-                      <option value="SPORT">Deportivo</option>
-                      <option value="CULTURAL">Cultural</option>
-                      <option value="MEETING">Reunión</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Ubicación *</label>
-                    <input
-                      type="text"
-                      name="location"
-                      defaultValue={editModal.data?.location}
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label>Descripción *</label>
-                  <textarea
-                    name="description"
-                    rows="4"
-                    defaultValue={editModal.data?.description}
-                    required
-                  ></textarea>
-                </div>
-              </>
-            )}
-
             {editModal.type === "user" && (
               <>
                 <div className="form-group">
@@ -826,18 +961,44 @@ const AdminDashboard = () => {
                 <div className="form-group">
                   <label>Nueva Contraseña</label>
                   <input
-                    type="text"
+                    type="password"
                     name="password"
                     placeholder="Dejar en blanco para mantener la actual"
+                    onChange={(e) => {
+                      if (passwordConfirm && e.target.value !== passwordConfirm) {
+                        setPasswordError("Las contraseñas no coinciden");
+                      } else {
+                        setPasswordError("");
+                      }
+                    }}
                   />
                 </div>
                 <div className="form-group">
+                  <label>Confirmar Nueva Contraseña</label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    placeholder="Confirmar contraseña"
+                    value={passwordConfirm}
+                    onChange={(e) => {
+                      setPasswordConfirm(e.target.value);
+                      const password = document.querySelector('input[name="password"]').value;
+                      if (password && e.target.value !== password) {
+                        setPasswordError("Las contraseñas no coinciden");
+                      } else {
+                        setPasswordError("");
+                      }
+                    }}
+                  />
+                  {passwordError && (
+                    <p style={{ color: "#ff4444", fontSize: "0.85rem", marginTop: "8px" }}>
+                      {passwordError}
+                    </p>
+                  )}
+                </div>
+                <div className="form-group">
                   <label>Rol *</label>
-                  <select
-                    name="role"
-                    defaultValue={editModal.data?.role}
-                    required
-                  >
+                  <select name="role" defaultValue={editModal.data?.role} required>
                     <option value="">Seleccionar...</option>
                     <option value="USER">Usuario</option>
                     <option value="ADMIN">Administrador</option>
@@ -851,13 +1012,14 @@ const AdminDashboard = () => {
               <button
                 type="button"
                 className="secondary-btn"
-                onClick={() =>
-                  setEditModal({ isOpen: false, type: "", data: null })
-                }
+                onClick={() => {
+                  setEditModal({ isOpen: false, type: "", data: null });
+                  setPasswordError("");
+                }}
               >
                 Cancelar
               </button>
-              <button type="submit" className="primary-btn" disabled={loading}>
+              <button type="submit" className="primary-btn" disabled={loading || passwordError}>
                 {loading ? "Guardando..." : "Guardar Cambios"}
               </button>
             </div>
@@ -900,11 +1062,7 @@ const AdminDashboard = () => {
         );
 
       case "calendario-academico":
-        const filteredCalendarEvents = filterItems(calendarEvents, [
-          "title",
-          "description",
-          "type",
-        ]);
+        const filteredCalendarEvents = filterItems(calendarEvents, ['title', 'description', 'type']);
 
         return (
           <div className="dashboard-section">
@@ -925,14 +1083,16 @@ const AdminDashboard = () => {
                 onSubmit={(e) => {
                   e.preventDefault();
                   const formData = new FormData(e.target);
+                  const title = formData.get("title");
                   const data = {
-                    title: formData.get("title"),
+                    title: title.toUpperCase(),
                     description: formData.get("description"),
                     type: formData.get("type"),
                     start_date: formData.get("start_date"),
                     end_date: formData.get("end_date"),
+                    url: formData.get("url") || undefined,
                   };
-                  handleCreate("/information/calendar-events", data);
+                  handleCreate("/information/calendar-events/events", data);
                   e.target.reset();
                 }}
               >
@@ -950,10 +1110,10 @@ const AdminDashboard = () => {
                     <label>Tipo *</label>
                     <select name="type" required>
                       <option value="">Seleccionar...</option>
-                      <option value="ACADEMIC">Académico</option>
-                      <option value="EVALUATION">Evaluación</option>
-                      <option value="HOLIDAY">Festivo</option>
-                      <option value="MEETING">Reunión</option>
+                      <option value="Academico">Académico</option>
+                      <option value="Evaluacion">Evaluación</option>
+                      <option value="Festivo">Festivo</option>
+                      <option value="Reunion">Reunión</option>
                     </select>
                   </div>
                 </div>
@@ -966,6 +1126,14 @@ const AdminDashboard = () => {
                     <label>Fecha Final *</label>
                     <input type="date" name="end_date" required />
                   </div>
+                </div>
+                <div className="form-group">
+                  <label>URL (Opcional)</label>
+                  <input
+                    type="url"
+                    name="url"
+                    placeholder="https://ejemplo.com"
+                  />
                 </div>
                 <div className="form-group">
                   <label>Descripción *</label>
@@ -1016,7 +1184,7 @@ const AdminDashboard = () => {
                         <p>
                           {event.type} - Del{" "}
                           {new Date(event.start_date).toLocaleDateString(
-                            "es-ES",
+                            "es-ES"
                           )}{" "}
                           al{" "}
                           {new Date(event.end_date).toLocaleDateString("es-ES")}
@@ -1027,19 +1195,15 @@ const AdminDashboard = () => {
                       </div>
                       <div className="event-actions">
                         <button
-                          className={`icon-btn state ${event.state ? "active" : "inactive"}`}
+                          className={`icon-btn state ${event.state ? 'active' : 'inactive'}`}
                           onClick={() =>
                             handleToggleState(
-                              "/information/calendar-events",
+                              "/information/calendar-events/events",
                               event.id,
-                              event.state,
+                              event.state
                             )
                           }
-                          title={
-                            event.state
-                              ? "Ocultar en página"
-                              : "Mostrar en página"
-                          }
+                          title={event.state ? "Ocultar en página" : "Mostrar en página"}
                         >
                           {event.state ? "👁️" : "👁️‍🗨️"}
                         </button>
@@ -1053,8 +1217,8 @@ const AdminDashboard = () => {
                           className="icon-btn delete"
                           onClick={() =>
                             handleDelete(
-                              "/information/calendar-events",
-                              event.id,
+                              "/information/calendar-events/events",
+                              event.id
                             )
                           }
                         >
@@ -1070,15 +1234,8 @@ const AdminDashboard = () => {
         );
 
       case "banco-preguntas":
-        const filteredQuestions = filterItems(questions, [
-          "question",
-          "answer",
-          "categoryName",
-        ]);
-        const filteredCategories = filterItems(categories, [
-          "name",
-          "description",
-        ]);
+        const filteredQuestions = filterItems(questions, ['question', 'answer', 'categoryName']);
+        const filteredCategories = filterItems(categories, ['name', 'description']);
 
         return (
           <div className="dashboard-section">
@@ -1181,7 +1338,7 @@ const AdminDashboard = () => {
                           onClick={() =>
                             handleDelete(
                               "/information/question-bank/categories",
-                              cat.categoryId,
+                              cat.id
                             )
                           }
                         >
@@ -1222,12 +1379,14 @@ const AdminDashboard = () => {
                 </div>
                 <div className="form-group">
                   <label>Categoría *</label>
-                  <input
-                    type="text"
-                    name="categoryName"
-                    placeholder="Ej: Matemáticas, Física, Historia..."
-                    required
-                  />
+                  <select name="categoryName" required>
+                    <option value="">Seleccionar categoría...</option>
+                    {categories.map((cat) => (
+                      <option key={cat.id} value={cat.name}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="form-group">
                   <label>Respuesta *</label>
@@ -1292,7 +1451,7 @@ const AdminDashboard = () => {
                           className="icon-btn view"
                           onClick={() =>
                             alert(
-                              `Pregunta: ${q.question}\n\nCategoría: ${q.categoryName}\n\nRespuesta: ${q.answer}`,
+                              `Pregunta: ${q.question}\n\nCategoría: ${q.categoryName}\n\nRespuesta: ${q.answer}`
                             )
                           }
                         >
@@ -1303,7 +1462,7 @@ const AdminDashboard = () => {
                           onClick={() =>
                             handleDelete(
                               "/information/question-bank/questions",
-                              q.questionId,
+                              q.questionId
                             )
                           }
                         >
@@ -1319,12 +1478,7 @@ const AdminDashboard = () => {
         );
 
       case "eventos-institucionales":
-        const filteredInstitutionalEvents = filterItems(institutionalEvents, [
-          "title",
-          "description",
-          "location",
-          "type",
-        ]);
+        const filteredInstitutionalEvents = filterItems(institutionalEvents, ['title', 'description', 'location', 'type']);
 
         return (
           <div className="dashboard-section">
@@ -1349,10 +1503,15 @@ const AdminDashboard = () => {
                     title: formData.get("title"),
                     description: formData.get("description"),
                     start_date: formData.get("start_date"),
+                    end_date: formData.get("end_date"),
                     type: formData.get("type"),
                     location: formData.get("location"),
+                    url: formData.get("url") || undefined,
                   };
-                  handleCreate("/information/institutional-events", data);
+                  handleCreate(
+                    "/information/institutional-events/events",
+                    data
+                  );
                   e.target.reset();
                 }}
               >
@@ -1370,16 +1529,20 @@ const AdminDashboard = () => {
                     <label>Fecha de Inicio *</label>
                     <input type="date" name="start_date" required />
                   </div>
+                  <div className="form-group">
+                    <label>Fecha de Fin *</label>
+                    <input type="date" name="end_date" required />
+                  </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group">
                     <label>Tipo de evento *</label>
                     <select name="type" required>
                       <option value="">Seleccionar...</option>
-                      <option value="ACADEMIC">Académico</option>
-                      <option value="SPORT">Deportivo</option>
-                      <option value="CULTURAL">Cultural</option>
-                      <option value="MEETING">Reunión</option>
+                      <option value="Academic">Académico</option>
+                      <option value="Deportivo">Deportivo</option>
+                      <option value="Cultural">Cultural</option>
+                      <option value="Reunion">Reunión</option>
                     </select>
                   </div>
                   <div className="form-group">
@@ -1391,6 +1554,14 @@ const AdminDashboard = () => {
                       required
                     />
                   </div>
+                </div>
+                <div className="form-group">
+                  <label>URL (Opcional)</label>
+                  <input
+                    type="url"
+                    name="url"
+                    placeholder="https://ejemplo.com"
+                  />
                 </div>
                 <div className="form-group">
                   <label>Descripción *</label>
@@ -1449,10 +1620,12 @@ const AdminDashboard = () => {
                             marginTop: "8px",
                           }}
                         >
-                          Fecha:{" "}
+                          Del{" "}
                           {new Date(event.start_date).toLocaleDateString(
-                            "es-ES",
+                            "es-ES"
                           )}{" "}
+                          al{" "}
+                          {new Date(event.end_date).toLocaleDateString("es-ES")}
                         </p>
                         <p
                           style={{
@@ -1466,19 +1639,15 @@ const AdminDashboard = () => {
                       </div>
                       <div className="event-actions">
                         <button
-                          className={`icon-btn state ${event.state ? "active" : "inactive"}`}
+                          className={`icon-btn state ${event.state ? 'active' : 'inactive'}`}
                           onClick={() =>
                             handleToggleState(
-                              "/information/institutional-events",
+                              "/information/institutional-events/events",
                               event.id,
-                              event.state,
+                              event.state
                             )
                           }
-                          title={
-                            event.state
-                              ? "Ocultar en página"
-                              : "Mostrar en página"
-                          }
+                          title={event.state ? "Ocultar en página" : "Mostrar en página"}
                         >
                           {event.state ? "👁️" : "👁️‍🗨️"}
                         </button>
@@ -1492,8 +1661,8 @@ const AdminDashboard = () => {
                           className="icon-btn delete"
                           onClick={() =>
                             handleDelete(
-                              "/information/institutional-events",
-                              event.id,
+                              "/information/institutional-events/events",
+                              event.id
                             )
                           }
                         >
@@ -1509,12 +1678,8 @@ const AdminDashboard = () => {
         );
 
       case "anuncios":
-        const filteredAnnouncements = filterItems(announcements, [
-          "title",
-          "description",
-          "type",
-        ]);
-        const filteredCarouselImages = filterItems(carouselImages, ["title"]);
+        const filteredAnnouncements = filterItems(announcements, ['title', 'description', 'type']);
+        const filteredCarouselImages = filterItems(carouselImages, ['title']);
 
         return (
           <div className="dashboard-section">
@@ -1542,7 +1707,7 @@ const AdminDashboard = () => {
                     date: formData.get("date"),
                     type: formData.get("type"),
                   };
-                  handleCreate("/information/advertisements", data);
+                  handleCreate("/information/announcements", data);
                   e.target.reset();
                 }}
               >
@@ -1564,10 +1729,10 @@ const AdminDashboard = () => {
                     <label>Tipo *</label>
                     <select name="type" required>
                       <option value="">Seleccionar...</option>
-                      <option value="IMPORTANT">Importante</option>
-                      <option value="ALERT">Alerta</option>
-                      <option value="NEWS">Novedad</option>
-                      <option value="GENERAL">General</option>
+                      <option value="important">Importante</option>
+                      <option value="alert">Alerta</option>
+                      <option value="news">Novedad</option>
+                      <option value="general">General</option>
                     </select>
                   </div>
                 </div>
@@ -1644,32 +1809,34 @@ const AdminDashboard = () => {
                       </span>
                       <span>
                         {new Date(announcement.date).toLocaleDateString(
-                          "es-ES",
+                          "es-ES"
                         )}
                       </span>
                       <div className="row-actions">
                         <button
-                          className={`icon-btn state ${announcement.state ? "active" : "inactive"}`}
+                          className={`icon-btn state ${announcement.state ? 'active' : 'inactive'}`}
                           onClick={() =>
                             handleToggleState(
-                              "/information/advertisements",
+                              "/information/announcements",
                               announcement.id,
-                              announcement.state,
+                              announcement.state
                             )
                           }
-                          title={
-                            announcement.state
-                              ? "Ocultar en página"
-                              : "Mostrar en página"
-                          }
+                          title={announcement.state ? "Ocultar en página" : "Mostrar en página"}
                         >
                           {announcement.state ? "👁️" : "👁️‍🗨️"}
+                        </button>
+                        <button
+                          className="icon-btn edit"
+                          onClick={() => openEditModal("announcement", announcement)}
+                        >
+                          ✏️
                         </button>
                         <button
                           className="icon-btn view"
                           onClick={() =>
                             alert(
-                              `${announcement.title}\n\n${announcement.description}`,
+                              `${announcement.title}\n\n${announcement.description}`
                             )
                           }
                         >
@@ -1679,8 +1846,8 @@ const AdminDashboard = () => {
                           className="icon-btn delete"
                           onClick={() =>
                             handleDelete(
-                              "/information/advertisements",
-                              announcement.id,
+                              "/information/announcements",
+                              announcement.id
                             )
                           }
                         >
@@ -1696,10 +1863,7 @@ const AdminDashboard = () => {
             {/* CARRUSEL DE IMÁGENES */}
             <div className="form-container" style={{ marginTop: "40px" }}>
               <h3 className="form-title">🖼️ Carrusel de Imágenes</h3>
-              <form
-                className="data-form"
-                onSubmit={handleCreatePhotoAnnouncement}
-              >
+              <form className="data-form" onSubmit={handleCreatePhotoAnnouncement}>
                 <div className="form-group">
                   <label>Título de la Imagen *</label>
                   <input
@@ -1719,7 +1883,7 @@ const AdminDashboard = () => {
                     className="file-input"
                   />
                   <p style={{ fontSize: "0.85rem", color: "#999", marginTop: "8px" }}>
-                    Formatos: JPG, PNG(Máx. 20MB)
+                    Formatos: JPG, PNG (Máx. 20MB)
                   </p>
                 </div>
                 {imagePreview && (
@@ -1752,9 +1916,7 @@ const AdminDashboard = () => {
               {loading ? (
                 <div className="loading-state">Cargando imágenes...</div>
               ) : filteredCarouselImages.length === 0 ? (
-                <div className="empty-state">
-                  No hay imágenes en el carrusel
-                </div>
+                <div className="empty-state">No hay imágenes en el carrusel</div>
               ) : (
                 <div className="carousel-grid">
                   {filteredCarouselImages.map((image) => (
@@ -1765,37 +1927,33 @@ const AdminDashboard = () => {
                       <div className="carousel-info">
                         <h4>{image.title}</h4>
                         <p style={{ fontSize: "0.85rem", color: "#999" }}>
-                          Subida:{" "}
-                          {new Date(image.uploadDate).toLocaleDateString(
-                            "es-ES",
-                          )}
+                          Subida: {new Date(image.uploadDate).toLocaleDateString("es-ES")}
                         </p>
                       </div>
                       <div className="carousel-actions">
                         <button
-                          className={`icon-btn state ${image.state ? "active" : "inactive"}`}
+                          className={`icon-btn state ${image.state ? 'active' : 'inactive'}`}
                           onClick={() =>
                             handleToggleState(
                               "/information/announcements-photos",
                               image.id,
-                              image.state,
+                              image.state
                             )
                           }
-                          title={
-                            image.state
-                              ? "Ocultar en página"
-                              : "Mostrar en página"
-                          }
+                          title={image.state ? "Ocultar en página" : "Mostrar en página"}
                         >
                           {image.state ? "👁️" : "👁️‍🗨️"}
                         </button>
                         <button
+                          className="icon-btn edit"
+                          onClick={() => openEditModal("carousel", image)}
+                        >
+                          ✏️
+                        </button>
+                        <button
                           className="icon-btn delete"
                           onClick={() =>
-                            handleDelete(
-                              "/information/announcements-photos",
-                              image.id,
-                            )
+                            handleDelete("/information/announcements-photos", image.id)
                           }
                         >
                           🗑️
@@ -1810,7 +1968,7 @@ const AdminDashboard = () => {
         );
 
       case "usuarios":
-        const filteredUsers = filterItems(users, ["username", "role"]);
+        const filteredUsers = filterItems(users, ['username', 'role']);
 
         return (
           <div className="dashboard-section">
@@ -1836,53 +1994,52 @@ const AdminDashboard = () => {
                     onSubmit={async (e) => {
                       e.preventDefault();
                       const formData = new FormData(e.target);
+                      const password = formData.get("password");
+                      const confirmPassword = formData.get("confirmPassword");
+
+                      if (password !== confirmPassword) {
+                        alert("Las contraseñas no coinciden");
+                        return;
+                      }
+
                       const data = {
                         username: formData.get("username"),
-                        password: formData.get("password"),
+                        password: password,
                         role: formData.get("role"),
                       };
 
                       await handleCreate("/auth/users", data);
                       e.target.reset();
+                      setPasswordConfirm("");
                     }}
                   >
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label>Nombre de Usuario *</label>
-                        <input
-                          type="text"
-                          name="username"
-                          placeholder="username"
-                          required
-                        />
-                      </div>
+                    <div className="form-group">
+                      <label>Nombre de Usuario *</label>
+                      <input type="text" name="username" placeholder="username" required />
                     </div>
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label>Contraseña *</label>
-                        <input
-                          type="text"
-                          name="password"
-                          placeholder="contraseña"
-                          required
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Rol *</label>
-                        <select name="role" required>
-                          <option value="">Seleccionar...</option>
-                          <option value="ADMIN">Administrador</option>
-                          <option value="SUPERADMIN">
-                            Super Administrador
-                          </option>
-                        </select>
-                      </div>
+                    <div className="form-group">
+                      <label>Contraseña *</label>
+                      <input type="password" name="password" placeholder="••••••••" required />
                     </div>
-                    <button
-                      type="submit"
-                      className="submit-btn"
-                      disabled={loading}
-                    >
+                    <div className="form-group">
+                      <label>Confirmar Contraseña *</label>
+                      <input
+                        type="password"
+                        name="confirmPassword"
+                        placeholder="••••••••"
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Rol *</label>
+                      <select name="role" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="USER">Usuario</option>
+                        <option value="ADMIN">Administrador</option>
+                        <option value="SUPERADMIN">Super Administrador</option>
+                      </select>
+                    </div>
+                    <button type="submit" className="submit-btn" disabled={loading}>
                       {loading ? "Creando..." : "Crear Usuario"}
                     </button>
                   </form>
@@ -1903,9 +2060,7 @@ const AdminDashboard = () => {
                   {loading ? (
                     <div className="loading-state">Cargando usuarios...</div>
                   ) : filteredUsers.length === 0 ? (
-                    <div className="empty-state">
-                      No hay usuarios registrados
-                    </div>
+                    <div className="empty-state">No hay usuarios registrados</div>
                   ) : (
                     <div className="data-table">
                       <div className="table-header">
@@ -1923,12 +2078,10 @@ const AdminDashboard = () => {
                             {user.role}
                           </span>
                           <span>
-                            {!user.mfaPending ? (
+                            {user.mfaSecret && !user.mfaPending ? (
                               <span style={{ color: "#4ade80" }}>✓ Sí</span>
-                            ) : !user.mfaPending ? (
-                              <span style={{ color: "#fbbf24" }}>
-                                ⏳ Pendiente
-                              </span>
+                            ) : user.mfaSecret && user.mfaPending ? (
+                              <span style={{ color: "#fbbf24" }}>⏳ Pendiente</span>
                             ) : (
                               <span style={{ color: "#f87171" }}>✗ No</span>
                             )}
