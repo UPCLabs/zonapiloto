@@ -36,7 +36,6 @@ public class InstitutionalEventsService implements IInstitutionalService {
         event.setTitle(eventDTO.getTitle());
         event.setDescription(eventDTO.getDescription());
         event.setStart_date(eventDTO.getStartDate());
-        event.setEnd_date(eventDTO.getEndDate());
         event.setType(eventDTO.getType());
 
         return eventRepository.save(event);
@@ -48,7 +47,6 @@ public class InstitutionalEventsService implements IInstitutionalService {
             .title(eventDTO.getTitle())
             .description(eventDTO.getDescription())
             .start_date(eventDTO.getStartDate())
-            .end_date(eventDTO.getEndDate())
             .type(eventDTO.getType())
             .build();
 
@@ -63,5 +61,10 @@ public class InstitutionalEventsService implements IInstitutionalService {
     @Override
     public List<InstitutionalEvent> getAllEvents() {
         return eventRepository.findAll();
+    }
+
+    @Override
+    public List<InstitutionalEvent> getAllAdminEvents() {
+        return eventRepository.findAllIncludingInactive();
     }
 }

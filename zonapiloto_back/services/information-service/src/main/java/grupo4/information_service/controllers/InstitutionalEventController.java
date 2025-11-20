@@ -11,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("information/institutional-events/events")
+@RequestMapping("information/institutional-events")
 @RequiredArgsConstructor
 public class InstitutionalEventController {
 
@@ -34,6 +34,13 @@ public class InstitutionalEventController {
         return ResponseEntity.ok(event);
     }
 
+    @GetMapping("/admin")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
+    public ResponseEntity<?> getAllAdminEvents() {
+        List<InstitutionalEvent> events = eventService.getAllAdminEvents();
+        return ResponseEntity.ok(events);
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> createEvent(
@@ -43,7 +50,7 @@ public class InstitutionalEventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(event);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> updateEvent(
         @PathVariable Long id,
@@ -53,7 +60,7 @@ public class InstitutionalEventController {
         return ResponseEntity.ok(updated);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
     public void deleteEvent(@PathVariable Long id) {
         eventService.deleteEvent(id);

@@ -14,4 +14,5 @@ public interface IAdvertisementService {
     Advertisement createAdvertisement(AdvertisementDTO advertisementDTO);
     void deleteAdvertisement(Long advertisement_id);
     List<Advertisement> getAllAdvertisements();
+    List<Advertisement> getAllAdminAdvertisements();
 }

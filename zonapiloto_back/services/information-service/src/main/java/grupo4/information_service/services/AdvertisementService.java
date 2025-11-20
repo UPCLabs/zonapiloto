@@ -64,4 +64,9 @@ public class AdvertisementService implements IAdvertisementService {
     public List<Advertisement> getAllAdvertisements() {
         return advertisementRepo.findAll();
     }
+
+    @Override
+    public List<Advertisement> getAllAdminAdvertisements() {
+        return advertisementRepo.findAllIncludingInactive();
+    }
 }

@@ -5,56 +5,20 @@ function Announcements() {
   const [anuncios, setAnuncios] = useState([]);
   const [imagenesCarrusel, setImagenesCarrusel] = useState([]);
   const [indiceActivo, setIndiceActivo] = useState(0);
-
-  //TODO
-  /*
-    Conexión con back para imágenes del carrusel (mendizzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz)
-    useEffect(() => {
-        const API_URL = import.meta.env.VITE_API_BASE_URL;
-        fetch(`${API_URL}/anuncios/imagenes`)
-            .then(res => res.json())
-            .then(data => setImagenesCarrusel(data))
-            .catch(err => console.error("Error al cargar imágenes:", err));
-    }, []);
-    */
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
-    const API_URL = import.meta.env.VITE_API_BASE_URL;
+    fetch(`${API_URL}/information/announcements-photos`)
+      .then((res) => res.json())
+      .then((data) => setImagenesCarrusel(data))
+      .catch((err) => console.error("Error al cargar imágenes:", err));
+  }, []);
+
+  useEffect(() => {
     fetch(`${API_URL}/information/advertisements`)
       .then((res) => res.json())
       .then((data) => setAnuncios(data))
       .catch((err) => console.error("Error al cargar anuncios:", err));
-  }, []);
-
-  // Ejemplos de imágenes para el carrusel
-  useEffect(() => {
-    const ejemploImagenes = [
-      {
-        id: 1,
-        url: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=800&h=400&fit=crop",
-        alt: "Concierto Universidad",
-        titulo: "Concierto de Fin de Semestre",
-      },
-      {
-        id: 2,
-        url: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=400&fit=crop",
-        alt: "Feria de Ciencias",
-        titulo: "Feria de Ciencia y Tecnología",
-      },
-      {
-        id: 3,
-        url: "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=800&h=400&fit=crop",
-        alt: "Deportes Universidad",
-        titulo: "Torneo Interuniversitario",
-      },
-      {
-        id: 4,
-        url: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&h=400&fit=crop",
-        alt: "Conferencia",
-        titulo: "Conferencia: IA en Educación",
-      },
-    ];
-    setImagenesCarrusel(ejemploImagenes);
   }, []);
 
   useEffect(() => {
@@ -124,9 +88,9 @@ function Announcements() {
                 key={imagen.id}
                 className={`carousel-slide ${index === indiceActivo ? "active" : ""}`}
               >
-                <img src={imagen.url} alt={imagen.alt} />
+                <img src={API_URL + imagen.url} />
                 <div className="carousel-caption">
-                  <h4>{imagen.titulo}</h4>
+                  <h4>{imagen.title}</h4>
                 </div>
               </div>
             ))}

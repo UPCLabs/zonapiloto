@@ -13,7 +13,6 @@ import org.hibernate.annotations.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "calendary_events")
-@SQLDelete(sql = "UPDATE calendary_events SET active = false WHERE id = ?")
 @Where(clause = "active = true")
 public class CalendaryEvent {
 
@@ -21,14 +20,22 @@ public class CalendaryEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String description;
+
+    @Column(nullable = false)
     private LocalDate start_date;
+
+    @Column(nullable = false)
     private LocalDate end_date;
 
     @Builder.Default
     private boolean active = true;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private EventType type;
 }

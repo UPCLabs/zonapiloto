@@ -12,4 +12,5 @@ public class CalendaryEventDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private EventType type;
+    private boolean active;
 }

@@ -13,4 +13,5 @@ public class InstitutionalEventDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private EventType type;
+    private boolean active;
 }

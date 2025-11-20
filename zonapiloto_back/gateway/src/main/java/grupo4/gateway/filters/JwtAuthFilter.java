@@ -13,6 +13,7 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -28,7 +29,8 @@ public class JwtAuthFilter implements GlobalFilter {
 
     private final List<String> PRIVATE_GET = List.of(
         "/auth/users/me",
-        "/auth/users"
+        "/auth/users",
+        "/information/**/admin"
     );
 
     private final List<String> PUBLIC_POST = List.of(
@@ -37,6 +39,8 @@ public class JwtAuthFilter implements GlobalFilter {
         "/auth/confirm-registration",
         "/auth/verify-registration"
     );
+
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Override
     public Mono<Void> filter(
@@ -50,7 +54,10 @@ public class JwtAuthFilter implements GlobalFilter {
             return chain.filter(exchange);
         }
 
-        if (HttpMethod.GET.equals(method) && !PRIVATE_GET.contains(path)) {
+        boolean isPrivateGet = PRIVATE_GET.stream().anyMatch(pattern ->
+            pathMatcher.match(pattern, path)
+        );
+        if (HttpMethod.GET.equals(method) && !isPrivateGet) {
             logger.info("Public GET method request, redirecting");
             return chain.filter(exchange);
         }
@@ -76,9 +83,6 @@ public class JwtAuthFilter implements GlobalFilter {
                 .parseSignedClaims(cookie.getValue())
                 .getPayload();
 
-            String user = claims.getSubject();
-            String role = (String) claims.get("role");
-
             exchange = exchange
                 .mutate()
                 .request(
@@ -94,8 +98,8 @@ public class JwtAuthFilter implements GlobalFilter {
             logger.info(
                 String.format(
                     "User: %s, role: %s - request: %s",
-                    user,
-                    role,
+                    claims.getSubject(),
+                    claims.get("role"),
                     path
                 )
             );

@@ -16,6 +16,12 @@ public class GatewayConfig {
     public RouteLocator customRoutes(RouteLocatorBuilder builder) {
         return builder
             .routes()
+            .route("gateway-service", r ->
+                r
+                    .path("/api/system/**")
+                    .filters(f -> f.stripPrefix(1))
+                    .uri("http://gateway:5000")
+            )
             .route("auth-service", r ->
                 r
                     .path("/api/auth/**")
@@ -25,6 +31,12 @@ public class GatewayConfig {
             .route("information-service", r ->
                 r
                     .path("/api/information/**")
+                    .filters(f -> f.stripPrefix(1))
+                    .uri("http://information-service:5002")
+            )
+            .route("zonapiloto_images", r ->
+                r
+                    .path("/api/zonapiloto_images/**")
                     .filters(f -> f.stripPrefix(1))
                     .uri("http://information-service:5002")
             )

@@ -62,4 +62,9 @@ public class EventService implements IEventService {
     public List<CalendaryEvent> getAllEvents() {
         return eventRepository.findAll();
     }
+
+    @Override
+    public List<CalendaryEvent> getAllAdminEvents() {
+        return eventRepository.findAllIncludingInactive();
+    }
 }
