@@ -8,6 +8,7 @@ public interface IAnnouncementPhotoService {
     boolean photoExists(Long photoId);
 
     AnnouncementPhoto getPhoto(Long photoId);
+    AnnouncementPhoto getPhotoAdmin(Long photoId);
 
     AnnouncementPhoto updatePhoto(Long photoId, AnnouncementPhotoDTO request);
 

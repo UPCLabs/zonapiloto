@@ -15,22 +15,27 @@ public class AdvertisementService implements IAdvertisementService {
     private final IAdvertisementRepo advertisementRepo;
 
     @Override
-    public boolean advertisementExists(Long advertisement_id) {
-        return advertisementRepo.existsById(advertisement_id);
+    public boolean advertisementExists(Long advertisementId) {
+        return advertisementRepo.existsById(advertisementId);
     }
 
     @Override
-    public Advertisement getAdvertisement(Long advertisement_id) {
-        return advertisementRepo.findById(advertisement_id).orElse(null);
+    public Advertisement getAdvertisement(Long advertisementId) {
+        return advertisementRepo.findByIdActive(advertisementId).orElse(null);
+    }
+
+    @Override
+    public Advertisement getAdvertisementAdmin(Long advertisementId) {
+        return advertisementRepo.findById(advertisementId).orElse(null);
     }
 
     @Override
     public Advertisement updateAdvertisement(
-        Long advertisement_id,
+        Long advertisementId,
         AdvertisementDTO advertisementDTO
     ) {
         Advertisement advertisement = advertisementRepo
-            .findById(advertisement_id)
+            .findById(advertisementId)
             .orElseThrow();
 
         advertisement.setTitle(advertisementDTO.getTitle());
@@ -57,17 +62,17 @@ public class AdvertisementService implements IAdvertisementService {
     }
 
     @Override
-    public void deleteAdvertisement(Long advertisement_id) {
-        advertisementRepo.deleteById(advertisement_id);
+    public void deleteAdvertisement(Long advertisementId) {
+        advertisementRepo.deleteById(advertisementId);
     }
 
     @Override
     public List<Advertisement> getAllAdvertisements() {
-        return advertisementRepo.findAll();
+        return advertisementRepo.findAllActive();
     }
 
     @Override
     public List<Advertisement> getAllAdminAdvertisements() {
-        return advertisementRepo.findAllIncludingInactive();
+        return advertisementRepo.findAll();
     }
 }

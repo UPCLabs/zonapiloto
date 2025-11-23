@@ -90,7 +90,7 @@ public class AnnouncementPhotoService implements IAnnouncementPhotoService {
     @Override
     public AnnouncementPhoto getPhoto(Long photoId) {
         return repository
-            .findById(photoId)
+            .findByIdActive(photoId)
             .orElseThrow(() ->
                 new RuntimeException("Photo no encontrada con id: " + photoId)
             );
@@ -126,11 +126,20 @@ public class AnnouncementPhotoService implements IAnnouncementPhotoService {
 
     @Override
     public List<AnnouncementPhoto> getAllPhotos() {
-        return repository.findAll();
+        return repository.findAllActive();
     }
 
     @Override
     public List<AnnouncementPhoto> getAllAdminPhotos() {
-        return repository.findAllIncludingInactive();
+        return repository.findAll();
+    }
+
+    @Override
+    public AnnouncementPhoto getPhotoAdmin(Long photoId) {
+        return repository
+            .findById(photoId)
+            .orElseThrow(() ->
+                new RuntimeException("Photo no encontrada con id: " + photoId)
+            );
     }
 }
