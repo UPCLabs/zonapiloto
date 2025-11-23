@@ -5,14 +5,12 @@ import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import lombok.*;
-import org.hibernate.annotations.*;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Where(clause = "state = true")
 @Table(name = "advertisements")
 public class Advertisement {
 

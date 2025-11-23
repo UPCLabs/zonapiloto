@@ -5,14 +5,15 @@ import grupo4.information_service.entities.InstitutionalEvent;
 import java.util.List;
 
 public interface IInstitutionalService {
-    boolean eventExists(Long event_id);
-    InstitutionalEvent getEvent(Long event_id);
+    boolean eventExists(Long eventId);
+    InstitutionalEvent getEvent(Long eventId);
+    InstitutionalEvent getEventAdmin(Long eventId);
     InstitutionalEvent updateEvent(
-        Long event_id,
+        Long eventId,
         InstitutionalEventDTO eventDTO
     );
     InstitutionalEvent createEvent(InstitutionalEventDTO eventDTO);
-    void deleteEvent(Long event_id);
+    void deleteEvent(Long eventId);
     List<InstitutionalEvent> getAllEvents();
     List<InstitutionalEvent> getAllAdminEvents();
 }

@@ -15,22 +15,22 @@ public class InstitutionalEventsService implements IInstitutionalService {
     private final IInstitutionalRepo eventRepository;
 
     @Override
-    public boolean eventExists(Long event_id) {
-        return eventRepository.existsById(event_id);
+    public boolean eventExists(Long eventId) {
+        return eventRepository.existsById(eventId);
     }
 
     @Override
-    public InstitutionalEvent getEvent(Long event_id) {
-        return eventRepository.findById(event_id).orElse(null);
+    public InstitutionalEvent getEvent(Long eventId) {
+        return eventRepository.findByIdActive(eventId).orElse(null);
     }
 
     @Override
     public InstitutionalEvent updateEvent(
-        Long event_id,
+        Long eventId,
         InstitutionalEventDTO eventDTO
     ) {
         InstitutionalEvent event = eventRepository
-            .findById(event_id)
+            .findById(eventId)
             .orElseThrow();
 
         event.setTitle(eventDTO.getTitle());
@@ -58,17 +58,22 @@ public class InstitutionalEventsService implements IInstitutionalService {
     }
 
     @Override
-    public void deleteEvent(Long event_id) {
-        eventRepository.deleteById(event_id);
+    public void deleteEvent(Long eventId) {
+        eventRepository.deleteById(eventId);
     }
 
     @Override
     public List<InstitutionalEvent> getAllEvents() {
-        return eventRepository.findAll();
+        return eventRepository.findAllActive();
     }
 
     @Override
     public List<InstitutionalEvent> getAllAdminEvents() {
-        return eventRepository.findAllIncludingInactive();
+        return eventRepository.findAll();
+    }
+
+    @Override
+    public InstitutionalEvent getEventAdmin(Long eventId) {
+        return eventRepository.findById(eventId).orElse(null);
     }
 }
