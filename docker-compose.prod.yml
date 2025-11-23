@@ -56,6 +56,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
+    volumes:
+      - zonapiloto_images:/zonapiloto_images
     expose:
       - "5002"
     networks:
@@ -90,8 +92,8 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       SERVICES_URLS: >
         auth-service=http://auth-service:5001/actuator/health,
-        question-bank-service=http://question-bank-service:5002/actuator/health,
-        calendar-service=http://calendar-service:5003/actuator/health,
+        information-service=http://information-service:5002/actuator/health,
+        profile-service=http://profile-service:5003/actuator/health,
     expose:
       - "5000"
     networks:
@@ -125,3 +127,4 @@ networks:
 
 volumes:
   postgres_data:
+  zonapiloto_images:

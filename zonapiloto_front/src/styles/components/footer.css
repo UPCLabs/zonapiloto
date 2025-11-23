@@ -76,12 +76,27 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: #ffffff;
     font-size: 1.3rem;
     transition: all 0.3s ease;
     cursor: pointer;
     border: 2px solid transparent;
 }
+
+.footer-social .social-icon i,
+.footer-social .social-icon .fi {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+.footer a,
+.footer a * {
+    text-decoration: none !important;
+    border: none !important;
+    outline: none !important;
+}
+
 
 .social-icon:hover {
     background: #9b0000;

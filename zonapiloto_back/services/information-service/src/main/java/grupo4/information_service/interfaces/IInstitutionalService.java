@@ -14,4 +14,5 @@ public interface IInstitutionalService {
     InstitutionalEvent createEvent(InstitutionalEventDTO eventDTO);
     void deleteEvent(Long event_id);
     List<InstitutionalEvent> getAllEvents();
+    List<InstitutionalEvent> getAllAdminEvents();
 }

@@ -35,6 +35,14 @@ public class AdvertisementController {
         return ResponseEntity.ok(event);
     }
 
+    @GetMapping("/admin")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
+    public ResponseEntity<?> getAllAdminAdvertisements() {
+        List<Advertisement> events =
+            advertisementService.getAllAdminAdvertisements();
+        return ResponseEntity.ok(events);
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> createAdvertisement(

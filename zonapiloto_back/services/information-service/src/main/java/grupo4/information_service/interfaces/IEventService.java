@@ -11,4 +11,5 @@ public interface IEventService {
     CalendaryEvent createEvent(CalendaryEventDTO eventDTO);
     void deleteEvent(Long event_id);
     List<CalendaryEvent> getAllEvents();
+    List<CalendaryEvent> getAllAdminEvents();
 }

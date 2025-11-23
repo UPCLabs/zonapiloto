@@ -1,7 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import PerfilAcademico from "./pages/Services/Profile.jsx";
 import BancoPreguntas from "./pages/Services/BancoPreguntas.jsx";
+import Soporte from "./pages/Services/Soporte.jsx";
+import Terminos from "./pages/Services/Terminos.jsx";
+import Privacidad from "./pages/Services/Privacidad.jsx";
 import Login from "./pages/Login";
 import CalendarioAcademico from "./pages/Services/CalendarioAcademico.jsx";
 import Restaurant from "./pages/Services/Restaurant.jsx";
@@ -9,8 +12,19 @@ import Events from "./pages/Services/InstitucionalEvents.jsx";
 import Lybrary from "./pages/Services/Biblioteca.jsx";
 import AdminDash from "./pages/Authentication/AdminDashboard.jsx";
 import Loggin from "./pages/Authentication/UnifledLogin.jsx";
+import Contact from "./pages/Services/Contacto.jsx";
 import SecretLoginTrigger from "./components/SecretLoginTrigger";
 
+function ConditionalSecretTrigger() {
+  const location = useLocation();
+  const hiddenRoutes = ["/login", "/loggin", "/admindash"];
+
+  if (hiddenRoutes.includes(location.pathname)) {
+    return null;
+  }
+
+  return <SecretLoginTrigger />;
+}
 
 function App() {
   return (
@@ -21,6 +35,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/perfil-academico" element={<PerfilAcademico />} />
           <Route path="/banco-preguntas" element={<BancoPreguntas />} />
+          <Route path="/contacto" element={<Contact />} />
+          <Route path="/soporte" element={<Soporte />} />
+          <Route path="/terminos" element={<Terminos />} />
+          <Route path="/privacidad" element={<Privacidad />} />
           <Route path="/login" element={<Login />} />
           <Route path="/calendario" element={<CalendarioAcademico />} />
           <Route path="/cafeteria" element={<Restaurant />} />
@@ -29,6 +47,7 @@ function App() {
           <Route path="/admindash" element={<AdminDash />} />
           <Route path="/loggin" element={<Loggin />} />
         </Routes>
+
       </Router>
     </>
   );

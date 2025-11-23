@@ -22,7 +22,7 @@ public class QuestionService implements IQuestionService {
 
     public QuestionResponse createQuestion(QuestionRequest dto) {
         Category category = categoryRepository
-            .findById(dto.getCategoryId())
+            .findByName(dto.getCategoryName())
             .orElseThrow(() ->
                 new EntityNotFoundException("Categoría no encontrada")
             );
@@ -41,7 +41,7 @@ public class QuestionService implements IQuestionService {
             );
 
         Category category = categoryRepository
-            .findById(dto.getCategoryId())
+            .findByName(dto.getCategoryName())
             .orElseThrow(() ->
                 new EntityNotFoundException("Categoría no encontrada")
             );
