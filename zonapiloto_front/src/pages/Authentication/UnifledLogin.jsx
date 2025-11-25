@@ -38,7 +38,7 @@ const UnifiedLogin = () => {
   const handleCredentialChange = (e) => {
     setCredentials({
       ...credentials,
-      [e.target.name]: e.target.value.toLowerCase(),
+      [e.target.name]: e.target.value,
     });
     setError("");
   };
@@ -61,7 +61,7 @@ const UnifiedLogin = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: credentials.username,
+          username: credentials.username.toLowerCase(),
           password: credentials.password,
         }),
       });
@@ -102,7 +102,7 @@ const UnifiedLogin = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: credentials.username,
+          username: credentials.username.toLowerCase(),
           password: credentials.password,
         }),
       });
@@ -195,7 +195,7 @@ const UnifiedLogin = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: credentials.username,
+          username: credentials.username.toLowerCase(),
           password: credentials.password,
           mfa_code: fullCode,
         }),

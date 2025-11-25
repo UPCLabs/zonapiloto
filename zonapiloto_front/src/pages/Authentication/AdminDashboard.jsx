@@ -350,14 +350,23 @@ const AdminDashboard = () => {
   const handleUpdate = async (endpoint, id, data) => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}${endpoint}/${id}`, {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      let response;
+      if (endpoint == "/information/announcements-photos") {
+        response = await fetch(`${API_URL}${endpoint}/${id}`, {
+          method: "PUT",
+          credentials: "include",
+          body: data,
+        });
+      } else {
+        response = await fetch(`${API_URL}${endpoint}/${id}`, {
+          method: "PUT",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+      }
 
       if (response.ok) {
         alert("Elemento actualizado exitosamente");
@@ -558,14 +567,20 @@ const AdminDashboard = () => {
           data,
         );
       } else if (editModal.type === "carousel") {
-        data = {
-          title: formData.get("title"),
-          state: formData.get("state") === "on",
-        };
+        const formDataToSend = new FormData();
+
+        formDataToSend.append("title", formData.get("title"));
+        formDataToSend.append("state", formData.get("state") === "on");
+
+        const file = formData.get("file");
+        if (file && file.size > 0) {
+          formDataToSend.append("file", file);
+        }
+
         handleUpdate(
           "/information/announcements-photos",
           editModal.data.id,
-          data,
+          formDataToSend,
         );
       } else if (editModal.type === "announcement") {
         data = {
@@ -835,15 +850,22 @@ const AdminDashboard = () => {
                     required
                   />
                 </div>
+
                 <div className="image-preview-container">
                   <label>Imagen Actual:</label>
                   <div className="image-preview">
                     <img
-                      src={editModal.data?.imageUrl}
+                      src={`${API_URL}${editModal.data?.url}`}
                       alt={editModal.data?.title}
                     />
                   </div>
                 </div>
+
+                <div className="form-group">
+                  <label>Nueva Imagen (opcional):</label>
+                  <input type="file" name="file" accept="image/*" />
+                </div>
+
                 <div className="form-group">
                   <label
                     style={{
@@ -1970,7 +1992,7 @@ const AdminDashboard = () => {
                   {filteredCarouselImages.map((image) => (
                     <div key={image.id} className="carousel-card">
                       <div className="carousel-image">
-                        <img src={image.imageUrl} alt={image.title} />
+                        <img src={`${API_URL}${image.url}`} />
                       </div>
                       <div className="carousel-info">
                         <h4>{image.title}</h4>
