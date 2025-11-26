@@ -1,0 +1,91 @@
+/* ============================================
+   EVENT ITEM
+============================================ */
+.event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.event-item {
+    display: flex;
+    gap: 20px;
+    background: rgba(20, 25, 45, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.event-item:hover {
+    border-color: rgba(102, 126, 234, 0.3);
+    transform: translateX(4px);
+}
+
+.event-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 70px;
+    padding: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    text-align: center;
+}
+
+.event-date .day {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1;
+}
+
+.event-date .month {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+
+.event-details {
+    flex: 1;
+}
+
+.event-details h4 {
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.event-details p {
+    color: #b0b0b0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 4px;
+}
+
+.event-actions {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .event-item {
+        flex-direction: column;
+    }
+
+    .event-date {
+        width: 100%;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 12px;
+    }
+
+    .event-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
