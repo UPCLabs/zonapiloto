@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import lombok.*;
-import org.hibernate.annotations.*;
 
 @Entity
 @Data
@@ -13,7 +12,6 @@ import org.hibernate.annotations.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "calendary_events")
-@Where(clause = "state = true")
 public class CalendaryEvent {
 
     @Id

@@ -4,7 +4,6 @@ import grupo4.information_service.enums.EventType;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import lombok.*;
-import org.hibernate.annotations.Where;
 
 @Entity
 @Data
@@ -12,7 +11,6 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @Builder
 @Table(name = "institutional_events")
-@Where(clause = "state = true")
 public class InstitutionalEvent {
 
     @Id

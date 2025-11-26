@@ -101,10 +101,10 @@ const CalendarioAcademico = () => {
 
   const getTipoColor = (tipo) => {
     const colores = {
-      Académico: "#9b0000",
-      Evaluación: "#d35400",
-      Festivo: "#27ae60",
-      Reunión: "#2980b9",
+      ACADEMIC: "#9b0000",
+      EXAM: "#d35400",
+      HOLYDAY: "#27ae60",
+      MEETING: "#2980b9",
     };
     return colores[tipo] || "#9b0000";
   };

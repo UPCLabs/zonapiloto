@@ -5,11 +5,12 @@ import grupo4.information_service.entities.CalendaryEvent;
 import java.util.List;
 
 public interface IEventService {
-    boolean eventExists(Long event_id);
-    CalendaryEvent getEvent(Long event_id);
-    CalendaryEvent updateEvent(Long event_id, CalendaryEventDTO eventDTO);
+    boolean eventExists(Long eventId);
+    CalendaryEvent getEvent(Long eventId);
+    CalendaryEvent getEventAdmin(Long eventId);
+    CalendaryEvent updateEvent(Long eventId, CalendaryEventDTO eventDTO);
     CalendaryEvent createEvent(CalendaryEventDTO eventDTO);
-    void deleteEvent(Long event_id);
+    void deleteEvent(Long eventId);
     List<CalendaryEvent> getAllEvents();
     List<CalendaryEvent> getAllAdminEvents();
 }

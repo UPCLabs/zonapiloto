@@ -15,21 +15,21 @@ public class EventService implements IEventService {
     private final IEventRepo eventRepository;
 
     @Override
-    public boolean eventExists(Long event_id) {
-        return eventRepository.existsById(event_id);
+    public boolean eventExists(Long eventId) {
+        return eventRepository.existsById(eventId);
     }
 
     @Override
-    public CalendaryEvent getEvent(Long event_id) {
-        return eventRepository.findById(event_id).orElse(null);
+    public CalendaryEvent getEvent(Long eventId) {
+        return eventRepository.findByIdActive(eventId).orElse(null);
     }
 
     @Override
     public CalendaryEvent updateEvent(
-        Long event_id,
+        Long eventId,
         CalendaryEventDTO eventDTO
     ) {
-        CalendaryEvent event = eventRepository.findById(event_id).orElseThrow();
+        CalendaryEvent event = eventRepository.findById(eventId).orElseThrow();
 
         event.setTitle(eventDTO.getTitle());
         event.setDescription(eventDTO.getDescription());
@@ -55,17 +55,22 @@ public class EventService implements IEventService {
     }
 
     @Override
-    public void deleteEvent(Long event_id) {
-        eventRepository.deleteById(event_id);
+    public void deleteEvent(Long eventId) {
+        eventRepository.deleteById(eventId);
     }
 
     @Override
     public List<CalendaryEvent> getAllEvents() {
-        return eventRepository.findAll();
+        return eventRepository.findAllActive();
     }
 
     @Override
     public List<CalendaryEvent> getAllAdminEvents() {
-        return eventRepository.findAllIncludingInactive();
+        return eventRepository.findAll();
+    }
+
+    @Override
+    public CalendaryEvent getEventAdmin(Long eventId) {
+        return eventRepository.findById(eventId).orElse(null);
     }
 }

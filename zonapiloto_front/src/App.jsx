@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import PerfilAcademico from "./pages/Services/Profile.jsx";
 import BancoPreguntas from "./pages/Services/BancoPreguntas.jsx";
@@ -14,6 +19,7 @@ import AdminDash from "./pages/Authentication/AdminDashboard.jsx";
 import Loggin from "./pages/Authentication/UnifledLogin.jsx";
 import Contact from "./pages/Services/Contacto.jsx";
 import SecretLoginTrigger from "./components/SecretLoginTrigger";
+import NotFound404 from "./pages/NotFound404.jsx";
 
 function ConditionalSecretTrigger() {
   const location = useLocation();
@@ -46,13 +52,11 @@ function App() {
           <Route path="/biblioteca" element={<Lybrary />} />
           <Route path="/admindash" element={<AdminDash />} />
           <Route path="/loggin" element={<Loggin />} />
+          <Route path="*" element={<NotFound404 />} />
         </Routes>
-
       </Router>
     </>
   );
-
 }
 
 export default App;
-

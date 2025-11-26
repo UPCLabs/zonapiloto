@@ -350,14 +350,23 @@ const AdminDashboard = () => {
   const handleUpdate = async (endpoint, id, data) => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}${endpoint}/${id}`, {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      let response;
+      if (endpoint == "/information/announcements-photos") {
+        response = await fetch(`${API_URL}${endpoint}/${id}`, {
+          method: "PUT",
+          credentials: "include",
+          body: data,
+        });
+      } else {
+        response = await fetch(`${API_URL}${endpoint}/${id}`, {
+          method: "PUT",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+      }
 
       if (response.ok) {
         alert("Elemento actualizado exitosamente");
@@ -373,6 +382,8 @@ const AdminDashboard = () => {
           await fetchCarouselImages();
         } else if (endpoint.includes("auth/users")) {
           await fetchUsers();
+        } else if (endpoint.includes("advertisements")) {
+          await fetchAnnouncements();
         }
         setEditModal({ isOpen: false, type: "", data: null });
       } else {
@@ -382,41 +393,6 @@ const AdminDashboard = () => {
     } catch (error) {
       console.error("Error al actualizar:", error);
       alert("Error al actualizar el elemento");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleToggleState = async (endpoint, id, currentState) => {
-    setLoading(true);
-    try {
-      const response = await fetch(`${API_URL}${endpoint}/${id}`, {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ state: !currentState }),
-      });
-
-      if (response.ok) {
-        alert("Estado actualizado exitosamente");
-        if (endpoint.includes("calendar-events")) {
-          await fetchCalendarEvents();
-        } else if (endpoint.includes("institutional-events")) {
-          await fetchInstitutionalEvents();
-        } else if (endpoint.includes("announcements-photos")) {
-          await fetchCarouselImages();
-        } else if (endpoint.includes("advertisements")) {
-          await fetchAnnouncements();
-        }
-      } else {
-        const error = await response.json();
-        alert("Error: " + (error.message || "No se pudo actualizar el estado"));
-      }
-    } catch (error) {
-      console.error("Error al cambiar estado:", error);
-      alert("Error al cambiar el estado");
     } finally {
       setLoading(false);
     }
@@ -571,7 +547,7 @@ const AdminDashboard = () => {
           start_date: formData.get("start_date"),
           end_date: formData.get("end_date"),
           url: formData.get("url") || undefined,
-          state: editModal.data.state,
+          state: formData.get("state") === "on",
         };
         handleUpdate("/information/calendar-events", editModal.data.id, data);
       } else if (editModal.type === "institutional") {
@@ -583,7 +559,7 @@ const AdminDashboard = () => {
           type: formData.get("type"),
           location: formData.get("location"),
           url: formData.get("url") || undefined,
-          state: editModal.data.state,
+          state: formData.get("state") === "on",
         };
         handleUpdate(
           "/information/institutional-events",
@@ -591,14 +567,20 @@ const AdminDashboard = () => {
           data,
         );
       } else if (editModal.type === "carousel") {
-        data = {
-          title: formData.get("title"),
-          state: editModal.data.state,
-        };
+        const formDataToSend = new FormData();
+
+        formDataToSend.append("title", formData.get("title"));
+        formDataToSend.append("state", formData.get("state") === "on");
+
+        const file = formData.get("file");
+        if (file && file.size > 0) {
+          formDataToSend.append("file", file);
+        }
+
         handleUpdate(
           "/information/announcements-photos",
           editModal.data.id,
-          data,
+          formDataToSend,
         );
       } else if (editModal.type === "announcement") {
         data = {
@@ -606,7 +588,7 @@ const AdminDashboard = () => {
           description: formData.get("description"),
           date: formData.get("date"),
           type: formData.get("type"),
-          state: editModal.data.state,
+          state: formData.get("state") === "on",
         };
         handleUpdate("/information/advertisements", editModal.data.id, data);
       } else if (editModal.type === "question") {
@@ -734,15 +716,6 @@ const AdminDashboard = () => {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label>URL (Opcional)</label>
-                  <input
-                    type="url"
-                    name="url"
-                    defaultValue={editModal.data?.url}
-                    placeholder="https://ejemplo.com"
-                  />
-                </div>
-                <div className="form-group">
                   <label>Descripción *</label>
                   <textarea
                     name="description"
@@ -750,6 +723,28 @@ const AdminDashboard = () => {
                     defaultValue={editModal.data?.description}
                     required
                   ></textarea>
+                </div>
+                <div className="form-group">
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      name="state"
+                      defaultChecked={editModal.data?.state}
+                      style={{
+                        width: "18px",
+                        height: "18px",
+                        cursor: "pointer",
+                      }}
+                    />
+                    <span>Mostrar en la página principal</span>
+                  </label>
                 </div>
               </>
             )}
@@ -772,15 +767,6 @@ const AdminDashboard = () => {
                       type="date"
                       name="start_date"
                       defaultValue={editModal.data?.start_date}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Fecha de Fin *</label>
-                    <input
-                      type="date"
-                      name="end_date"
-                      defaultValue={editModal.data?.end_date}
                       required
                     />
                   </div>
@@ -828,6 +814,28 @@ const AdminDashboard = () => {
                     required
                   ></textarea>
                 </div>
+                <div className="form-group">
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      name="state"
+                      defaultChecked={editModal.data?.state}
+                      style={{
+                        width: "18px",
+                        height: "18px",
+                        cursor: "pointer",
+                      }}
+                    />
+                    <span>Mostrar en la página principal</span>
+                  </label>
+                </div>
               </>
             )}
 
@@ -842,14 +850,43 @@ const AdminDashboard = () => {
                     required
                   />
                 </div>
+
                 <div className="image-preview-container">
                   <label>Imagen Actual:</label>
                   <div className="image-preview">
                     <img
-                      src={editModal.data?.imageUrl}
+                      src={`${API_URL}${editModal.data?.url}`}
                       alt={editModal.data?.title}
                     />
                   </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Nueva Imagen (opcional):</label>
+                  <input type="file" name="file" accept="image/*" />
+                </div>
+
+                <div className="form-group">
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      name="state"
+                      defaultChecked={editModal.data?.state}
+                      style={{
+                        width: "18px",
+                        height: "18px",
+                        cursor: "pointer",
+                      }}
+                    />
+                    <span>Mostrar en la página principal</span>
+                  </label>
                 </div>
               </>
             )}
@@ -898,6 +935,28 @@ const AdminDashboard = () => {
                     defaultValue={editModal.data?.description}
                     required
                   ></textarea>
+                </div>
+                <div className="form-group">
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      name="state"
+                      defaultChecked={editModal.data?.state}
+                      style={{
+                        width: "18px",
+                        height: "18px",
+                        cursor: "pointer",
+                      }}
+                    />
+                    <span>Mostrar en la página principal</span>
+                  </label>
                 </div>
               </>
             )}
@@ -1167,14 +1226,6 @@ const AdminDashboard = () => {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label>URL (Opcional)</label>
-                  <input
-                    type="url"
-                    name="url"
-                    placeholder="https://ejemplo.com"
-                  />
-                </div>
-                <div className="form-group">
                   <label>Descripción *</label>
                   <textarea
                     name="description"
@@ -1233,23 +1284,6 @@ const AdminDashboard = () => {
                         </p>
                       </div>
                       <div className="event-actions">
-                        <button
-                          className={`icon-btn state ${event.state ? "active" : "inactive"}`}
-                          onClick={() =>
-                            handleToggleState(
-                              "/information/calendar-events",
-                              event.id,
-                              event.state,
-                            )
-                          }
-                          title={
-                            event.state
-                              ? "Ocultar en página"
-                              : "Mostrar en página"
-                          }
-                        >
-                          {event.state ? "👁️" : "👁️‍🗨️"}
-                        </button>
                         <button
                           className="icon-btn edit"
                           onClick={() => openEditModal("calendar", event)}
@@ -1558,7 +1592,6 @@ const AdminDashboard = () => {
                     title: formData.get("title"),
                     description: formData.get("description"),
                     start_date: formData.get("start_date"),
-                    end_date: formData.get("end_date"),
                     type: formData.get("type"),
                     location: formData.get("location"),
                     url: formData.get("url") || undefined,
@@ -1578,12 +1611,8 @@ const AdminDashboard = () => {
                 </div>
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Fecha de Inicio *</label>
+                    <label>Fecha *</label>
                     <input type="date" name="start_date" required />
-                  </div>
-                  <div className="form-group">
-                    <label>Fecha de Fin *</label>
-                    <input type="date" name="end_date" required />
                   </div>
                 </div>
                 <div className="form-row">
@@ -1672,12 +1701,10 @@ const AdminDashboard = () => {
                             marginTop: "8px",
                           }}
                         >
-                          Del{" "}
+                          Fecha:{" "}
                           {new Date(event.start_date).toLocaleDateString(
                             "es-ES",
-                          )}{" "}
-                          al{" "}
-                          {new Date(event.end_date).toLocaleDateString("es-ES")}
+                          )}
                         </p>
                         <p
                           style={{
@@ -1690,23 +1717,6 @@ const AdminDashboard = () => {
                         </p>
                       </div>
                       <div className="event-actions">
-                        <button
-                          className={`icon-btn state ${event.state ? "active" : "inactive"}`}
-                          onClick={() =>
-                            handleToggleState(
-                              "/information/institutional-events",
-                              event.id,
-                              event.state,
-                            )
-                          }
-                          title={
-                            event.state
-                              ? "Ocultar en página"
-                              : "Mostrar en página"
-                          }
-                        >
-                          {event.state ? "👁️" : "👁️‍🗨️"}
-                        </button>
                         <button
                           className="icon-btn edit"
                           onClick={() => openEditModal("institutional", event)}
@@ -1874,23 +1884,6 @@ const AdminDashboard = () => {
                       </span>
                       <div className="row-actions">
                         <button
-                          className={`icon-btn state ${announcement.state ? "active" : "inactive"}`}
-                          onClick={() =>
-                            handleToggleState(
-                              "/information/advertisements",
-                              announcement.id,
-                              announcement.state,
-                            )
-                          }
-                          title={
-                            announcement.state
-                              ? "Ocultar en página"
-                              : "Mostrar en página"
-                          }
-                        >
-                          {announcement.state ? "👁️" : "👁️‍🗨️"}
-                        </button>
-                        <button
                           className="icon-btn edit"
                           onClick={() =>
                             openEditModal("announcement", announcement)
@@ -1999,35 +1992,12 @@ const AdminDashboard = () => {
                   {filteredCarouselImages.map((image) => (
                     <div key={image.id} className="carousel-card">
                       <div className="carousel-image">
-                        <img src={image.imageUrl} alt={image.title} />
+                        <img src={`${API_URL}${image.url}`} />
                       </div>
                       <div className="carousel-info">
                         <h4>{image.title}</h4>
-                        <p style={{ fontSize: "0.85rem", color: "#999" }}>
-                          Subida:{" "}
-                          {new Date(image.uploadDate).toLocaleDateString(
-                            "es-ES",
-                          )}
-                        </p>
                       </div>
                       <div className="carousel-actions">
-                        <button
-                          className={`icon-btn state ${image.state ? "active" : "inactive"}`}
-                          onClick={() =>
-                            handleToggleState(
-                              "/information/announcements-photos",
-                              image.id,
-                              image.state,
-                            )
-                          }
-                          title={
-                            image.state
-                              ? "Ocultar en página"
-                              : "Mostrar en página"
-                          }
-                        >
-                          {image.state ? "👁️" : "👁️‍🗨️"}
-                        </button>
                         <button
                           className="icon-btn edit"
                           onClick={() => openEditModal("carousel", image)}
