@@ -21,13 +21,11 @@ services:
       start_period: 20s
 
   rabbitmq:
-    image: rabbitmq:3.13-management
+    image: rabbitmq:3.13
     container_name: rabbitmq-zonapiloto
     restart: unless-stopped
     expose:
       - "5672"
-    ports:
-      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBIT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBIT_PASSWORD}
@@ -50,6 +48,10 @@ services:
       postgres:
         condition: service_healthy
     environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: ${RABBIT_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASSWORD}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
@@ -140,6 +142,7 @@ services:
         auth-service=http://auth-service:5001/actuator/health,
         information-service=http://information-service:5002/actuator/health,
         profile-service=http://profile-service:5003/actuator/health,
+        notification-service=http://notification-service:5004/actuator/health,
 
     expose:
       - "5000"
