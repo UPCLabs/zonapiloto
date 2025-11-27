@@ -6,6 +6,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tools.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/auth")
@@ -22,7 +23,9 @@ public class TestController {
             "hola"
         );
 
-        rabbitTemplate.convertAndSend("user.register", event);
+        String json = new ObjectMapper().writeValueAsString(event);
+
+        rabbitTemplate.convertAndSend("user.register", json);
 
         return "Evento enviado a RabbitMQ";
     }

@@ -1,12 +1,12 @@
 package grupo4.notification_service.listeners;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import grupo4.notification_service.entities.UserRegisterEvent;
 import grupo4.notification_service.services.EmailService;
 import java.util.logging.Logger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.ObjectMapper;
 
 @Service
 @RequiredArgsConstructor
