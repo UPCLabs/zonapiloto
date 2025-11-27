@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import BackgroundCarousel from "../components/BackgroundCarousel";
-import "../styles/login.css";
+import BackgroundCarousel from "../../components/BackgroundCarousel";
+import "../../styles/services/login.css";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -14,12 +14,8 @@ function Login() {
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsLoading(true);
-
-        // 🔹 Simulación de autenticación
         setTimeout(() => {
             setIsLoading(false);
-
-            // Redirigir al perfil académico
             navigate("/perfil-academico");
         }, 1500);
     };

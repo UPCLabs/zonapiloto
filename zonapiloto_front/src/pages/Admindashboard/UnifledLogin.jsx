@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import "../../styles/admin_dashboard/unifledlogin.css";
+import { useNavigate } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
+import "../../styles/admin_dashboard/unifledlogin.css";
 
 const UnifiedLogin = () => {
-  // Estados principales
-  const [step, setStep] = useState("credentials"); // credentials | setup-mfa | verify-mfa
+  const navigate = useNavigate();
+  const [step, setStep] = useState("credentials");
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
@@ -13,6 +14,7 @@ const UnifiedLogin = () => {
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const API_URL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
@@ -32,9 +34,8 @@ const UnifiedLogin = () => {
     };
 
     checkUser();
-  }, []);
+  }, [API_URL]);
 
-  // Manejo de cambios en credenciales
   const handleCredentialChange = (e) => {
     setCredentials({
       ...credentials,
@@ -43,7 +44,6 @@ const UnifiedLogin = () => {
     setError("");
   };
 
-  // Paso 1: Verificar credenciales
   const handleCheckCredentials = async (e) => {
     e.preventDefault();
 
@@ -56,7 +56,6 @@ const UnifiedLogin = () => {
     setError("");
 
     try {
-      // Endpoint: /auth/check-credentials
       const response = await fetch(`${API_URL}/auth/check-credentials`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -73,17 +72,14 @@ const UnifiedLogin = () => {
         return;
       }
 
-      // data = { exists: true/false, hasMfa: true/false }
       if (!data.valid) {
         setError("Usuario no encontrado");
         return;
       }
 
       if (!data.hasMfa) {
-        // Necesita configurar MFA
         await setupMFA();
       } else {
-        // Ya tiene MFA, ir a verificación
         setStep("verify-mfa");
       }
     } catch (err) {
@@ -94,10 +90,8 @@ const UnifiedLogin = () => {
     }
   };
 
-  // Paso 2: Configurar MFA (generar QR)
   const setupMFA = async () => {
     try {
-      // Endpoint: /auth/confirm-registration
       const response = await fetch(`${API_URL}/auth/confirm-registration`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -114,7 +108,6 @@ const UnifiedLogin = () => {
         return;
       }
 
-      // data = { qr_url: "...", mfa_secret: "..." }
       setQrData({
         qrUrl: data.qr_url,
         secret: data.mfa_secret,
@@ -126,7 +119,6 @@ const UnifiedLogin = () => {
     }
   };
 
-  // Manejo de códigos MFA
   const handleCodeChange = (index, value) => {
     if (value.length > 1) value = value.slice(0, 1);
     if (!/^\d*$/.test(value)) return;
@@ -167,7 +159,6 @@ const UnifiedLogin = () => {
     }, 0);
   };
 
-  // Paso 3: Verificar código MFA
   const handleMFASubmit = async () => {
     const fullCode = code.join("");
 
@@ -180,14 +171,11 @@ const UnifiedLogin = () => {
     setError("");
 
     try {
-      let endpoint, successMessage;
+      let endpoint;
 
       if (step === "setup-mfa") {
-        // Verificar primer setup de MFA
         endpoint = `${API_URL}/auth/verify-registration`;
-        successMessage = "MFA configurado exitosamente";
       } else {
-        // Login normal con MFA
         endpoint = `${API_URL}/auth/login`;
       }
 
@@ -212,12 +200,10 @@ const UnifiedLogin = () => {
         if (step === "setup-mfa") {
           await setupMFA();
         }
-
         return;
       }
 
       if (step === "setup-mfa") {
-        // Después de configurar MFA, hacer login
         setStep("verify-mfa");
         setCode(["", "", "", "", "", ""]);
         setError("");
@@ -225,7 +211,6 @@ const UnifiedLogin = () => {
           document.getElementById("code-0")?.focus();
         }, 100);
       } else {
-        // Login exitoso, guardar token
         if (data.user) {
           localStorage.setItem("user", data.user);
           localStorage.setItem("role", data.role);
@@ -240,7 +225,6 @@ const UnifiedLogin = () => {
     }
   };
 
-  // Función para volver atrás
   const handleBack = () => {
     setStep("credentials");
     setCode(["", "", "", "", "", ""]);
@@ -250,196 +234,330 @@ const UnifiedLogin = () => {
 
   return (
     <div className="unified-login-page">
-      <div className="neon-background">
-        <div className="neon-line line-1"></div>
-        <div className="neon-line line-2"></div>
-        <div className="neon-line line-3"></div>
-        <div className="neon-circle circle-1"></div>
-        <div className="neon-circle circle-2"></div>
+      {/* Animated Background */}
+      <div className="animated-background">
+        <div className="gradient-orb orb-1"></div>
+        <div className="gradient-orb orb-2"></div>
+        <div className="gradient-orb orb-3"></div>
       </div>
 
-      <div className="login-container">
-        <div className="login-card">
-          <div className="card-glow"></div>
+      {/* Header */}
+      <header className="login-page-header">
+        <button className="home-btn" onClick={() => navigate("/")}>
+          <span className="home-icon">🏠</span>
+          Inicio
+        </button>
+      </header>
 
-          {/* Header */}
-          <div className="login-header">
-            <div className="icon-badge">🔐</div>
-            <h1 className="login-title">
-              <span className="title-word">S.C.D</span>
-            </h1>
-            <p className="login-subtitle">Sistema de Control y Datos</p>
+      {/* Main Container */}
+      <div className="login-main-container">
+        <div className="login-card-wrapper">
+          {/* Left Side - Info */}
+          <div className="login-info-side">
+            <div className="info-content">
+              <div className="info-icon-badge">
+                <span className="shield-icon">🛡️</span>
+              </div>
+              <h2 className="info-title">Sistema Seguro</h2>
+              <p className="info-description">
+                Protegemos tu información con autenticación de dos factores y
+                los más altos estándares de seguridad.
+              </p>
+              <div className="security-features">
+                <div className="feature-item">
+                  <span className="feature-icon">🔐</span>
+                  <span>Encriptación de extremo a extremo</span>
+                </div>
+                <div className="feature-item">
+                  <span className="feature-icon">📱</span>
+                  <span>Autenticación de dos factores</span>
+                </div>
+                <div className="feature-item">
+                  <span className="feature-icon">🔒</span>
+                  <span>Sesiones seguras</span>
+
+                </div>
+              </div>
+              <button className="home-btn" onClick={() => navigate("/")}>
+                <span className="home-icon">🏠</span>
+                Inicio
+              </button>
+            </div>
           </div>
 
-          {/* Paso 1: Credenciales */}
-          {step === "credentials" && (
-            <form
-              onSubmit={handleCheckCredentials}
-              className="credentials-form"
-            >
-              <div className="form-group">
-                <label htmlFor="username">Usuario</label>
-                <div className="input-wrapper">
-                  <span className="input-icon">👤</span>
-                  <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    value={credentials.username}
-                    onChange={handleCredentialChange}
-                    placeholder="Ingresa tu usuario"
-                    required
-                    autoComplete="username"
-                  />
-                </div>
-              </div>
+          {/* Right Side - Form */}
+          <div className="login-form-side">
+            <div className="form-header">
+              <h1 className="form-title">Iniciar Sesión</h1>
+              <p className="form-subtitle">
+                {step === "credentials"
+                  ? "Ingresa tus credenciales"
+                  : step === "setup-mfa"
+                    ? "Configura tu autenticación"
+                    : "Verifica tu identidad"}
+              </p>
+            </div>
 
-              <div className="form-group">
-                <label htmlFor="password">Contraseña</label>
-                <div className="input-wrapper">
-                  <span className="input-icon">🔒</span>
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    value={credentials.password}
-                    onChange={handleCredentialChange}
-                    placeholder="Ingresa tu contraseña"
-                    required
-                    autoComplete="current-password"
-                  />
-                </div>
-              </div>
-
-              {error && (
-                <div className="error-message">
-                  <span className="error-icon">⚠</span>
-                  {error}
-                </div>
-              )}
-
-              <button
-                type="submit"
-                className={`submit-btn ${loading ? "loading" : ""}`}
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <span className="spinner"></span>
-                    Verificando...
-                  </>
-                ) : (
-                  <>
-                    <span>INGRESAR</span>
-                    <span className="btn-arrow">→</span>
-                  </>
-                )}
-              </button>
-            </form>
-          )}
-
-          {/* Panel MFA deslizante */}
-          <div
-            className={`mfa-panel ${step !== "credentials" ? "active" : ""}`}
-          >
-            <button className="back-btn" onClick={handleBack}>
-              ← Volver
-            </button>
-
-            {/* Configuración MFA */}
-            {step === "setup-mfa" && qrData && (
-              <div className="mfa-setup">
-                <h2 className="mfa-title">Configurar Autenticación</h2>
-                <p className="mfa-subtitle">Escanea el código QR con tu app</p>
-
-                <div className="qr-container">
-                  <QRCodeCanvas
-                    value={qrData.qrUrl}
-                    size={200}
-                    bgColor="#ffffff"
-                    fgColor="#000000"
-                    level="H"
-                  />
-                </div>
-
-                <div className="secret-container">
-                  <p className="secret-label">Código manual:</p>
-                  <div className="secret-code">{qrData.secret}</div>
-                </div>
-
-                <div className="apps-info">
-                  <p>Apps compatibles:</p>
-                  <div className="app-badges">
-                    <span>Google Authenticator</span>
-                    <span>Authy</span>
-                    <span>Microsoft Authenticator</span>
+            {/* Step 1: Credentials */}
+            {step === "credentials" && (
+              <form onSubmit={handleCheckCredentials} className="login-form">
+                <div className="form-group">
+                  <label htmlFor="username">Usuario</label>
+                  <div className="input-wrapper">
+                    <span className="input-icon">👤</span>
+                    <input
+                      type="text"
+                      id="username"
+                      name="username"
+                      value={credentials.username}
+                      onChange={handleCredentialChange}
+                      placeholder="Ingresa tu usuario"
+                      required
+                      autoComplete="username"
+                    />
                   </div>
                 </div>
-              </div>
-            )}
 
-            {/* Verificación MFA */}
-            {(step === "setup-mfa" || step === "verify-mfa") && (
-              <div className="mfa-verify">
-                <h3 className="verify-title">
-                  {step === "setup-mfa"
-                    ? "Ingresa el código para activar"
-                    : `Bienvenido, ${credentials.username}`}
-                </h3>
-
-                <div className="code-inputs" onPaste={handlePaste}>
-                  {code.map((digit, index) => (
+                <div className="form-group">
+                  <label htmlFor="password">Contraseña</label>
+                  <div className="input-wrapper">
+                    <span className="input-icon">🔒</span>
                     <input
-                      key={index}
-                      id={`code-${index}`}
-                      type="text"
-                      inputMode="numeric"
-                      maxLength="1"
-                      value={digit}
-                      onChange={(e) => handleCodeChange(index, e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(index, e)}
-                      className="code-input"
-                      autoComplete="off"
+                      type={showPassword ? "text" : "password"}
+                      id="password"
+                      name="password"
+                      value={credentials.password}
+                      onChange={handleCredentialChange}
+                      placeholder="Ingresa tu contraseña"
+                      required
+                      autoComplete="current-password"
                     />
-                  ))}
+                    <button
+                      type="button"
+                      className="toggle-password-btn"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? "👁️" : "👁️‍🗨️"}
+                    </button>
+                  </div>
                 </div>
 
                 {error && (
-                  <div className="error-message">
-                    <span className="error-icon">⚠</span>
-                    {error}
+                  <div className="error-alert">
+                    <span className="error-icon">⚠️</span>
+                    <span>{error}</span>
                   </div>
                 )}
 
                 <button
-                  onClick={handleMFASubmit}
-                  className={`submit-btn ${loading ? "loading" : ""}`}
-                  disabled={loading || code.join("").length !== 6}
+                  type="submit"
+                  className={`submit-button ${loading ? "loading" : ""}`}
+                  disabled={loading}
                 >
                   {loading ? (
                     <>
                       <span className="spinner"></span>
-                      Verificando...
+                      <span>Verificando...</span>
                     </>
                   ) : (
                     <>
-                      {step === "setup-mfa" ? "ACTIVAR MFA" : "VERIFICAR"}
-                      <span className="btn-arrow">→</span>
+                      <span>Ingresar</span>
+                      <span className="button-arrow">→</span>
                     </>
                   )}
                 </button>
+
+                <div className="form-divider">
+                  <span className="divider-line"></span>
+                  <span className="divider-text">¿No tienes cuenta?</span>
+                  <span className="divider-line"></span>
+                </div>
+
+                <button
+                  type="button"
+                  className="register-button"
+                  onClick={() => navigate("/register")}
+                >
+                  <span className="register-icon">📝</span>
+                  <span>Crear cuenta nueva</span>
+                </button>
+              </form>
+            )}
+
+            {/* Step 2: Setup MFA */}
+            {step === "setup-mfa" && qrData && (
+              <div className="mfa-setup-container">
+                <button className="back-button" onClick={handleBack}>
+                  <span>←</span>
+                  <span>Volver</span>
+                </button>
+
+                <div className="mfa-setup-content">
+                  <div className="setup-instructions">
+                    <h3>Configura tu Autenticación</h3>
+                    <p>
+                      Escanea el código QR con tu aplicación de autenticación
+                    </p>
+                  </div>
+
+                  <div className="qr-code-wrapper">
+                    <div className="qr-code-container">
+                      <QRCodeCanvas
+                        value={qrData.qrUrl}
+                        size={220}
+                        bgColor="#ffffff"
+                        fgColor="#000000"
+                        level="H"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="manual-code-section">
+                    <p className="manual-code-label">
+                      ¿No puedes escanear? Ingresa este código manualmente:
+                    </p>
+                    <div className="manual-code-box">
+                      <code>{qrData.secret}</code>
+                    </div>
+                  </div>
+
+                  <div className="apps-recommendation">
+                    <p className="apps-title">Apps recomendadas:</p>
+                    <div className="apps-list">
+                      <span className="app-badge">Google Authenticator</span>
+                      <span className="app-badge">Microsoft Authenticator</span>
+                      <span className="app-badge">Authy</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="code-verification-section">
+                  <h4 className="verification-title">
+                    Ingresa el código para activar
+                  </h4>
+                  <div className="code-inputs-container" onPaste={handlePaste}>
+                    {code.map((digit, index) => (
+                      <input
+                        key={index}
+                        id={`code-${index}`}
+                        type="text"
+                        inputMode="numeric"
+                        maxLength="1"
+                        value={digit}
+                        onChange={(e) =>
+                          handleCodeChange(index, e.target.value)
+                        }
+                        onKeyDown={(e) => handleKeyDown(index, e)}
+                        className="code-input"
+                        autoComplete="off"
+                      />
+                    ))}
+                  </div>
+
+                  {error && (
+                    <div className="error-alert">
+                      <span className="error-icon">⚠️</span>
+                      <span>{error}</span>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={handleMFASubmit}
+                    className={`submit-button ${loading ? "loading" : ""}`}
+                    disabled={loading || code.join("").length !== 6}
+                  >
+                    {loading ? (
+                      <>
+                        <span className="spinner"></span>
+                        <span>Verificando...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Activar Autenticación</span>
+                        <span className="button-arrow">→</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             )}
-          </div>
 
-          {/* Footer */}
-          <div className="login-footer">
-            <div className="divider">
-              <span className="divider-line"></span>
-              <span className="divider-text">Sistema Seguro</span>
-              <span className="divider-line"></span>
+            {/* Step 3: Verify MFA */}
+            {step === "verify-mfa" && (
+              <div className="mfa-verify-container">
+                <button className="back-button" onClick={handleBack}>
+                  <span>←</span>
+                  <span>Volver</span>
+                </button>
+
+                <div className="verify-welcome">
+                  <div className="welcome-icon">👋</div>
+                  <h3>¡Bienvenido de nuevo!</h3>
+                  <p className="welcome-user">{credentials.username}</p>
+                </div>
+
+                <div className="code-verification-section">
+                  <h4 className="verification-title">
+                    Ingresa tu código de verificación
+                  </h4>
+                  <p className="verification-subtitle">
+                    Abre tu aplicación de autenticación
+                  </p>
+
+                  <div className="code-inputs-container" onPaste={handlePaste}>
+                    {code.map((digit, index) => (
+                      <input
+                        key={index}
+                        id={`code-${index}`}
+                        type="text"
+                        inputMode="numeric"
+                        maxLength="1"
+                        value={digit}
+                        onChange={(e) =>
+                          handleCodeChange(index, e.target.value)
+                        }
+                        onKeyDown={(e) => handleKeyDown(index, e)}
+                        className="code-input"
+                        autoComplete="off"
+                      />
+                    ))}
+                  </div>
+
+                  {error && (
+                    <div className="error-alert">
+                      <span className="error-icon">⚠️</span>
+                      <span>{error}</span>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={handleMFASubmit}
+                    className={`submit-button ${loading ? "loading" : ""}`}
+                    disabled={loading || code.join("").length !== 6}
+                  >
+                    {loading ? (
+                      <>
+                        <span className="spinner"></span>
+                        <span>Verificando...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Verificar e Ingresar</span>
+                        <span className="button-arrow">→</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Footer */}
+            <div className="form-footer">
+              <p className="security-badge">
+                <span className="lock-icon">🔒</span>
+                Conexión segura y encriptada
+              </p>
             </div>
-            <p className="security-note">🔒 Autenticación de dos factores</p>
           </div>
         </div>
       </div>

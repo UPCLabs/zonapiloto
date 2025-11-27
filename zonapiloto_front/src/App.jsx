@@ -10,7 +10,7 @@ import BancoPreguntas from "./pages/Services/BancoPreguntas.jsx";
 import Soporte from "./pages/Services/Soporte.jsx";
 import Terminos from "./pages/Services/Terminos.jsx";
 import Privacidad from "./pages/Services/Privacidad.jsx";
-import Login from "./pages/Login";
+import Login from "./pages/Services/Login.jsx";
 import CalendarioAcademico from "./pages/Services/CalendarioAcademico.jsx";
 import Restaurant from "./pages/Services/Restaurant.jsx";
 import Events from "./pages/Services/InstitucionalEvents.jsx";
@@ -18,6 +18,7 @@ import Lybrary from "./pages/Services/Biblioteca.jsx";
 import AdminDash from "./pages/Admindashboard/componen/AdminDashBoard.jsx";
 import Loggin from "./pages/Admindashboard/UnifledLogin.jsx";
 import Contact from "./pages/Services/Contacto.jsx";
+import Register from "./pages/Services/RegisterPage.jsx";
 import SecretLoginTrigger from "./components/SecretLoginTrigger";
 import NotFound404 from "./pages/NotFound404.jsx";
 
@@ -52,6 +53,7 @@ function App() {
           <Route path="/biblioteca" element={<Lybrary />} />
           <Route path="/admindash" element={<AdminDash />} />
           <Route path="/loggin" element={<Loggin />} />
+          <Route path="/register" element={<Register />} />
           <Route path="*" element={<NotFound404 />} />
         </Routes>
       </Router>

@@ -78,8 +78,8 @@ function ServicesGrid() {
       case "Contacto":
         navigate("/contacto");
         break;
-      case "Administración":
-        navigate("/admindash");
+      case "Panel de Administración":
+        navigate("/loggin");
         break;
       default:
         alert(`Haz clic en: ${title}`);
