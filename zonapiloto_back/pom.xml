@@ -25,6 +25,7 @@
         <module>services/information-service</module>
         <module>services/notification-service</module>
         <module>services/profile-service</module>
+        <module>libs/common-messaging</module>
     </modules>
 
     <properties>

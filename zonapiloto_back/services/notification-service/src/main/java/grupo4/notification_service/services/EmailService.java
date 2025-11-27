@@ -1,6 +1,6 @@
 package grupo4.notification_service.services;
 
-import grupo4.notification_service.entities.UserRegisterEvent;
+import grupo4.common_messaging.events.UserRegisterEvent;
 import java.util.logging.Logger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,19 +1,19 @@
 package grupo4.auth_service.controllers;
 
-import grupo4.auth_service.events.UserRegisterEvent;
+import grupo4.common_messaging.events.UserRegisterEvent;
+import grupo4.common_messaging.publisher.MessagePublisher;
+import grupo4.common_messaging.queues.QueuesNames;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tools.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class TestController {
 
-    private final RabbitTemplate rabbitTemplate;
+    private final MessagePublisher publisher;
 
     @GetMapping("/test-event")
     public String fire() {
@@ -23,9 +23,7 @@ public class TestController {
             "hola"
         );
 
-        String json = new ObjectMapper().writeValueAsString(event);
-
-        rabbitTemplate.convertAndSend("user.register", json);
+        publisher.send(QueuesNames.USER_REGISTER, event);
 
         return "Evento enviado a RabbitMQ";
     }

@@ -1,4 +1,4 @@
-package grupo4.auth_service.events;
+package grupo4.common_messaging.events;
 
 import lombok.*;
 
