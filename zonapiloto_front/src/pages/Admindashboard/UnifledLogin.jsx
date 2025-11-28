@@ -234,14 +234,12 @@ const UnifiedLogin = () => {
 
   return (
     <div className="unified-login-page">
-      {/* Animated Background */}
       <div className="animated-background">
         <div className="gradient-orb orb-1"></div>
         <div className="gradient-orb orb-2"></div>
         <div className="gradient-orb orb-3"></div>
       </div>
 
-      {/* Header */}
       <header className="login-page-header">
         <button className="home-btn" onClick={() => navigate("/")}>
           <span className="home-icon">🏠</span>
@@ -249,10 +247,8 @@ const UnifiedLogin = () => {
         </button>
       </header>
 
-      {/* Main Container */}
       <div className="login-main-container">
         <div className="login-card-wrapper">
-          {/* Left Side - Info */}
           <div className="login-info-side">
             <div className="info-content">
               <div className="info-icon-badge">
@@ -385,6 +381,8 @@ const UnifiedLogin = () => {
             )}
 
             {/* Step 2: Setup MFA */}
+
+            {/* falta cambiar contraseña */}
             {step === "setup-mfa" && qrData && (
               <div className="mfa-setup-container">
                 <button className="back-button" onClick={handleBack}>
