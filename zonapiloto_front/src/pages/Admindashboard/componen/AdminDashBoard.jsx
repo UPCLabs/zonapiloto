@@ -4,10 +4,10 @@ import Sidebar from "../layout/Sidebar.jsx";
 import Header from "../layout/HeaderAdminDash.jsx";
 import Footer from "../layout/FooterAdmin.jsx";
 import InicioSection from "../sections/InicioSection.jsx";
-import CalendarioSection from "../sections/CalendarioSection.jsx";
-import BancoPreguntasSection from "../sections/BancoPreguntasSection.jsx";
-import EventosInstitucionalesSection from "../sections/EventosInstitucionalesSection.jsx";
-import AnunciosSection from "../sections/AnunciosSection.jsx";
+import CalendarioSection from "../sections/CalendarySection.jsx";
+import BancoPreguntasSection from "../sections/QuestionBankSection.jsx";
+import EventosInstitucionalesSection from "../sections/InstitutionalEventsSection.jsx";
+import AnunciosSection from "../sections/AnnouncementsSection.jsx";
 import UsuariosSection from "../sections/UsuariosSection.jsx";
 import AddSection from "../sections/AddSection.jsx";
 import EditModal from "../modals/EditModal.jsx";
@@ -56,28 +56,35 @@ const AdminDashboard = () => {
             icon: "📅",
             label: "Calendario Académico",
             description: "Horarios y fechas importantes",
-            roles: ["ADMIN", "SUPERADMIN"],
+            roles: ["EVENT_ADMIN", "SUPERADMIN"],
         },
         {
             id: "banco-preguntas",
             icon: "📝",
             label: "Banco de Preguntas",
             description: "Practica y prepárate para tus evaluaciones",
-            roles: ["ADMIN", "SUPERADMIN"],
+            roles: ["QUESTIONS_ADMIN", "SUPERADMIN"],
         },
         {
             id: "eventos-institucionales",
             icon: "🎉",
             label: "Eventos Institucionales",
             description: "Entérate de los próximos eventos",
-            roles: ["ADMIN", "SUPERADMIN"],
+            roles: ["EVENT_ADMIN", "SUPERADMIN"],
         },
         {
             id: "anuncios",
             icon: "📢",
             label: "Anuncios",
             description: "Gestión de anuncios en la página principal",
-            roles: ["ADMIN", "SUPERADMIN"],
+            roles: ["EVENT_ADMIN", "SUPERADMIN"],
+        },
+        {
+            id: "restaurantes",
+            icon: "🍽️",
+            label: "Restaurantes",
+            description: "Gestión de restaurantes, menu de la cafeteria",
+            roles: ["RESTAURANT_ADMIN", "SUPERADMIN"],
         },
     ];
 
@@ -86,19 +93,19 @@ const AdminDashboard = () => {
             id: "inicio",
             icon: "🏠",
             label: "Inicio",
-            roles: ["USER", "ADMIN", "SUPERADMIN"],
+            roles: ["QUESTIONS_ADMIN", "RESTAURANT_ADMIN", "EVENT_ADMIN", "SUPERADMIN"],
         },
         {
             id: "usuarios",
             icon: "👥",
             label: "Gestión de Usuarios",
-            roles: ["SUPERADMIN"],
+            roles: ["QUESTIONS_ADMIN", "RESTAURANT_ADMIN", "EVENT_ADMIN", "SUPERADMIN"],
         },
         {
-            id: "configuracion",
-            icon: "⚙️",
+            id: "Solicitudes",
+            icon: "📬",
             label: "Configuración",
-            roles: ["SUPERADMIN"],
+            roles: ["QUESTIONS_ADMIN", "RESTAURANT_ADMIN", "EVENT_ADMIN", "SUPERADMIN"],
         },
     ];
 

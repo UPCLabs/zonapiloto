@@ -32,8 +32,6 @@ const BancoPreguntasSection = ({
                     Gestión de preguntas, respuestas y categorías
                 </p>
             </div>
-
-            {/* GESTIÓN DE CATEGORÍAS */}
             <div className="form-container">
                 <h3 className="form-title">📁 Gestión de Categorías</h3>
                 <form

@@ -14,11 +14,10 @@ const RegisterPage = ({ onBack }) => {
         email: "",
         confirmEmail: "",
         fullName: "",
-        documentType: "",
-        documentNumber: "",
         phone: "",
         roleType: "",
         chamberOfCommerce: null,
+        document: null,
         rut: null,
         requestLetter: null,
         departmentLetter: null,
@@ -64,6 +63,7 @@ const RegisterPage = ({ onBack }) => {
         setFormData(prev => ({
             ...prev,
             roleType: "",
+            document: null,
             chamberOfCommerce: null,
             rut: null,
             requestLetter: null,
@@ -173,8 +173,7 @@ const RegisterPage = ({ onBack }) => {
         const newErrors = {};
 
         if (!formData.fullName) newErrors.fullName = "Nombre completo requerido";
-        if (!formData.documentType) newErrors.documentType = "Tipo de documento requerido";
-        if (!formData.documentNumber) newErrors.documentNumber = "Número de documento requerido";
+        if (!formData.document) newErrors.document = "Documento requerido";
         if (!formData.phone) newErrors.phone = "Teléfono requerido";
 
         if (selectedRole === "RESTAURANT_ADMIN") {
