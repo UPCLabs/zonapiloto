@@ -27,21 +27,21 @@ const AnunciosSection = ({
     const filteredCarouselImages = filterItems(carouselImages, ["title"]);
 
     return (
-        <div className="dashboard-section">
-            <div className="section-header">
-                <h2 className="section-title">
-                    <span className="title-icon">📢</span>
+        <div className="admin-dashboard-section">
+            <div className="admin-section-header">
+                <h2 className="admin-section-title">
+                    <span className="admin-title-icon">📢</span>
                     Anuncios - Página Principal
                 </h2>
-                <p className="section-subtitle">
+                <p className="admin-section-subtitle">
                     Gestión de anuncios visibles en la página principal
                 </p>
             </div>
 
-            <div className="form-container">
-                <h3 className="form-title">📝 Anuncios de Texto</h3>
+            <div className="admin-form-container">
+                <h3 className="admin-form-title">📝 Anuncios de Texto</h3>
                 <form
-                    className="data-form"
+                    className="admin-data-form"
                     onSubmit={(e) => {
                         e.preventDefault();
                         const formData = new FormData(e.target);
@@ -55,7 +55,7 @@ const AnunciosSection = ({
                         e.target.reset();
                     }}
                 >
-                    <div className="form-group">
+                    <div className="admin-form-group">
                         <label>Título del Anuncio *</label>
                         <input
                             type="text"
@@ -64,12 +64,12 @@ const AnunciosSection = ({
                             required
                         />
                     </div>
-                    <div className="form-row">
-                        <div className="form-group">
+                    <div className="admin-form-row">
+                        <div className="admin-form-group">
                             <label>Fecha *</label>
                             <input type="date" name="date" required />
                         </div>
-                        <div className="form-group">
+                        <div className="admin-form-group">
                             <label>Tipo *</label>
                             <select name="type" required>
                                 <option value="">Seleccionar...</option>
@@ -80,7 +80,7 @@ const AnunciosSection = ({
                             </select>
                         </div>
                     </div>
-                    <div className="form-group">
+                    <div className="admin-form-group">
                         <label>Descripción *</label>
                         <textarea
                             name="description"
@@ -89,15 +89,15 @@ const AnunciosSection = ({
                             required
                         ></textarea>
                     </div>
-                    <button type="submit" className="submit-btn" disabled={loading}>
+                    <button type="submit" className="admin-submit-btn" disabled={loading}>
                         {loading ? "Guardando..." : "Publicar Anuncio"}
                     </button>
                 </form>
             </div>
 
-            <div className="list-container">
-                <div className="list-header">
-                    <h3 className="form-title">Anuncios de Texto Publicados</h3>
+            <div className="admin-list-container">
+                <div className="admin-list-header">
+                    <h3 className="admin-form-title">Anuncios de Texto Publicados</h3>
                     <SearchBox
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
@@ -105,9 +105,9 @@ const AnunciosSection = ({
                     />
                 </div>
                 {loading ? (
-                    <div className="loading-state">Cargando anuncios...</div>
+                    <div className="admin-loading-state">Cargando anuncios...</div>
                 ) : filteredAnnouncements.length === 0 ? (
-                    <div className="empty-state">No hay anuncios publicados</div>
+                    <div className="admin-empty-state">No hay anuncios publicados</div>
                 ) : (
                     <DataTable
                         headers={["Título", "Tipo", "Fecha", "Acciones"]}
@@ -178,10 +178,10 @@ const AnunciosSection = ({
                 )}
             </div>
 
-            <div className="form-container" style={{ marginTop: "40px" }}>
-                <h3 className="form-title">🖼️ Carrusel de Imágenes</h3>
-                <form className="data-form" onSubmit={handleCreatePhotoAnnouncement}>
-                    <div className="form-group">
+            <div className="admin-form-container" style={{ marginTop: "40px" }}>
+                <h3 className="admin-form-title">🖼️ Carrusel de Imágenes</h3>
+                <form className="admin-data-form" onSubmit={handleCreatePhotoAnnouncement}>
+                    <div className="admin-form-group">
                         <label>Título de la Imagen *</label>
                         <input
                             type="text"
@@ -190,14 +190,14 @@ const AnunciosSection = ({
                             required
                         />
                     </div>
-                    <div className="form-group">
+                    <div className="admin-form-group">
                         <label>Seleccionar Imagen *</label>
                         <input
                             type="file"
                             accept="image/*"
                             onChange={handleFileChange}
                             required
-                            className="file-input"
+                            className="admin-file-input"
                         />
                         <p
                             style={{
@@ -210,22 +210,22 @@ const AnunciosSection = ({
                         </p>
                     </div>
                     {imagePreview && (
-                        <div className="image-preview-container">
+                        <div className="admin-image-preview-container">
                             <label>Vista Previa:</label>
-                            <div className="image-preview">
+                            <div className="admin-image-preview">
                                 <img src={imagePreview} alt="Preview" />
                             </div>
                         </div>
                     )}
-                    <button type="submit" className="submit-btn" disabled={loading}>
+                    <button type="submit" className="admin-submit-btn" disabled={loading}>
                         {loading ? "Subiendo..." : "Subir Imagen al Carrusel"}
                     </button>
                 </form>
             </div>
 
-            <div className="list-container">
-                <div className="list-header">
-                    <h3 className="form-title">Imágenes del Carrusel</h3>
+            <div className="admin-list-container">
+                <div className="admin-list-header">
+                    <h3 className="admin-form-title">Imágenes del Carrusel</h3>
                     <SearchBox
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
@@ -233,9 +233,9 @@ const AnunciosSection = ({
                     />
                 </div>
                 {loading ? (
-                    <div className="loading-state">Cargando imágenes...</div>
+                    <div className="admin-loading-state">Cargando imágenes...</div>
                 ) : filteredCarouselImages.length === 0 ? (
-                    <div className="empty-state">No hay imágenes en el carrusel</div>
+                    <div className="admin-empty-state">No hay imágenes en el carrusel</div>
                 ) : (
                     <CarouselGrid
                         images={filteredCarouselImages}

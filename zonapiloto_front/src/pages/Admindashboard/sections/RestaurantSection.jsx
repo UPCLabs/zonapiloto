@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Loader, AlertCircle, Plus, Edit, Trash2 } from "lucide-react";
+import { Loader, Plus, Edit, Trash2 } from "lucide-react";
 import "../../../styles/admin_dashboard/sections/restaurantsection.css";
 
 const RestaurantSection = () => {
     const API_URL = import.meta.env.VITE_API_BASE_URL;
     const [restaurant, setRestaurant] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [selectedLogo, setSelectedLogo] = useState(null);
-    const [selectedMenu, setSelectedMenu] = useState(null);
+    const [formMode, setFormMode] = useState(null); // null, 'create', 'edit'
     const [logoPreview, setLogoPreview] = useState(null);
-    const [formMode, setFormMode] = useState(null);
 
     useEffect(() => {
         fetchOwnRestaurant();
@@ -41,22 +39,10 @@ const RestaurantSection = () => {
         }
     };
 
-    const handleLogoChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setSelectedLogo(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setLogoPreview(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const handleMenuChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setSelectedMenu(file);
+    const handleLogoUrlChange = (e) => {
+        const url = e.target.value;
+        if (url && url.trim()) {
+            setLogoPreview(url);
         }
     };
 
@@ -74,12 +60,11 @@ const RestaurantSection = () => {
                 menuPdfUrl: formData.get("menuPdfUrl"),
             };
 
-            const endpoint = formMode === 'create'
-                ? `${API_URL}/information/restaurants`
-                : `${API_URL}/information/restaurants`;
+            const endpoint = `${API_URL}/information/restaurants`;
+            const method = formMode === 'create' ? "POST" : "PUT";
 
             const response = await fetch(endpoint, {
-                method: formMode === 'create' ? "POST" : "PUT",
+                method: method,
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
@@ -90,8 +75,6 @@ const RestaurantSection = () => {
             if (response.ok) {
                 alert(`Restaurante ${formMode === 'create' ? 'creado' : 'actualizado'} exitosamente`);
                 e.target.reset();
-                setSelectedLogo(null);
-                setSelectedMenu(null);
                 setLogoPreview(null);
                 await fetchOwnRestaurant();
             } else {
@@ -106,10 +89,10 @@ const RestaurantSection = () => {
         }
     };
 
-    if (loading) {
+    if (loading && !restaurant && formMode !== 'create') {
         return (
-            <div className="dashboard-section">
-                <div className="loading-state">
+            <div className="admin-dashboard-section">
+                <div className="admin-loading-state">
                     <Loader className="spinner" size={48} />
                     <p>Cargando información del restaurante...</p>
                 </div>
@@ -118,20 +101,22 @@ const RestaurantSection = () => {
     }
 
     return (
-        <div className="dashboard-section">
-            <div className="section-header">
-                <h2 className="section-title">
-                    <span className="title-icon">🍽️</span>
+        <div className="admin-dashboard-section">
+            <div className="admin-section-header">
+                <h2 className="admin-section-title">
+                    <span className="admin-title-icon">🍽️</span>
                     Mi Restaurante
                 </h2>
-                <p className="section-subtitle">
-                    {restaurant ? "Gestiona la información de tu restaurante" : "Crea tu restaurante"}
+                <p className="admin-section-subtitle">
+                    {restaurant
+                        ? "Gestiona la información de tu restaurante"
+                        : "Crea tu restaurante y comparte tu menú"}
                 </p>
             </div>
 
-            {/* Información del restaurante existente */}
+            {/* Vista del restaurante existente */}
             {restaurant && formMode !== 'edit' && (
-                <div className="list-container">
+                <div className="admin-list-container">
                     <div className="restaurant-info-card">
                         <div className="restaurant-header-info">
                             <img
@@ -139,7 +124,7 @@ const RestaurantSection = () => {
                                 alt={restaurant.nombre}
                                 className="restaurant-main-logo"
                                 onError={(e) => {
-                                    e.target.src = 'https://via.placeholder.com/100?text=Logo';
+                                    e.target.src = 'https://via.placeholder.com/100?text=Sin+Logo';
                                 }}
                             />
                             <div className="restaurant-details">
@@ -149,11 +134,13 @@ const RestaurantSection = () => {
                             </div>
                         </div>
 
-                        <div className="restaurant-actions" style={{ marginTop: '20px' }}>
+                        <div className="restaurant-actions">
                             <button
                                 className="primary-btn"
-                                onClick={() => setFormMode('edit')}
-                                style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                                onClick={() => {
+                                    setFormMode('edit');
+                                    setLogoPreview(restaurant.logo);
+                                }}
                             >
                                 <Edit size={18} />
                                 Editar Información
@@ -161,17 +148,12 @@ const RestaurantSection = () => {
                         </div>
 
                         {restaurant.menuPdfUrl && (
-                            <div className="menu-section" style={{ marginTop: '24px' }}>
-                                <h4 style={{ marginBottom: '12px', color: '#fff' }}>Menú Actual:</h4>
+                            <div className="menu-section">
+                                <h4>Menú Actual:</h4>
                                 <iframe
                                     src={restaurant.menuPdfUrl}
                                     title={`Menú de ${restaurant.nombre}`}
-                                    style={{
-                                        width: '100%',
-                                        height: '500px',
-                                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                                        borderRadius: '12px'
-                                    }}
+                                    className="menu-iframe"
                                     loading="lazy"
                                 />
                             </div>
@@ -219,6 +201,7 @@ const RestaurantSection = () => {
                                     <option value="Comida China">Comida China</option>
                                     <option value="Pizzería">Pizzería</option>
                                     <option value="Vegetariano/Vegano">Vegetariano/Vegano</option>
+                                    <option value="Mariscos">Mariscos</option>
                                     <option value="Otro">Otro</option>
                                 </select>
                             </div>
@@ -242,10 +225,11 @@ const RestaurantSection = () => {
                                 name="logo"
                                 defaultValue={restaurant?.logo || ""}
                                 placeholder="https://ejemplo.com/logo.jpg"
+                                onChange={handleLogoUrlChange}
                                 required
                             />
-                            <small style={{ color: '#999', marginTop: '4px', display: 'block' }}>
-                                Ingresa la URL de la imagen del logo (debe ser una URL pública)
+                            <small className="form-help-text">
+                                Ingresa la URL de la imagen del logo (debe ser una URL pública accesible)
                             </small>
                         </div>
 
@@ -253,7 +237,13 @@ const RestaurantSection = () => {
                             <div className="image-preview-container">
                                 <label>Vista previa del logo:</label>
                                 <div className="image-preview">
-                                    <img src={logoPreview} alt="Logo preview" />
+                                    <img
+                                        src={logoPreview}
+                                        alt="Logo preview"
+                                        onError={(e) => {
+                                            e.target.src = 'https://via.placeholder.com/200?text=URL+Inválida';
+                                        }}
+                                    />
                                 </div>
                             </div>
                         )}
@@ -264,24 +254,22 @@ const RestaurantSection = () => {
                                 type="url"
                                 name="menuPdfUrl"
                                 defaultValue={restaurant?.menuPdfUrl || ""}
-                                placeholder="https://www.canva.com/design/..."
+                                placeholder="https://drive.google.com/file/d/... o https://canva.com/design/..."
                                 required
                             />
-                            <small style={{ color: '#999', marginTop: '4px', display: 'block' }}>
-                                Sube tu menú a Canva u otra plataforma y pega el enlace de visualización
+                            <small className="form-help-text">
+                                Sube tu menú a Google Drive, Canva u otra plataforma y pega el enlace público
                             </small>
                         </div>
 
-                        <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
+                        <div className="form-actions">
                             {formMode === 'edit' && (
                                 <button
                                     type="button"
-                                    className="secondary-btn"
+                                    className="admin-secondary-btn"
                                     onClick={() => {
                                         setFormMode(null);
                                         setLogoPreview(null);
-                                        setSelectedLogo(null);
-                                        setSelectedMenu(null);
                                     }}
                                 >
                                     Cancelar
@@ -289,10 +277,14 @@ const RestaurantSection = () => {
                             )}
                             <button
                                 type="submit"
-                                className="submit-btn"
+                                className="admin-submit-btn"
                                 disabled={loading}
                             >
-                                {loading ? "Guardando..." : formMode === 'create' ? "Crear Restaurante" : "Guardar Cambios"}
+                                {loading
+                                    ? "Guardando..."
+                                    : formMode === 'create'
+                                        ? "Crear Restaurante"
+                                        : "Guardar Cambios"}
                             </button>
                         </div>
                     </form>

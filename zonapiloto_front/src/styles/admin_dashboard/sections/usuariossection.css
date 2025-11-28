@@ -1,7 +1,4 @@
-/* ============================================
-   USUARIOS SECTION - ESTILOS ESPECIALES
-============================================ */
-.superadmin-badge {
+/* .superadmin-badge {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -63,4 +60,4 @@
 .role-badge.user {
     background: rgba(156, 163, 175, 0.2);
     color: #9ca3af;
-}
+}  */

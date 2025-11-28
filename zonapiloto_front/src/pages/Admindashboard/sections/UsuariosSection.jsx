@@ -19,24 +19,24 @@ const UsuariosSection = ({
     const filteredUsers = filterItems(users, ["username", "role"]);
 
     return (
-        <div className="dashboard-section">
-            <div className="section-header">
-                <h2 className="section-title">
-                    <span className="title-icon">👥</span>
+        <div className="admin-dashboard-section">
+            <div className="admin-section-header">
+                <h2 className="admin-section-title">
+                    <span className="admin-title-icon">👥</span>
                     Gestión de Usuarios
                 </h2>
-                <p className="section-subtitle">Solo para Super Administradores</p>
+                <p className="admin-section-subtitle">Solo para Super Administradores</p>
             </div>
             {userRole === "SUPERADMIN" ? (
                 <>
-                    <div className="form-container">
+                    <div className="admin-form-container">
                         <div className="superadmin-badge">
                             <span>👑</span>
                             <span>Privilegios de Super Administrador</span>
                         </div>
-                        <h3 className="form-title">Crear Nuevo Usuario</h3>
+                        <h3 className="admin-form-title">Crear Nuevo Usuario</h3>
                         <form
-                            className="data-form"
+                            className="admin-data-form"
                             onSubmit={async (e) => {
                                 e.preventDefault();
                                 const formData = new FormData(e.target);
@@ -59,7 +59,7 @@ const UsuariosSection = ({
                                 setPasswordConfirm("");
                             }}
                         >
-                            <div className="form-group">
+                            <div className="admin-form-group">
                                 <label>Nombre de Usuario *</label>
                                 <input
                                     type="text"
@@ -68,7 +68,7 @@ const UsuariosSection = ({
                                     required
                                 />
                             </div>
-                            <div className="form-group">
+                            <div className="admin-form-group">
                                 <label>Contraseña *</label>
                                 <input
                                     type="text"
@@ -77,7 +77,7 @@ const UsuariosSection = ({
                                     required
                                 />
                             </div>
-                            <div className="form-group">
+                            <div className="admin-form-group">
                                 <label>Confirmar Contraseña *</label>
                                 <input
                                     type="text"
@@ -86,22 +86,24 @@ const UsuariosSection = ({
                                     required
                                 />
                             </div>
-                            <div className="form-group">
+                            <div className="admin-form-group">
                                 <label>Rol *</label>
                                 <select name="role" required>
                                     <option value="">Seleccionar...</option>
-                                    <option value="ADMIN">Administrador</option>
                                     <option value="SUPERADMIN">Super Administrador</option>
+                                    <option value="RESTAURANTADMIN">Administrador De Restaurante</option>
+                                    <option value="QUESTIONSADMIN">Administrador De Banco De Pregungas</option>
+                                    <option value="EVENTSADMIN">Administrador De Eventos</option>
                                 </select>
                             </div>
-                            <button type="submit" className="submit-btn" disabled={loading}>
+                            <button type="submit" className="admin-submit-btn" disabled={loading}>
                                 {loading ? "Creando..." : "Crear Usuario"}
                             </button>
                         </form>
                     </div>
-                    <div className="list-container">
-                        <div className="list-header">
-                            <h3 className="form-title">Usuarios Existentes</h3>
+                    <div className="admin-list-container">
+                        <div className="admin-list-header">
+                            <h3 className="admin-form-title">Usuarios Existentes</h3>
                             <SearchBox
                                 searchTerm={searchTerm}
                                 setSearchTerm={setSearchTerm}
@@ -109,9 +111,9 @@ const UsuariosSection = ({
                             />
                         </div>
                         {loading ? (
-                            <div className="loading-state">Cargando usuarios...</div>
+                            <div className="admin-loading-state">Cargando usuarios...</div>
                         ) : filteredUsers.length === 0 ? (
-                            <div className="empty-state">No hay usuarios registrados</div>
+                            <div className="admin-empty-state">No hay usuarios registrados</div>
                         ) : (
                             <DataTable
                                 headers={["Usuario", "Rol", "MFA Configurado", "Acciones"]}

@@ -328,7 +328,7 @@ const useAdminData = () => {
         const error = await response.json();
         alert(
           "Error: " +
-            (error.message || error.error || "No se pudo crear el elemento"),
+          (error.message || error.error || "No se pudo crear el elemento"),
         );
       }
     } catch (error) {

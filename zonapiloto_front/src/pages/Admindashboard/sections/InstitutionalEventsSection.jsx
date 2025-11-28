@@ -22,21 +22,21 @@ const EventosInstitucionalesSection = ({
     ]);
 
     return (
-        <div className="dashboard-section">
-            <div className="section-header">
-                <h2 className="section-title">
-                    <span className="title-icon">🎉</span>
+        <div className="admin-dashboard-section">
+            <div className="admin-section-header">
+                <h2 className="admin-section-title">
+                    <span className="admin-title-icon">🎉</span>
                     Eventos Institucionales
                 </h2>
-                <p className="section-subtitle">
+                <p className="admin-section-subtitle">
                     Gestión de eventos y actividades institucionales
                 </p>
             </div>
 
-            <div className="form-container">
-                <h3 className="form-title">Crear Nuevo Evento</h3>
+            <div className="admin-form-container">
+                <h3 className="admin-form-title">Crear Nuevo Evento</h3>
                 <form
-                    className="data-form"
+                    className="admin-data-form"
                     onSubmit={(e) => {
                         e.preventDefault();
                         const formData = new FormData(e.target);
@@ -52,7 +52,7 @@ const EventosInstitucionalesSection = ({
                         e.target.reset();
                     }}
                 >
-                    <div className="form-group">
+                    <div className="admin-form-group">
                         <label>Título del Evento *</label>
                         <input
                             type="text"
@@ -61,14 +61,14 @@ const EventosInstitucionalesSection = ({
                             required
                         />
                     </div>
-                    <div className="form-row">
-                        <div className="form-group">
+                    <div className="admin-form-row">
+                        <div className="admin-form-group">
                             <label>Fecha *</label>
                             <input type="date" name="start_date" required />
                         </div>
                     </div>
-                    <div className="form-row">
-                        <div className="form-group">
+                    <div className="admin-form-row">
+                        <div className="admin-form-group">
                             <label>Tipo de evento *</label>
                             <select name="type" required>
                                 <option value="">Seleccionar...</option>
@@ -78,7 +78,7 @@ const EventosInstitucionalesSection = ({
                                 <option value="MEETING">Reunión</option>
                             </select>
                         </div>
-                        <div className="form-group">
+                        <div className="admin-form-group">
                             <label>Ubicación *</label>
                             <input
                                 type="text"
@@ -88,7 +88,7 @@ const EventosInstitucionalesSection = ({
                             />
                         </div>
                     </div>
-                    <div className="form-group">
+                    <div className="admin-form-group">
                         <label>URL (Opcional)</label>
                         <input
                             type="url"
@@ -96,7 +96,7 @@ const EventosInstitucionalesSection = ({
                             placeholder="https://ejemplo.com"
                         />
                     </div>
-                    <div className="form-group">
+                    <div className="admin-form-group">
                         <label>Descripción *</label>
                         <textarea
                             name="description"
@@ -105,15 +105,15 @@ const EventosInstitucionalesSection = ({
                             required
                         ></textarea>
                     </div>
-                    <button type="submit" className="submit-btn" disabled={loading}>
+                    <button type="submit" className="admin-submit-btn" disabled={loading}>
                         {loading ? "Guardando..." : "Crear Evento"}
                     </button>
                 </form>
             </div>
 
-            <div className="list-container">
-                <div className="list-header">
-                    <h3 className="form-title">Eventos Programados</h3>
+            <div className="admin-list-container">
+                <div className="admin-list-header">
+                    <h3 className="admin-form-title">Eventos Programados</h3>
                     <SearchBox
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
@@ -121,9 +121,9 @@ const EventosInstitucionalesSection = ({
                     />
                 </div>
                 {loading ? (
-                    <div className="loading-state">Cargando eventos...</div>
+                    <div className="admin-loading-state">Cargando eventos...</div>
                 ) : filteredInstitutionalEvents.length === 0 ? (
-                    <div className="empty-state">No hay eventos programados</div>
+                    <div className="admin-empty-state">No hay eventos programados</div>
                 ) : (
                     <div className="event-list">
                         {filteredInstitutionalEvents.map((event) => (

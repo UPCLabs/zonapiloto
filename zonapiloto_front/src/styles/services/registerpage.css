@@ -611,6 +611,170 @@
 }
 
 /* ============================================
+   TERMS AND CONDITIONS SECTION
+   Agregar esto al final de registerpage.css
+============================================ */
+
+.terms-section {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 24px;
+}
+
+.terms-checkbox-container {
+    margin-bottom: 20px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    margin-top: 2px;
+    cursor: pointer;
+    accent-color: #667eea;
+    flex-shrink: 0;
+}
+
+.checkbox-label input[type="checkbox"].error {
+    outline: 2px solid #ff4444;
+    border-radius: 4px;
+}
+
+.checkbox-text {
+    color: #e0e0e0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.terms-link {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid transparent;
+}
+
+.terms-link:hover {
+    color: #8b9aff;
+    border-bottom-color: #8b9aff;
+}
+
+.terms-error {
+    display: block;
+    margin-top: 8px;
+    margin-left: 32px;
+}
+
+/* Privacy Notice Box */
+.privacy-notice {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    background: rgba(102, 126, 234, 0.08);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 10px;
+    margin-top: 16px;
+}
+
+.notice-icon {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.notice-content {
+    flex: 1;
+}
+
+.notice-content strong {
+    color: #fff;
+    font-size: 1rem;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.notice-content p {
+    color: #b0b0b0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .terms-section {
+        padding: 20px;
+    }
+
+    .checkbox-label {
+        gap: 10px;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        min-width: 18px;
+    }
+
+    .checkbox-text {
+        font-size: 0.9rem;
+    }
+
+    .privacy-notice {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .notice-icon {
+        font-size: 1.5rem;
+    }
+
+    .notice-content strong {
+        font-size: 0.95rem;
+    }
+
+    .notice-content p {
+        font-size: 0.85rem;
+    }
+
+    .terms-error {
+        margin-left: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    .terms-section {
+        padding: 16px;
+    }
+
+    .checkbox-label {
+        gap: 8px;
+    }
+
+    .checkbox-text {
+        font-size: 0.85rem;
+    }
+
+    .privacy-notice {
+        padding: 14px;
+    }
+
+    .notice-content p {
+        font-size: 0.8rem;
+    }
+}
+
+/* ============================================
    ANIMACIONES
 ============================================ */
 @keyframes slideDown {

@@ -21,21 +21,21 @@ const CalendarioSection = ({
     ]);
 
     return (
-        <div className="dashboard-section">
-            <div className="section-header">
-                <h2 className="section-title">
-                    <span className="title-icon">📅</span>
+        <div className="admin-dashboard-section">
+            <div className="admin-section-header">
+                <h2 className="admin-section-title">
+                    <span className="admin-title-icon">📅</span>
                     Calendario Académico
                 </h2>
-                <p className="section-subtitle">
+                <p className="admin-section-subtitle">
                     Gestión de fechas y horarios importantes
                 </p>
             </div>
 
-            <div className="form-container">
-                <h3 className="form-title">Agregar Fecha Importante</h3>
+            <div className="admin-form-container">
+                <h3 className="admin-form-title">Agregar Fecha Importante</h3>
                 <form
-                    className="data-form"
+                    className="admin-data-form"
                     onSubmit={(e) => {
                         e.preventDefault();
                         const formData = new FormData(e.target);
@@ -53,7 +53,7 @@ const CalendarioSection = ({
                     }}
                 >
                     <div className="form-row">
-                        <div className="form-group">
+                        <div className="admin-form-group">
                             <label>Título del Evento *</label>
                             <input
                                 type="text"
@@ -62,7 +62,7 @@ const CalendarioSection = ({
                                 required
                             />
                         </div>
-                        <div className="form-group">
+                        <div className="admin-form-group">
                             <label>Tipo *</label>
                             <select name="type" required>
                                 <option value="">Seleccionar...</option>
@@ -73,17 +73,17 @@ const CalendarioSection = ({
                             </select>
                         </div>
                     </div>
-                    <div className="form-row">
-                        <div className="form-group">
+                    <div className="admin-form-row">
+                        <div className="admin-form-group">
                             <label>Fecha de Inicio *</label>
                             <input type="date" name="start_date" required />
                         </div>
-                        <div className="form-group">
+                        <div className="admin-form-group">
                             <label>Fecha Final *</label>
                             <input type="date" name="end_date" required />
                         </div>
                     </div>
-                    <div className="form-group">
+                    <div className="admin-form-group">
                         <label>Descripción *</label>
                         <textarea
                             name="description"
@@ -92,15 +92,15 @@ const CalendarioSection = ({
                             required
                         ></textarea>
                     </div>
-                    <button type="submit" className="submit-btn" disabled={loading}>
+                    <button type="submit" className="admin-submit-btn" disabled={loading}>
                         {loading ? "Guardando..." : "Agregar al Calendario"}
                     </button>
                 </form>
             </div>
 
-            <div className="list-container">
-                <div className="list-header">
-                    <h3 className="form-title">Eventos Registrados</h3>
+            <div className="admin-list-container">
+                <div className="admin-list-header">
+                    <h3 className="admin-form-title">Eventos Registrados</h3>
                     <SearchBox
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
@@ -108,11 +108,11 @@ const CalendarioSection = ({
                     />
                 </div>
                 {loading ? (
-                    <div className="loading-state">Cargando eventos...</div>
+                    <div className="admin-loading-state">Cargando eventos...</div>
                 ) : filteredCalendarEvents.length === 0 ? (
-                    <div className="empty-state">No hay eventos registrados</div>
+                    <div className="admin-empty-state">No hay eventos registrados</div>
                 ) : (
-                    <div className="event-list">
+                    <div className="admin-event-list">
                         {filteredCalendarEvents.map((event) => (
                             <EventItem
                                 key={event.id}

@@ -4,7 +4,7 @@ import "../../../styles/admin_dashboard/shared/searchbox.css";
 const SearchBox = ({ searchTerm, setSearchTerm, placeholder = "Buscar..." }) => {
     return (
         <div className="search-box">
-            <span className="search-icon">🔍</span>
+            <span className="admin-search-icon">🔍</span>
             <input
                 type="text"
                 placeholder={placeholder}

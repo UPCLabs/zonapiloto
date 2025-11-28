@@ -10,6 +10,7 @@ const RegisterPage = ({ onBack }) => {
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -207,6 +208,8 @@ const RegisterPage = ({ onBack }) => {
     if (!formData.identityDocument)
       newErrors.identityDocument =
         "Documento de identidad requerido (ambas caras en PDF)";
+    if (!acceptedTerms)
+      newErrors.acceptedTerms = "Debes aceptar los términos y condiciones";
 
     if (selectedRole === "RESTAURANTADMIN") {
       if (!formData.roleType) newErrors.roleType = "Rol requerido";
@@ -244,7 +247,6 @@ const RegisterPage = ({ onBack }) => {
     try {
       const submitData = new FormData();
 
-      // Agregar datos del usuario como JSON
       const userDTO = {
         username: formData.fullName,
         email: formData.email,
@@ -254,7 +256,6 @@ const RegisterPage = ({ onBack }) => {
 
       submitData.append("user", JSON.stringify(userDTO));
 
-      // Agregar documentos
       if (formData.identityDocument) {
         submitData.append("documento", formData.identityDocument);
       }
@@ -300,12 +301,12 @@ const RegisterPage = ({ onBack }) => {
         return;
       }
 
-      // Resetear formulario
       setStep(1);
       setSelectedRole(null);
       setIsEmailVerified(false);
       setEmailSent(false);
       setVerificationCode("");
+      setAcceptedTerms(false);
       setFormData({
         email: "",
         confirmEmail: "",
@@ -557,7 +558,6 @@ const RegisterPage = ({ onBack }) => {
 
       <main className="register-main">
         <div className="register-container">
-          {/* Header */}
           <div className="register-header">
             <h1>Registro de Administradores</h1>
             <p className="register-subtitle">
@@ -567,7 +567,6 @@ const RegisterPage = ({ onBack }) => {
             </p>
           </div>
 
-          {/* Step 1: Role Selection */}
           {step === 1 && (
             <div className="step-section">
               <h2 className="section-title">Selecciona tu Rol</h2>
@@ -588,7 +587,6 @@ const RegisterPage = ({ onBack }) => {
             </div>
           )}
 
-          {/* Step 2: Email Verification */}
           {step === 2 && (
             <div className="step-section">
               <button onClick={handleBackToRoles} className="back-button">
@@ -666,7 +664,6 @@ const RegisterPage = ({ onBack }) => {
             </div>
           )}
 
-          {/* Step 3: Final Form */}
           {step === 3 && isEmailVerified && (
             <div className="step-section">
               <button onClick={handleBackToEmail} className="back-button">
@@ -678,7 +675,6 @@ const RegisterPage = ({ onBack }) => {
                   Información Personal y Documentación
                 </h2>
 
-                {/* Campos Bloqueados */}
                 <div className="form-section locked-section">
                   <h3 className="subsection-title">
                     <span className="lock-icon">🔒</span>
@@ -718,7 +714,6 @@ const RegisterPage = ({ onBack }) => {
                   </div>
                 </div>
 
-                {/* Información Personal */}
                 <div className="form-section">
                   <h3 className="subsection-title">Datos Personales</h3>
 
@@ -772,10 +767,65 @@ const RegisterPage = ({ onBack }) => {
                   </div>
                 </div>
 
-                {/* Documentación Específica */}
                 <div className="form-section">
                   <h3 className="subsection-title">Documentación Requerida</h3>
                   {renderRoleSpecificFields()}
+                </div>
+                <div className="form-section terms-section">
+                  <div className="terms-checkbox-container">
+                    <label htmlFor="acceptTerms" className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        id="acceptTerms"
+                        checked={acceptedTerms}
+                        onChange={(e) => {
+                          setAcceptedTerms(e.target.checked);
+                          if (errors.acceptedTerms) {
+                            setErrors(prev => ({ ...prev, acceptedTerms: "" }));
+                          }
+                        }}
+                        className={errors.acceptedTerms ? "error" : ""}
+                      />
+                      <span className="checkbox-text">
+                        He leído y acepto la{" "}
+                        <a
+                          href="/privacidad"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="terms-link"
+                        >
+                          Política de Privacidad
+                        </a>
+                        {" "}y{" "}
+                        <a
+                          href="/terminos"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="terms-link"
+                        >
+                          Términos y Condiciones
+                        </a>
+                        {" "}para el tratamiento de mis datos personales *
+                      </span>
+                    </label>
+                    {errors.acceptedTerms && (
+                      <span className="error-message terms-error">
+                        {errors.acceptedTerms}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="privacy-notice">
+                    <div className="notice-icon">🔒</div>
+                    <div className="notice-content">
+                      <strong>Protección de Datos</strong>
+                      <p>
+                        Tus documentos serán almacenados de forma segura y únicamente serán
+                        utilizados para verificar tu identidad y validar tu solicitud de
+                        administrador. No compartiremos tu información con terceros.
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 <button onClick={handleSubmit} className="submit-btn">
@@ -790,7 +840,6 @@ const RegisterPage = ({ onBack }) => {
 
       <Footer />
 
-      {/* Verification Modal */}
       {showVerificationModal && (
         <div className="modal-overlay">
           <div className="modal-content">

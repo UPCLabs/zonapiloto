@@ -224,9 +224,9 @@ const AdminDashboard = () => {
 
             default:
                 return (
-                    <div className="dashboard-section">
-                        <div className="section-header">
-                            <h2 className="section-title">Sección en Desarrollo</h2>
+                    <div className="admin-dashboard-section">
+                        <div className="admin-section-header">
+                            <h2 className="admin-section-title">Sección en Desarrollo</h2>
                         </div>
                         <div className="coming-soon">
                             <div className="coming-soon-icon">🚧</div>
@@ -239,13 +239,13 @@ const AdminDashboard = () => {
     };
 
     if (fullLoading) {
-        return <div className="loader">Cargando...</div>;
+        return <div className="admin-loader">Cargando...</div>;
     }
 
     return (
         <div className="admin-dashboard">
-            <div className="ambient-light left"></div>
-            <div className="ambient-light right"></div>
+            <div className="admin-ambient-light left"></div>
+            <div className="admin-ambient-light right"></div>
 
             <Sidebar
                 menuOpen={menuOpen}
@@ -259,10 +259,10 @@ const AdminDashboard = () => {
                 filteredMenuItems={filteredMenuItems}
             />
 
-            <div className="main-content">
+            <div className="admin-main-content">
                 <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
-                <main className="dashboard-content">{renderContent()}</main>
+                <main className="admin-dashboard-content">{renderContent()}</main>
 
                 <Footer />
             </div>

@@ -22,20 +22,20 @@ const BancoPreguntasSection = ({
     const filteredCategories = filterItems(categories, ["name", "description"]);
 
     return (
-        <div className="dashboard-section">
-            <div className="section-header">
-                <h2 className="section-title">
-                    <span className="title-icon">📝</span>
+        <div className="admin-dashboard-section">
+            <div className="admin-section-header">
+                <h2 className="admin-section-title">
+                    <span className="admin-title-icon">📝</span>
                     Banco de Preguntas
                 </h2>
-                <p className="section-subtitle">
+                <p className="admin-section-subtitle">
                     Gestión de preguntas, respuestas y categorías
                 </p>
             </div>
-            <div className="form-container">
-                <h3 className="form-title">📁 Gestión de Categorías</h3>
+            <div className="admin-form-container">
+                <h3 className="admin-form-title">📁 Gestión de Categorías</h3>
                 <form
-                    className="data-form"
+                    className="admin-data-form"
                     onSubmit={(e) => {
                         e.preventDefault();
                         const formData = new FormData(e.target);
@@ -47,7 +47,7 @@ const BancoPreguntasSection = ({
                         e.target.reset();
                     }}
                 >
-                    <div className="form-group">
+                    <div className="admin-form-group">
                         <label>Nombre de la Categoría *</label>
                         <input
                             type="text"
@@ -56,7 +56,7 @@ const BancoPreguntasSection = ({
                             required
                         />
                     </div>
-                    <div className="form-group">
+                    <div className="admin-form-group">
                         <label>Descripción *</label>
                         <textarea
                             name="description"
@@ -65,15 +65,15 @@ const BancoPreguntasSection = ({
                             required
                         ></textarea>
                     </div>
-                    <button type="submit" className="submit-btn" disabled={loading}>
+                    <button type="submit" className="admin-submit-btn" disabled={loading}>
                         {loading ? "Guardando..." : "Crear Categoría"}
                     </button>
                 </form>
             </div>
 
-            <div className="list-container">
-                <div className="list-header">
-                    <h3 className="form-title">Categorías Registradas</h3>
+            <div className="admin-list-container">
+                <div className="admin-list-header">
+                    <h3 className="admin-form-title">Categorías Registradas</h3>
                     <SearchBox
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
@@ -81,9 +81,9 @@ const BancoPreguntasSection = ({
                     />
                 </div>
                 {loading ? (
-                    <div className="loading-state">Cargando categorías...</div>
+                    <div className="admin-loading-state">Cargando categorías...</div>
                 ) : filteredCategories.length === 0 ? (
-                    <div className="empty-state">No hay categorías registradas</div>
+                    <div className="admin-empty-state">No hay categorías registradas</div>
                 ) : (
                     <DataTable
                         headers={["Nombre", "Descripción", "Acciones"]}
@@ -127,10 +127,10 @@ const BancoPreguntasSection = ({
             </div>
 
             {/* GESTIÓN DE PREGUNTAS */}
-            <div className="form-container" style={{ marginTop: "40px" }}>
-                <h3 className="form-title">❓ Nueva Pregunta</h3>
+            <div className="admin-form-container" style={{ marginTop: "40px" }}>
+                <h3 className="admin-form-title">❓ Nueva Pregunta</h3>
                 <form
-                    className="data-form"
+                    className="admin-data-form"
                     onSubmit={(e) => {
                         e.preventDefault();
                         const formData = new FormData(e.target);
@@ -143,7 +143,7 @@ const BancoPreguntasSection = ({
                         e.target.reset();
                     }}
                 >
-                    <div className="form-group">
+                    <div className="admin-form-group">
                         <label>Pregunta *</label>
                         <textarea
                             name="question"
@@ -152,7 +152,7 @@ const BancoPreguntasSection = ({
                             required
                         ></textarea>
                     </div>
-                    <div className="form-group">
+                    <div className="admin-form-group">
                         <label>Categoría *</label>
                         <select name="categoryName" required>
                             <option value="">Seleccionar categoría...</option>
@@ -163,7 +163,7 @@ const BancoPreguntasSection = ({
                             ))}
                         </select>
                     </div>
-                    <div className="form-group">
+                    <div className="admin-form-group">
                         <label>Respuesta *</label>
                         <textarea
                             name="answer"
@@ -172,18 +172,18 @@ const BancoPreguntasSection = ({
                             required
                         ></textarea>
                     </div>
-                    <button type="submit" className="submit-btn" disabled={loading}>
+                    <button type="submit" className="admin-submit-btn" disabled={loading}>
                         {loading ? "Guardando..." : "Agregar Pregunta"}
                     </button>
                 </form>
             </div>
 
-            <div className="list-container">
-                <h3 className="form-title">Preguntas Registradas</h3>
+            <div className="admin-list-container">
+                <h3 className="admin-form-title">Preguntas Registradas</h3>
                 {loading ? (
-                    <div className="loading-state">Cargando preguntas...</div>
+                    <div className="admin-loading-state">Cargando preguntas...</div>
                 ) : filteredQuestions.length === 0 ? (
-                    <div className="empty-state">No hay preguntas registradas</div>
+                    <div className="admin-empty-state">No hay preguntas registradas</div>
                 ) : (
                     <DataTable
                         headers={["Pregunta", "Categoría", "Respuesta", "Acciones"]}

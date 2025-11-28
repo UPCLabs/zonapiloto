@@ -10,12 +10,26 @@ const SolicitudesSection = () => {
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [showDocumentsModal, setShowDocumentsModal] = useState(false);
     const [rejectReason, setRejectReason] = useState("");
+    const [notification, setNotification] = useState(null);
 
     const API_URL = import.meta.env.VITE_API_BASE_URL;
 
     useEffect(() => {
         fetchPendingUsers();
     }, []);
+
+    useEffect(() => {
+        if (notification) {
+            const timer = setTimeout(() => {
+                setNotification(null);
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [notification]);
+
+    const showNotification = (message, type = 'success') => {
+        setNotification({ message, type });
+    };
 
     const fetchPendingUsers = async () => {
         setLoading(true);
@@ -62,17 +76,22 @@ const SolicitudesSection = () => {
             });
 
             if (response.ok) {
-                alert(confirm ? 'Usuario aprobado exitosamente' : 'Usuario rechazado');
+                showNotification(
+                    confirm
+                        ? '✓ Usuario aprobado exitosamente'
+                        : '✗ Usuario rechazado correctamente',
+                    confirm ? 'success' : 'info'
+                );
                 setShowConfirmModal(false);
                 setSelectedUser(null);
                 setRejectReason("");
                 fetchPendingUsers();
             } else {
                 const data = await response.json();
-                alert(data.error || 'Error al procesar la solicitud');
+                showNotification(data.error || 'Error al procesar la solicitud', 'error');
             }
         } catch (error) {
-            alert('Error al procesar la solicitud');
+            showNotification('Error al procesar la solicitud', 'error');
             console.error('Error:', error);
         }
     };
@@ -162,20 +181,34 @@ const SolicitudesSection = () => {
     };
 
     return (
-        <div className="dashboard-section">
-            <div className="section-header">
-                <h2 className="section-title">
-                    <span className="title-icon">📋</span>
+        <div className="admin-dashboard-section">
+            {notification && (
+                <div className={`notification notification-${notification.type}`}>
+                    <div className="notification-content">
+                        <span className="notification-message">{notification.message}</span>
+                        <button
+                            className="notification-close"
+                            onClick={() => setNotification(null)}
+                        >
+                            ✕
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            <div className="admin-section-header">
+                <h2 className="admin-section-title">
+                    <span className="admin-title-icon">📋</span>
                     Solicitudes de Registro
                 </h2>
-                <p className="section-subtitle">
+                <p className="admin-section-subtitle">
                     Gestión de solicitudes pendientes de aprobación
                 </p>
             </div>
 
-            <div className="list-container">
-                <div className="list-header">
-                    <h3 className="form-title">Solicitudes Pendientes</h3>
+            <div className="admin-list-container">
+                <div className="admin-list-header">
+                    <h3 className="admin-form-title">Solicitudes Pendientes</h3>
                     <SearchBox
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
@@ -184,7 +217,7 @@ const SolicitudesSection = () => {
                 </div>
 
                 {loading ? (
-                    <div className="loading-state">Cargando solicitudes...</div>
+                    <div className="admin-loading-state">Cargando solicitudes...</div>
                 ) : filteredUsers.length === 0 ? (
                     <div className="empty-state">
                         {searchTerm ? "No se encontraron solicitudes" : "No hay solicitudes pendientes"}
@@ -198,7 +231,7 @@ const SolicitudesSection = () => {
                                 style={{ "--role-color": getRoleColor(user.roleRequested) }}
                             >
                                 <div className="solicitud-header">
-                                    <div className="user-info">
+                                    <div className="solicitud-user-info">
                                         <span className="role-icon">{getRoleIcon(user.roleRequested)}</span>
                                         <div className="user-details">
                                             <h4 className="user-name">{user.username}</h4>
@@ -246,8 +279,6 @@ const SolicitudesSection = () => {
                     </div>
                 )}
             </div>
-
-            {/* Modal de Confirmación */}
             {showConfirmModal && selectedUser && (
                 <div className="modal-overlay" onClick={() => {
                     setShowConfirmModal(false);
@@ -261,7 +292,7 @@ const SolicitudesSection = () => {
                                 : '¿Rechazar solicitud?'}
                         </h3>
 
-                        <div className="modal-user-info">
+                        <div className="modal-solicitud-user-info">
                             <p><strong>Usuario:</strong> {selectedUser.username}</p>
                             <p><strong>Email:</strong> {selectedUser.email}</p>
                             <p><strong>Rol:</strong> {getRoleName(selectedUser.roleRequested)}</p>
@@ -295,7 +326,7 @@ const SolicitudesSection = () => {
                             <button
                                 onClick={() => {
                                     if (selectedUser.action === 'reject' && !rejectReason.trim()) {
-                                        alert('Por favor ingresa el motivo del rechazo');
+                                        showNotification('Por favor ingresa el motivo del rechazo', 'error');
                                         return;
                                     }
                                     handleConfirmUser(
@@ -312,7 +343,6 @@ const SolicitudesSection = () => {
                 </div>
             )}
 
-            {/* Modal de Documentos */}
             {showDocumentsModal && selectedUser && (
                 <div className="modal-overlay" onClick={() => {
                     setShowDocumentsModal(false);
@@ -323,7 +353,7 @@ const SolicitudesSection = () => {
                             📎 Documentos de {selectedUser.username}
                         </h3>
 
-                        <div className="modal-user-info">
+                        <div className="modal-solicitud-user-info">
                             <p><strong>Email:</strong> {selectedUser.email}</p>
                             <p><strong>Rol:</strong> {getRoleName(selectedUser.roleRequested)}</p>
                         </div>

@@ -3,11 +3,11 @@ import "../../../styles/admin_dashboard/sections/iniciosection.css";
 
 const InicioSection = ({ services, setActiveSection }) => {
     return (
-        <div className="dashboard-section">
-            <div className="section-header">
-                <h2 className="section-title">Panel de Control</h2>
+        <div className="admin-dashboard-section">
+            <div className="admin-section-header">
+                <h2 className="admin-section-title">Panel de Control</h2>
             </div>
-            <div className="services-overview">
+            <div className="admin-services-overview">
                 <h3 className="subsection-title">Servicios Disponibles</h3>
                 <div className="services-grid">
                     {services.map((service) => (

@@ -17,33 +17,34 @@
     overflow: hidden;
 }
 
-.ambient-light {
+/* LUCES AMBIENTALES - REDUCIDAS Y SUTILES */
+.admin-ambient-light {
     position: fixed;
-    width: 600px;
-    height: 600px;
+    width: 500px;
+    height: 500px;
     border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.15;
+    filter: blur(140px);
+    opacity: 0.08;
     pointer-events: none;
     z-index: 0;
 }
 
-.ambient-light.left {
-    top: -200px;
-    left: -200px;
+.admin-ambient-light.left {
+    top: -150px;
+    left: -150px;
     background: #4a90e2;
 }
 
-.ambient-light.right {
-    bottom: -200px;
-    right: -200px;
+.admin-ambient-light.right {
+    bottom: -150px;
+    right: -150px;
     background: #9b59b6;
 }
 
 /* ============================================
    MAIN CONTENT
 ============================================ */
-.main-content {
+.admin-main-content {
     flex: 1;
     margin-left: 280px;
     display: flex;
@@ -52,7 +53,7 @@
     z-index: 1;
 }
 
-.dashboard-content {
+.admin-dashboard-content {
     flex: 1;
     padding: 40px;
     overflow-y: auto;
@@ -61,11 +62,11 @@
 /* ============================================
    SECTIONS BASE
 ============================================ */
-.dashboard-section {
-    animation: fadeIn 0.5s ease;
+.admin-dashboard-section {
+    animation: adminFadeIn 0.5s ease;
 }
 
-@keyframes fadeIn {
+@keyframes adminFadeIn {
     from {
         opacity: 0;
         transform: translateY(20px);
@@ -77,11 +78,11 @@
     }
 }
 
-.section-header {
+.admin-section-header {
     margin-bottom: 32px;
 }
 
-.section-title {
+.admin-section-title {
     font-size: 2rem;
     font-weight: 700;
     color: #fff;
@@ -91,11 +92,12 @@
     gap: 12px;
 }
 
-.title-icon {
-    font-size: 2.2rem;
+.admin-title-icon {
+    font-size: 2rem;
+    filter: none;
 }
 
-.section-subtitle {
+.admin-section-subtitle {
     color: #999;
     font-size: 1rem;
 }
@@ -103,7 +105,7 @@
 /* ============================================
    FORMS BASE
 ============================================ */
-.form-container {
+.admin-form-container {
     background: rgba(30, 35, 55, 0.8);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -112,7 +114,7 @@
     margin-bottom: 32px;
 }
 
-.form-title {
+.admin-form-title {
     font-size: 1.4rem;
     color: #fff;
     margin-bottom: 24px;
@@ -121,33 +123,33 @@
     gap: 10px;
 }
 
-.data-form {
+.admin-data-form {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.form-row {
+.admin-form-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
 }
 
-.form-group {
+.admin-form-group {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.form-group label {
+.admin-form-group label {
     color: #b0b0b0;
     font-size: 0.9rem;
     font-weight: 500;
 }
 
-.form-group input,
-.form-group select,
-.form-group textarea {
+.admin-form-group input,
+.admin-form-group select,
+.admin-form-group textarea {
     padding: 12px 16px;
     background: rgba(20, 25, 45, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -158,30 +160,30 @@
     font-family: inherit;
 }
 
-.form-group input::placeholder,
-.form-group textarea::placeholder {
+.admin-form-group input::placeholder,
+.admin-form-group textarea::placeholder {
     color: rgba(255, 255, 255, 0.3);
 }
 
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
+.admin-form-group input:focus,
+.admin-form-group select:focus,
+.admin-form-group textarea:focus {
     outline: none;
     border-color: #667eea;
     background: rgba(20, 25, 45, 0.8);
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.form-group textarea {
+.admin-form-group textarea {
     resize: vertical;
     min-height: 100px;
 }
 
-.file-input {
+.admin-file-input {
     cursor: pointer;
 }
 
-.file-input::file-selector-button {
+.admin-file-input::file-selector-button {
     padding: 10px 20px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: #fff;
@@ -193,16 +195,16 @@
     transition: all 0.3s ease;
 }
 
-.file-input::file-selector-button:hover {
+.admin-file-input::file-selector-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
-.image-preview-container {
+.admin-image-preview-container {
     margin-top: 16px;
 }
 
-.image-preview {
+.admin-image-preview {
     margin-top: 12px;
     border-radius: 12px;
     overflow: hidden;
@@ -210,14 +212,14 @@
     max-width: 400px;
 }
 
-.image-preview img {
+.admin-image-preview img {
     width: 100%;
     height: auto;
     display: block;
 }
 
-.submit-btn,
-.primary-btn {
+.admin-submit-btn,
+.admin-primary-btn {
     padding: 14px 28px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: #fff;
@@ -229,19 +231,19 @@
     transition: all 0.3s ease;
 }
 
-.submit-btn:hover:not(:disabled),
-.primary-btn:hover:not(:disabled) {
+.admin-submit-btn:hover:not(:disabled),
+.admin-primary-btn:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
 }
 
-.submit-btn:disabled,
-.primary-btn:disabled {
+.admin-submit-btn:disabled,
+.admin-primary-btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
-.secondary-btn {
+.admin-secondary-btn {
     padding: 14px 28px;
     background: rgba(255, 255, 255, 0.05);
     color: #b0b0b0;
@@ -253,7 +255,7 @@
     transition: all 0.3s ease;
 }
 
-.secondary-btn:hover {
+.admin-secondary-btn:hover {
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
 }
@@ -261,7 +263,7 @@
 /* ============================================
    LISTS & CONTAINERS
 ============================================ */
-.list-container {
+.admin-list-container {
     background: rgba(30, 35, 55, 0.8);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -270,7 +272,7 @@
     margin-bottom: 32px;
 }
 
-.list-header {
+.admin-list-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -279,8 +281,8 @@
     gap: 16px;
 }
 
-.loading-state,
-.empty-state {
+.admin-loading-state,
+.admin-empty-state {
     text-align: center;
     padding: 60px 20px;
     color: #999;
@@ -290,7 +292,7 @@
 /* ============================================
    LOADER
 ============================================ */
-.loader {
+.admin-loader {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -303,7 +305,7 @@
 /* ============================================
    ANIMATIONS
 ============================================ */
-@keyframes pulse {
+@keyframes adminPulse {
 
     0%,
     100% {
@@ -315,28 +317,28 @@
     }
 }
 
-.loading-state {
-    animation: pulse 2s ease-in-out infinite;
+.admin-loading-state {
+    animation: adminPulse 2s ease-in-out infinite;
 }
 
 /* ============================================
    SCROLLBAR STYLING
 ============================================ */
-.dashboard-content::-webkit-scrollbar {
+.admin-dashboard-content::-webkit-scrollbar {
     width: 8px;
 }
 
-.dashboard-content::-webkit-scrollbar-track {
+.admin-dashboard-content::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
 }
 
-.dashboard-content::-webkit-scrollbar-thumb {
+.admin-dashboard-content::-webkit-scrollbar-thumb {
     background: rgba(102, 126, 234, 0.5);
     border-radius: 10px;
 }
 
-.dashboard-content::-webkit-scrollbar-thumb:hover {
+.admin-dashboard-content::-webkit-scrollbar-thumb:hover {
     background: rgba(102, 126, 234, 0.7);
 }
 
@@ -344,55 +346,55 @@
    RESPONSIVE DESIGN
 ============================================ */
 @media (max-width: 1024px) {
-    .main-content {
+    .admin-main-content {
         margin-left: 0;
     }
 
-    .dashboard-content {
+    .admin-dashboard-content {
         padding: 24px 20px;
     }
 }
 
 @media (max-width: 768px) {
-    .section-title {
+    .admin-section-title {
         font-size: 1.5rem;
     }
 
-    .title-icon {
+    .admin-title-icon {
         font-size: 1.7rem;
     }
 
-    .form-row {
+    .admin-form-row {
         grid-template-columns: 1fr;
     }
 
-    .form-container,
-    .list-container {
+    .admin-form-container,
+    .admin-list-container {
         padding: 24px;
     }
 
-    .list-header {
+    .admin-list-header {
         flex-direction: column;
         align-items: stretch;
     }
 }
 
 @media (max-width: 480px) {
-    .dashboard-content {
+    .admin-dashboard-content {
         padding: 16px;
     }
 
-    .form-container,
-    .list-container {
+    .admin-form-container,
+    .admin-list-container {
         padding: 16px;
         border-radius: 12px;
     }
 
-    .section-title {
+    .admin-section-title {
         font-size: 1.3rem;
     }
 
-    .form-title {
+    .admin-form-title {
         font-size: 1.2rem;
     }
 }
@@ -400,19 +402,19 @@
 /* ============================================
    UTILITIES
 ============================================ */
-.text-center {
+.admin-text-center {
     text-align: center;
 }
 
-.mt-20 {
+.admin-mt-20 {
     margin-top: 20px;
 }
 
-.mb-20 {
+.admin-mb-20 {
     margin-bottom: 20px;
 }
 
-.flex-center {
+.admin-flex-center {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -430,17 +432,17 @@
     .row-actions,
     .carousel-actions,
     .icon-btn,
-    .submit-btn,
-    .primary-btn,
-    .secondary-btn {
+    .admin-submit-btn,
+    .admin-primary-btn,
+    .admin-secondary-btn {
         display: none !important;
     }
 
-    .main-content {
+    .admin-main-content {
         margin-left: 0;
     }
 
-    .dashboard-content {
+    .admin-dashboard-content {
         padding: 0;
     }
 
@@ -449,8 +451,8 @@
         color: black;
     }
 
-    .form-container,
-    .list-container,
+    .admin-form-container,
+    .admin-list-container,
     .service-card,
     .event-item,
     .table-row {
