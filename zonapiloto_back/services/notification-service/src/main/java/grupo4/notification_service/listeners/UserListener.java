@@ -1,7 +1,7 @@
 package grupo4.notification_service.listeners;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import grupo4.notification_service.entities.UserRegisterEvent;
+import grupo4.common_messaging.events.EmailEvent;
+import grupo4.common_messaging.util.EventMapper;
 import grupo4.notification_service.services.EmailService;
 import java.util.logging.Logger;
 import lombok.RequiredArgsConstructor;
@@ -13,20 +13,20 @@ import org.springframework.stereotype.Service;
 public class UserListener {
 
     private final EmailService emailService;
-    private final ObjectMapper objectMapper;
 
     private static final Logger LOGGER = Logger.getLogger("UserListeners");
 
-    @RabbitListener(queues = "user.register")
+    @RabbitListener(queues = "user.email")
     public void onUserRegister(String json) {
+        LOGGER.info("User register event received");
+
         try {
-            UserRegisterEvent event = objectMapper.readValue(
-                json,
-                UserRegisterEvent.class
-            );
-            LOGGER.info("User register event received");
+            EmailEvent event = EventMapper.fromJson(json, EmailEvent.class);
 
             emailService.sendEmail(event);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            LOGGER.severe("Error parsing JSON: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -59,9 +59,11 @@ services:
       SPRING_JPA_SHOW_SQL: "true"
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION}
-      SUPERADMIN_USERNAME: ${SUPERADMIN_USERNAME}
+      SUPERADMIN_EMAIL: ${SUPERADMIN_EMAIL}
       SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD}
-
+      DOCUMENTS_PATH: ${DOCUMENTS_PATH}
+    volumes:
+      - zonapiloto_documents:/storage/documents
     expose:
       - "5001"
     networks:
@@ -175,3 +177,4 @@ volumes:
   postgres_data:
   zonapiloto_images:
   rabbitmq_data:
+  zonapiloto_documents:
