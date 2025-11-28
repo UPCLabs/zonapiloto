@@ -1,6 +1,6 @@
 package grupo4.notification_service.listeners;
 
-import grupo4.common_messaging.events.UserRegisterEvent;
+import grupo4.common_messaging.events.EmailEvent;
 import grupo4.common_messaging.util.EventMapper;
 import grupo4.notification_service.services.EmailService;
 import java.util.logging.Logger;
@@ -16,20 +16,16 @@ public class UserListener {
 
     private static final Logger LOGGER = Logger.getLogger("UserListeners");
 
-    @RabbitListener(queues = "user.register")
+    @RabbitListener(queues = "user.email")
     public void onUserRegister(String json) {
-        LOGGER.info("JSON recibido: " + json);
+        LOGGER.info("User register event received");
 
         try {
-            UserRegisterEvent event = EventMapper.fromJson(
-                json,
-                UserRegisterEvent.class
-            );
+            EmailEvent event = EventMapper.fromJson(json, EmailEvent.class);
 
-            LOGGER.info("Objeto mapeado: " + event);
             emailService.sendEmail(event);
         } catch (Exception e) {
-            LOGGER.severe("Error parseando JSON: " + e.getMessage());
+            LOGGER.severe("Error parsing JSON: " + e.getMessage());
             throw new RuntimeException(e);
         }
     }

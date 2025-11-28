@@ -6,11 +6,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserDTO {
+public class UserRegisterDTO {
 
-    private Long id;
     private String username;
     private String email;
+
     private String role;
-    private boolean mfaPending;
 }

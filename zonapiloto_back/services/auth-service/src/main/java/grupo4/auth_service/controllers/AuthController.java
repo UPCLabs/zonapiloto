@@ -1,17 +1,19 @@
 package grupo4.auth_service.controllers;
 
 import grupo4.auth_service.entities.User;
-import grupo4.auth_service.enums.UserRole;
 import grupo4.auth_service.services.AuthService;
 import grupo4.auth_service.services.MfaService;
 import grupo4.auth_service.services.MfaService.MfaSetup;
 import grupo4.auth_service.services.UserService;
-import grupo4.auth_service.util.UserUtil;
+import grupo4.auth_service.util.EmailCodeCache;
+import grupo4.common_messaging.email.EmailTemplate;
+import grupo4.common_messaging.events.EmailEvent;
+import grupo4.common_messaging.publisher.MessagePublisher;
+import grupo4.common_messaging.queues.QueuesNames;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,131 +24,57 @@ public class AuthController {
     private final AuthService authService;
     private final MfaService mfaService;
     private final UserService userService;
+    private final EmailCodeCache emailCodeVericator;
+    private final MessagePublisher messagePublisher;
 
-    @GetMapping("/users/me")
-    public ResponseEntity<?> userInfo(
-        @RequestHeader("X-User") String user,
-        @RequestHeader("X-Role") String role
-    ) {
-        User usuario = userService.getUser(user);
+    @PostMapping("/send-email-code")
+    public ResponseEntity<?> sendCode(@RequestBody Map<String, String> req) {
+        String email = req.get("email");
 
-        if (usuario == null) {
-            ResponseCookie cookie = ResponseCookie.from("token", "")
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("None")
-                .path("/")
-                .maxAge(0)
-                .build();
+        String code = String.valueOf((int) (Math.random() * 900000 + 100000));
 
-            return ResponseEntity.status(401)
-                .header("Set-Cookie", cookie.toString())
-                .body("Sesión inválida");
-        }
+        emailCodeVericator.saveCode(email, code);
 
-        return ResponseEntity.ok(Map.of("user", user, "role", role));
+        EmailEvent emailEvent = EmailEvent.builder()
+            .to(email)
+            .subject("Código de verificación")
+            .template(EmailTemplate.EMAIL_VERIFY)
+            .variables(Map.of("code", code))
+            .build();
+
+        messagePublisher.send(QueuesNames.EMAIL_QUEUE, emailEvent);
+
+        return ResponseEntity.ok(Map.of("message", "Código enviado"));
     }
 
-    @GetMapping("/users")
-    @PreAuthorize("hasAuthority('SUPERADMIN')")
-    public ResponseEntity<?> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
-    }
+    @PostMapping("/verify-email-code")
+    public ResponseEntity<?> verifyCode(@RequestBody Map<String, String> req) {
+        String email = req.get("email");
+        String code = req.get("code");
 
-    @PostMapping("/users")
-    @PreAuthorize("hasAuthority('SUPERADMIN')")
-    public ResponseEntity<?> register(@RequestBody Map<String, String> req) {
-        String username = req.get("username");
-        String password = req.get("password");
-        UserRole role = UserRole.valueOf(req.get("role"));
+        boolean isValid = emailCodeVericator.validate(email, code);
 
-        if (userService.userExists(username)) {
+        if (!isValid) {
             return ResponseEntity.badRequest().body(
-                Map.of("error", "Usuario ya existe")
+                Map.of("error", "Código inválido o expirado")
             );
         }
 
-        userService.createUser(username, password, role);
+        emailCodeVericator.remove(email);
 
-        return ResponseEntity.ok(
-            Map.of(
-                "message",
-                "Usuario creado exitosamente. Pendiente de confirmar registro (configurar MFA)."
-            )
-        );
-    }
-
-    @PutMapping("/users/{user_id}")
-    @PreAuthorize("hasAuthority('SUPERADMIN')")
-    public ResponseEntity<?> updateUser(
-        @RequestBody Map<String, String> req,
-        @PathVariable Long user_id
-    ) {
-        String newUsername = req.get("username");
-        String newPassword = req.get("password");
-        String newRole = req.get("role");
-
-        User user = userService.getUser(user_id);
-        if (user == null) {
-            return ResponseEntity.status(404).body(
-                Map.of("error", "Usuario no encontrado")
-            );
-        }
-
-        if (newPassword != null) {
-            user.setPassword(UserUtil.encryptPassword(newPassword));
-        }
-
-        user.setUsername(newUsername);
-
-        user.setRole(UserRole.valueOf(newRole));
-
-        userService.updateUser(user);
-        return ResponseEntity.ok(Map.of("message", "Usuario actualizado"));
-    }
-
-    @DeleteMapping("/users/{user_id}")
-    @PreAuthorize("hasAuthority('SUPERADMIN')")
-    public ResponseEntity<?> deleteUser(
-        @RequestHeader("X-User") String requester,
-        @PathVariable Long user_id
-    ) {
-        User user = userService.getUser(user_id);
-
-        if (user == null) {
-            return ResponseEntity.status(404).body(
-                Map.of("error", "Usuario no encontrado")
-            );
-        }
-
-        if (requester.equals(user.getUsername())) {
-            return ResponseEntity.status(400).body(
-                Map.of("error", "No puedes eliminar tu propio usuario")
-            );
-        }
-
-        userService.deleteUser(user.getId());
-
-        return ResponseEntity.ok(
-            Map.of(
-                "message",
-                "Usuario eliminado correctamente",
-                "deletedUser",
-                user.getUsername()
-            )
-        );
+        return ResponseEntity.ok(Map.of("verified", true));
     }
 
     @PostMapping("/check-credentials")
     public ResponseEntity<?> checkCredentials(
         @RequestBody Map<String, String> req
     ) {
-        String username = req.get("username");
+        String email = req.get("email");
         String password = req.get("password");
 
-        User user = userService.getUser(username);
+        User user = userService.getUserEntity(email);
 
-        if (authService.checkCredentials(username, password)) {
+        if (authService.checkCredentials(email, password)) {
             return ResponseEntity.ok(
                 Map.of(
                     "valid",
@@ -166,17 +94,17 @@ public class AuthController {
     public ResponseEntity<?> confirmRegistration(
         @RequestBody Map<String, String> req
     ) {
-        String username = req.get("username");
+        String email = req.get("email");
         String password = req.get("password");
 
-        boolean valid = authService.checkCredentials(username, password);
+        boolean valid = authService.checkCredentials(email, password);
         if (!valid) {
             return ResponseEntity.status(401).body(
                 Map.of("error", "Credenciales inválidas")
             );
         }
 
-        User user = userService.getUser(username);
+        User user = userService.getUserEntity(email);
         if (user == null) {
             return ResponseEntity.badRequest().body(
                 Map.of("error", "Usuario no encontrado")
@@ -189,7 +117,7 @@ public class AuthController {
             );
         }
 
-        MfaSetup setup = mfaService.generateSetup(username);
+        MfaSetup setup = mfaService.generateSetup(email);
         user.setMfaSecret(setup.secret());
         userService.updateUser(user);
 
@@ -202,21 +130,18 @@ public class AuthController {
     public ResponseEntity<?> verifyRegistration(
         @RequestBody Map<String, String> req
     ) {
-        String username = req.get("username");
+        String email = req.get("email");
         String password = req.get("password");
         int code = Integer.parseInt(req.get("mfa_code"));
 
-        User user = userService.getUser(username);
+        User user = userService.getUserEntity(email);
         if (user == null) {
             return ResponseEntity.badRequest().body(
                 Map.of("error", "Usuario no encontrado")
             );
         }
 
-        boolean passwordValid = authService.checkCredentials(
-            username,
-            password
-        );
+        boolean passwordValid = authService.checkCredentials(email, password);
         if (!passwordValid) {
             return ResponseEntity.status(401).body(
                 Map.of("error", "Contraseña incorrecta")
@@ -236,7 +161,7 @@ public class AuthController {
         }
 
         boolean validCode = mfaService.verifyCode(
-            username,
+            email,
             user.getMfaSecret(),
             code
         );
@@ -258,17 +183,17 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> req) {
-        String username = req.get("username");
+        String email = req.get("email");
         String password = req.get("password");
         int code = Integer.parseInt(req.get("mfa_code"));
 
-        if (!authService.checkCredentials(username, password)) {
+        if (!authService.checkCredentials(email, password)) {
             return ResponseEntity.status(401).body(
                 Map.of("error", "Credenciales inválidas")
             );
         }
 
-        User user = userService.getUser(username);
+        User user = userService.getUserEntity(email);
         if (user == null) {
             return ResponseEntity.status(404).body(
                 Map.of("error", "Usuario no encontrado")
@@ -282,7 +207,7 @@ public class AuthController {
         }
 
         boolean validCode = mfaService.verifyCode(
-            username,
+            email,
             user.getMfaSecret(),
             code
         );

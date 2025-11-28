@@ -9,27 +9,19 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "users")
-public class User {
+@Table(name = "pending_users")
+public class PendingUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(nullable = false)
     private String username;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = true)
-    private String mfaSecret;
-
-    @Column(nullable = false)
-    private String password;
-
-    private boolean mfaPending;
-
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private UserRole roleRequested;
 }

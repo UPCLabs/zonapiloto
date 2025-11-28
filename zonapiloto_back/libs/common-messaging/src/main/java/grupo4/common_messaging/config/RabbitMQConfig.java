@@ -11,18 +11,8 @@ import org.springframework.context.annotation.Bean;
 public class RabbitMQConfig {
 
     @Bean
-    public Queue userRegisterQueue() {
-        return new Queue(QueuesNames.USER_REGISTER, true);
-    }
-
-    @Bean
-    public Queue userAcceptedQueue() {
-        return new Queue(QueuesNames.USER_ACCEPTED, true);
-    }
-
-    @Bean
-    public Queue userCreatedQueue() {
-        return new Queue(QueuesNames.USER_CREATED, true);
+    public Queue userEmail() {
+        return new Queue(QueuesNames.EMAIL_QUEUE, true);
     }
 
     @Bean

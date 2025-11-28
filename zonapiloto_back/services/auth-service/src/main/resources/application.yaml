@@ -24,8 +24,11 @@ jwt:
   expiration: ${JWT_EXPIRATION:86400000}
 
 superadmin:
-  username: ${SUPERADMIN_USERNAME}
+  email: ${SUPERADMIN_EMAIL}
   password: ${SUPERADMIN_PASSWORD}
+
+storage:
+  base-path: ${DOCUMENTS_PATH}
 
 management:
   endpoints:

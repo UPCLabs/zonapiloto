@@ -1,12 +1,14 @@
 package grupo4.notification_service.services;
 
-import grupo4.common_messaging.events.UserRegisterEvent;
-import java.util.logging.Logger;
+import grupo4.common_messaging.events.EmailEvent;
+import jakarta.mail.internet.MimeMessage;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -18,27 +20,46 @@ public class EmailService {
     private String hostMail;
 
     private final JavaMailSender mailSender;
-    private static final Logger LOGGER = Logger.getLogger(
-        EmailService.class.toString()
-    );
 
     @Async
-    public void sendEmail(UserRegisterEvent request) {
-        String email = String.format("Zonapiloto <%s>", hostMail);
-
+    public void sendEmail(EmailEvent request) {
         try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(email);
-            message.setTo(request.getEmailTo());
-            message.setSubject(request.getSubject());
-            message.setText(request.getBody());
+            String html = loadTemplate(request.getTemplate().toString());
+
+            for (var entry : request.getVariables().entrySet()) {
+                html = html.replace(
+                    "{{" + entry.getKey() + "}}",
+                    entry.getValue()
+                );
+            }
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(
+                message,
+                true,
+                "UTF-8"
+            );
+
+            helper.setFrom("ZonaPiloto <" + hostMail + ">");
+            helper.setTo(request.getTo());
+            helper.setSubject(request.getSubject());
+            helper.setText(html, true);
 
             mailSender.send(message);
-        } catch (MailException e) {
-            LOGGER.severe("Sending email failed: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    @Async
-    public void sendEmailAttachment() {}
+    private String loadTemplate(String name) throws Exception {
+        ClassPathResource resource = new ClassPathResource(
+            "templates/email/" + name + ".html"
+        );
+        try (InputStream inputStream = resource.getInputStream()) {
+            return new String(
+                inputStream.readAllBytes(),
+                StandardCharsets.UTF_8
+            );
+        }
+    }
 }
