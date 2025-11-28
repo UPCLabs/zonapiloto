@@ -17,12 +17,7 @@ public class RoleDocumentConfig {
             "carta_administrativa"
         ),
         UserRole.QUESTIONSADMIN,
-        List.of(
-            "documento",
-            "carta_de_solicitud",
-            "certificado_laboral",
-            "carta_administrativa"
-        ),
+        List.of("documento", "certificado_laboral", "carta_administrativa"),
         UserRole.RESTAURANTADMIN,
         List.of("documento", "camara_de_comercio", "rut", "carta_de_solicitud")
     );

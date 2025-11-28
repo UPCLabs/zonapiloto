@@ -32,7 +32,8 @@ public class JwtAuthFilter implements GlobalFilter {
         "/auth/users",
         "/auth/users/detail",
         "/information/**/admin",
-        "/auth/pending-users"
+        "/auth/pending-users",
+        "/storage/**"
     );
 
     private final List<String> PUBLIC_POST = List.of(

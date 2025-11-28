@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,6 +16,31 @@ public class StorageService {
     private String basePath;
 
     private static final Logger LOGGER = Logger.getLogger("storage_service");
+
+    public Resource getFile(String... pathParts) {
+        try {
+            Path filePath = Paths.get(basePath, pathParts).normalize();
+
+            if (!Files.exists(filePath)) {
+                throw new RuntimeException("El archivo no existe: " + filePath);
+            }
+
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (!resource.exists() || !resource.isReadable()) {
+                throw new RuntimeException(
+                    "No se puede leer el archivo: " + filePath
+                );
+            }
+
+            return resource;
+        } catch (Exception e) {
+            throw new RuntimeException(
+                "Error obteniendo archivo: " + e.getMessage(),
+                e
+            );
+        }
+    }
 
     public String saveTemporaryFile(
         MultipartFile file,
