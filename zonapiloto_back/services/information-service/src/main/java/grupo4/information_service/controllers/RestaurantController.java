@@ -29,13 +29,17 @@ public class RestaurantController {
     public ResponseEntity<?> getRestaurant(
         @RequestHeader("X-UserId") Long userId
     ) {
-        Restaurant restaurant = restaurantService.getRestaurant(userId);
+        try {
+            Restaurant restaurant = restaurantService.getRestaurant(userId);
 
-        if (restaurant == null) {
+            if (restaurant == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok(restaurant);
+        } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(restaurant);
     }
 
     @GetMapping("/admin")
