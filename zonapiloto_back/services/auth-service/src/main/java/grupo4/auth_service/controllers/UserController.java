@@ -22,10 +22,11 @@ public class UserController {
 
     @GetMapping("/users/me")
     public ResponseEntity<?> userInfo(
+        @RequestHeader("X-UserId") Long userId,
         @RequestHeader("X-User") String user,
         @RequestHeader("X-Role") String role
     ) {
-        User usuario = userService.getUserEntity(user);
+        User usuario = userService.getUserEntity(userId);
 
         if (usuario == null) {
             ResponseCookie cookie = ResponseCookie.from("token", "")

@@ -6,6 +6,7 @@ import grupo4.auth_service.services.MfaService;
 import grupo4.auth_service.services.MfaService.MfaSetup;
 import grupo4.auth_service.services.UserService;
 import grupo4.auth_service.util.EmailCodeCache;
+import grupo4.auth_service.util.UserUtil;
 import grupo4.common_messaging.email.EmailTemplate;
 import grupo4.common_messaging.events.EmailEvent;
 import grupo4.common_messaging.publisher.MessagePublisher;
@@ -132,6 +133,7 @@ public class AuthController {
     ) {
         String email = req.get("email");
         String password = req.get("password");
+        String newPassword = req.get("new_password");
         int code = Integer.parseInt(req.get("mfa_code"));
 
         User user = userService.getUserEntity(email);
@@ -177,6 +179,7 @@ public class AuthController {
         }
 
         user.setMfaPending(false);
+        user.setPassword(UserUtil.encryptPassword(newPassword));
         userService.updateUser(user);
         return ResponseEntity.ok(Map.of("message", "Registro completado"));
     }
