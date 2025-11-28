@@ -4,62 +4,14 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import '../../styles/services/restaurant.css';
 
-// Mock de datos de ejemplo
-const MOCK_RESTAURANTS = [
-  {
-    id: "1",
-    usuarioId: "user_123",
-    nombre: "La Parrilla del Chef",
-    logo: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400",
-    localizacion: "Calle 13 #45-67, Soacha Centro",
-    categoria: "Carnes y Parrilla",
-    menuPdfUrl: "https://www.canva.com/design/DAG5NrWWGa4/6AOGyaC0bU1ps1Wyv_eO4w/view?embed"
-  },
-  {
-    id: "2",
-    usuarioId: "user_456",
-    nombre: "Sushi Express Tokyo",
-    logo: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400",
-    localizacion: "Av. Soacha #23-10, Plaza Mayor",
-    categoria: "Comida Japonesa",
-    menuPdfUrl: "https://www.canva.com/design/DAG5NrWWGa4/6AOGyaC0bU1ps1Wyv_eO4w/view?embed"
-  },
-  {
-    id: "3",
-    usuarioId: "user_789",
-    nombre: "Pizzería Bella Napoli",
-    logo: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400",
-    localizacion: "Carrera 7 #12-34, Compartir",
-    categoria: "Comida Italiana",
-    menuPdfUrl: "https://www.canva.com/design/DAG5NrWWGa4/6AOGyaC0bU1ps1Wyv_eO4w/view?embed"
-  },
-  {
-    id: "4",
-    usuarioId: "user_321",
-    nombre: "Café & Postres DeliciOso",
-    logo: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400",
-    localizacion: "Calle 5 #8-20, León XIII",
-    categoria: "Café y Postres",
-    menuPdfUrl: "https://www.canva.com/design/DAG5NrWWGa4/6AOGyaC0bU1ps1Wyv_eO4w/view?embed"
-  },
-  {
-    id: "5",
-    usuarioId: "user_654",
-    nombre: "Tacos & Burritos Azteca",
-    logo: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400",
-    localizacion: "Calle 15 Sur #3-45, San Mateo",
-    categoria: "Comida Mexicana",
-    menuPdfUrl: "https://www.canva.com/design/DAG5NrWWGa4/6AOGyaC0bU1ps1Wyv_eO4w/view?embed"
-  }
-];
-
 const Restaurant = () => {
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
+
   const [restaurants, setRestaurants] = useState([]);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [useMock, setUseMock] = useState(true); // Cambiar a false para usar API real
 
   useEffect(() => {
     fetchRestaurants();
@@ -70,25 +22,26 @@ const Restaurant = () => {
       setLoading(true);
       setError(null);
 
-      if (useMock) {
-        // Simular delay de API
-        await new Promise(resolve => setTimeout(resolve, 500));
-        setRestaurants(MOCK_RESTAURANTS);
-        setSelectedRestaurant(MOCK_RESTAURANTS[0]); // Seleccionar el primero por defecto
-      } else {
-        // Usar API real
-        const response = await fetch(`https://tu-api.com/api/restaurants`);
+      const response = await fetch(`${API_URL}/information/restaurants`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-        if (!response.ok) throw new Error('Error al cargar los restaurantes');
+      if (!response.ok) {
+        throw new Error('Error al cargar los restaurantes');
+      }
 
-        const data = await response.json();
-        setRestaurants(data);
-        if (data.length > 0) {
-          setSelectedRestaurant(data[0]);
-        }
+      const data = await response.json();
+      setRestaurants(data);
+
+      if (data.length > 0) {
+        setSelectedRestaurant(data[0]);
       }
     } catch (err) {
       setError(err.message);
+      console.error('Error al cargar restaurantes:', err);
     } finally {
       setLoading(false);
     }
@@ -128,6 +81,22 @@ const Restaurant = () => {
             Reintentar
           </button>
         </div>
+        <Footer />
+      </>
+    );
+  }
+
+  if (restaurants.length === 0) {
+    return (
+      <>
+        <Header />
+        <main className="restaurant-container">
+          <div className="restaurant-error">
+            <AlertCircle size={48} />
+            <h2>No hay restaurantes disponibles</h2>
+            <p>Aún no se han registrado restaurantes en el sistema.</p>
+          </div>
+        </main>
         <Footer />
       </>
     );
@@ -203,12 +172,19 @@ const Restaurant = () => {
                 </div>
 
                 <div className="menu-viewer-container">
-                  <iframe
-                    src={selectedRestaurant.menuPdfUrl}
-                    title={`Menú de ${selectedRestaurant.nombre}`}
-                    className="menu-iframe"
-                    loading="lazy"
-                  />
+                  {selectedRestaurant.menuPdfUrl ? (
+                    <iframe
+                      src={selectedRestaurant.menuPdfUrl}
+                      title={`Menú de ${selectedRestaurant.nombre}`}
+                      className="menu-iframe"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="no-selection">
+                      <AlertCircle size={48} />
+                      <p>Este restaurante aún no ha subido su menú</p>
+                    </div>
+                  )}
                 </div>
               </>
             ) : (

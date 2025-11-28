@@ -9,6 +9,7 @@ import BancoPreguntasSection from "../sections/QuestionBankSection.jsx";
 import EventosInstitucionalesSection from "../sections/InstitutionalEventsSection.jsx";
 import AnunciosSection from "../sections/AnnouncementsSection.jsx";
 import UsuariosSection from "../sections/UsuariosSection.jsx";
+import RestaurantSection from "../sections/RestaurantSection.jsx";
 import SolicitudesSection from "../sections/SolicitudesSection.jsx";
 import EditModal from "../modals/EditModal.jsx";
 import "../../../styles/admin_dashboard/componen/admindashboard.css";
@@ -85,13 +86,6 @@ const AdminDashboard = () => {
             label: "Restaurantes",
             description: "Gestión de restaurantes, menu de la cafeteria",
             roles: ["RESTAURANTADMIN", "SUPERADMIN"],
-        },
-        {
-            id: "solicitudes",
-            icon: "📬",
-            label: "solicitudes",
-            description: "Gestión de usuarios y sus solicitudes",
-            roles: ["SUPERADMIN"],
         },
     ];
 
@@ -205,6 +199,8 @@ const AdminDashboard = () => {
                         API_URL={API_URL}
                     />
                 );
+            case "restaurantes":
+                return <RestaurantSection />;
 
             case "usuarios":
                 return (

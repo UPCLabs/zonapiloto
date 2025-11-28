@@ -1,5 +1,5 @@
 /* ============================================
-   SIDEBAR
+   SIDEBAR - FIXED VERSION
 ============================================ */
 .sidebar {
     width: 280px;
@@ -10,14 +10,20 @@
     flex-direction: column;
     position: fixed;
     height: 100vh;
+    top: 0;
+    left: 0;
     z-index: 100;
     transition: transform 0.3s ease;
+    overflow: hidden;
+    /* Previene el estiramiento */
 }
 
 .sidebar-header {
     padding: 30px 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     text-align: center;
+    flex-shrink: 0;
+    /* No permite que se comprima */
 }
 
 .logo {
@@ -44,6 +50,8 @@
     gap: 12px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
+    flex-shrink: 0;
+    /* No permite que se comprima */
 }
 
 .user-avatar {
@@ -60,17 +68,25 @@
 
 .user-details {
     flex: 1;
+    min-width: 0;
+    /* Permite que el texto se trunque */
 }
 
 .user-details h4 {
     font-size: 1rem;
     color: #fff;
     margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .user-details p {
     font-size: 0.85rem;
     color: #999;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .user-status {
@@ -85,10 +101,14 @@
     box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
 }
 
+/* MENÚ CON SCROLL CONTROLADO */
 .sidebar-menu {
     flex: 1;
     padding: 20px 10px;
     overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+    /* Permite que el flex funcione correctamente */
 }
 
 .menu-item {
@@ -127,11 +147,17 @@
 
 .menu-label {
     font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
+/* FOOTER FIJO EN LA PARTE INFERIOR */
 .sidebar-footer {
     padding: 20px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+    /* No permite que se comprima */
 }
 
 .logout-btn {
@@ -185,9 +211,23 @@
     .sidebar {
         width: 260px;
     }
+
+    .logo {
+        font-size: 1.7rem;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 1.3rem;
+    }
+
+    .menu-item {
+        padding: 12px 14px;
+    }
 }
 
-/* SCROLLBAR */
+/* SCROLLBAR PERSONALIZADO */
 .sidebar-menu::-webkit-scrollbar {
     width: 8px;
 }

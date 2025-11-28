@@ -1,23 +1,95 @@
 /* ============================================
-   CONFIGURACION SECTION - COMING SOON
+   RESTAURANT ADMIN SECTION STYLES
 ============================================ */
-.coming-soon {
-    text-align: center;
-    padding: 100px 40px;
+
+.restaurant-info-card {
+    background: rgba(20, 25, 45, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 24px;
 }
 
-.coming-soon-icon {
-    font-size: 5rem;
-    margin-bottom: 24px;
+.restaurant-header-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
 }
 
-.coming-soon h3 {
-    font-size: 1.8rem;
+.restaurant-main-logo {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.restaurant-details h3 {
     color: #fff;
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+
+.restaurant-location {
+    color: #999;
+    font-size: 0.95rem;
     margin-bottom: 12px;
 }
 
-.coming-soon p {
-    color: #999;
-    font-size: 1.1rem;
+.restaurant-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.restaurant-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.menu-section {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 24px;
+}
+
+.menu-section h4 {
+    color: #fff;
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .restaurant-header-info {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .restaurant-main-logo {
+        width: 80px;
+        height: 80px;
+    }
+
+    .restaurant-details h3 {
+        font-size: 1.3rem;
+    }
 }
