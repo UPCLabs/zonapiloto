@@ -1,0 +1,23 @@
+/* ============================================
+   CONFIGURACION SECTION - COMING SOON
+============================================ */
+.coming-soon {
+    text-align: center;
+    padding: 100px 40px;
+}
+
+.coming-soon-icon {
+    font-size: 5rem;
+    margin-bottom: 24px;
+}
+
+.coming-soon h3 {
+    font-size: 1.8rem;
+    color: #fff;
+    margin-bottom: 12px;
+}
+
+.coming-soon p {
+    color: #999;
+    font-size: 1.1rem;
+}
