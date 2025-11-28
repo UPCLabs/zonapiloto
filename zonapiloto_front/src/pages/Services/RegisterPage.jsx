@@ -14,10 +14,9 @@ const RegisterPage = ({ onBack }) => {
         email: "",
         confirmEmail: "",
         fullName: "",
-        phone: "",
         roleType: "",
+        identityDocument: null,
         chamberOfCommerce: null,
-        document: null,
         rut: null,
         requestLetter: null,
         departmentLetter: null,
@@ -43,7 +42,7 @@ const RegisterPage = ({ onBack }) => {
             color: "#b4360f"
         },
         {
-            id: "QUESTION_ADMIN",
+            id: "QUESTIONS_ADMIN",
             name: "Administrador de preguntas",
             icon: "❓",
             description: "Actualiza y maneja las preguntas frecuentes",
@@ -63,7 +62,7 @@ const RegisterPage = ({ onBack }) => {
         setFormData(prev => ({
             ...prev,
             roleType: "",
-            document: null,
+            identityDocument: null,
             chamberOfCommerce: null,
             rut: null,
             requestLetter: null,
@@ -143,7 +142,21 @@ const RegisterPage = ({ onBack }) => {
         }
 
         try {
-            console.log("Enviando código de verificación a:", formData.email);
+            // const response = await fetch('/auth/send-email-code', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify({ email: formData.email })
+            // });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setErrors({ email: data.error || "Error al enviar el código de verificación" });
+                return;
+            }
+
             setEmailSent(true);
             setShowVerificationModal(true);
             alert("Código de verificación enviado a tu correo");
@@ -159,13 +172,30 @@ const RegisterPage = ({ onBack }) => {
         }
 
         try {
-            console.log("Verificando código:", verificationCode);
+            const response = await fetch('/auth/verify-email-code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: formData.email,
+                    code: verificationCode
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.error || "Código de verificación incorrecto");
+                return;
+            }
+
             setIsEmailVerified(true);
             setShowVerificationModal(false);
             setStep(3);
             alert("¡Correo verificado exitosamente!");
         } catch (error) {
-            alert("Código de verificación incorrecto");
+            alert("Error al verificar el código");
         }
     };
 
@@ -173,16 +203,18 @@ const RegisterPage = ({ onBack }) => {
         const newErrors = {};
 
         if (!formData.fullName) newErrors.fullName = "Nombre completo requerido";
-        if (!formData.document) newErrors.document = "Documento requerido";
-        if (!formData.phone) newErrors.phone = "Teléfono requerido";
+        if (!formData.identityDocument) newErrors.identityDocument = "Documento de identidad requerido (ambas caras en PDF)";
 
         if (selectedRole === "RESTAURANT_ADMIN") {
             if (!formData.roleType) newErrors.roleType = "Rol requerido";
+            if (!formData.chamberOfCommerce) newErrors.chamberOfCommerce = "Certificado de Cámara de Comercio requerido";
+            if (!formData.rut) newErrors.rut = "RUT requerido";
             if (!formData.requestLetter) newErrors.requestLetter = "Carta de solicitud requerida";
         } else if (selectedRole === "EVENT_ADMIN") {
             if (!formData.requestLetter) newErrors.requestLetter = "Carta de solicitud requerida";
             if (!formData.departmentLetter) newErrors.departmentLetter = "Carta de dependencia requerida";
-        } else if (selectedRole === "QUESTION_ADMIN") {
+            if (!formData.laborCertificate) newErrors.laborCertificate = "Certificado laboral requerido";
+        } else if (selectedRole === "QUESTIONS_ADMIN") {
             if (!formData.departmentLetter) newErrors.departmentLetter = "Carta de dependencia requerida";
             if (!formData.laborCertificate) newErrors.laborCertificate = "Certificado laboral requerido";
         }
@@ -194,21 +226,92 @@ const RegisterPage = ({ onBack }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (validateFinalForm()) {
-            const submitData = new FormData();
-            Object.keys(formData).forEach(key => {
-                if (formData[key] !== null) {
-                    submitData.append(key, formData[key]);
-                }
-            });
-            submitData.append('role', selectedRole);
+        if (!validateFinalForm()) {
+            return;
+        }
 
-            console.log("Enviando formulario completo:", {
+        try {
+            const submitData = new FormData();
+
+            // Agregar datos del usuario como JSON
+            const userDTO = {
+                username: formData.fullName,
+                email: formData.email,
                 role: selectedRole,
-                ...formData
+                roleType: formData.roleType || null
+            };
+
+            submitData.append('user', JSON.stringify(userDTO));
+
+            // Agregar documentos
+            if (formData.identityDocument) {
+                submitData.append('identityDocument', formData.identityDocument);
+            }
+
+            if (selectedRole === "RESTAURANT_ADMIN") {
+                if (formData.chamberOfCommerce) {
+                    submitData.append('chamberOfCommerce', formData.chamberOfCommerce);
+                }
+                if (formData.rut) {
+                    submitData.append('rut', formData.rut);
+                }
+                if (formData.requestLetter) {
+                    submitData.append('requestLetter', formData.requestLetter);
+                }
+            } else if (selectedRole === "EVENT_ADMIN") {
+                if (formData.requestLetter) {
+                    submitData.append('requestLetter', formData.requestLetter);
+                }
+                if (formData.departmentLetter) {
+                    submitData.append('departmentLetter', formData.departmentLetter);
+                }
+                if (formData.laborCertificate) {
+                    submitData.append('laborCertificate', formData.laborCertificate);
+                }
+            } else if (selectedRole === "QUESTIONS_ADMIN") {
+                if (formData.departmentLetter) {
+                    submitData.append('departmentLetter', formData.departmentLetter);
+                }
+                if (formData.laborCertificate) {
+                    submitData.append('laborCertificate', formData.laborCertificate);
+                }
+            }
+
+            const response = await fetch('/auth/registration/register', {
+                method: 'POST',
+                body: submitData
             });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.error || "Error al enviar la solicitud");
+                return;
+            }
 
             alert("¡Solicitud enviada exitosamente! Tu cuenta será revisada por un administrador.");
+
+            // Resetear formulario
+            setStep(1);
+            setSelectedRole(null);
+            setIsEmailVerified(false);
+            setEmailSent(false);
+            setVerificationCode("");
+            setFormData({
+                email: "",
+                confirmEmail: "",
+                fullName: "",
+                roleType: "",
+                identityDocument: null,
+                chamberOfCommerce: null,
+                rut: null,
+                requestLetter: null,
+                departmentLetter: null,
+                laborCertificate: null,
+            });
+            setErrors({});
+        } catch (error) {
+            alert("Error al procesar la solicitud");
         }
     };
 
@@ -239,7 +342,7 @@ const RegisterPage = ({ onBack }) => {
                         <div className="form-group">
                             <label htmlFor="chamberOfCommerce">
                                 <span className="label-icon">🏢</span>
-                                Certificado de Cámara de Comercio (PDF - Opcional)
+                                Certificado de Cámara de Comercio (PDF) *
                             </label>
                             <input
                                 type="file"
@@ -260,7 +363,7 @@ const RegisterPage = ({ onBack }) => {
                         <div className="form-group">
                             <label htmlFor="rut">
                                 <span className="label-icon">📄</span>
-                                RUT (PDF - Opcional)
+                                RUT (PDF) *
                             </label>
                             <input
                                 type="file"
@@ -347,7 +450,7 @@ const RegisterPage = ({ onBack }) => {
                         <div className="form-group">
                             <label htmlFor="laborCertificate">
                                 <span className="label-icon">📋</span>
-                                Certificado laboral (PDF - Opcional)
+                                Certificado laboral (PDF) *
                             </label>
                             <input
                                 type="file"
@@ -367,7 +470,7 @@ const RegisterPage = ({ onBack }) => {
                     </>
                 );
 
-            case "QUESTION_ADMIN":
+            case "QUESTIONS_ADMIN":
                 return (
                     <>
                         <div className="form-group">
@@ -603,66 +706,28 @@ const RegisterPage = ({ onBack }) => {
                                         )}
                                     </div>
 
-                                    <div className="form-row">
-                                        <div className="form-group">
-                                            <label htmlFor="documentType">
-                                                <span className="label-icon">🪪</span>
-                                                Tipo de Documento *
-                                            </label>
-                                            <select
-                                                id="documentType"
-                                                name="documentType"
-                                                value={formData.documentType}
-                                                onChange={handleInputChange}
-                                                className={errors.documentType ? "error" : ""}
-                                            >
-                                                <option value="">Seleccionar...</option>
-                                                <option value="CC">Cédula de Ciudadanía (CC)</option>
-                                                <option value="CE">Cédula de Extranjería (CE)</option>
-                                                <option value="PASAPORTE">Pasaporte</option>
-                                            </select>
-                                            {errors.documentType && (
-                                                <span className="error-message">{errors.documentType}</span>
-                                            )}
-                                        </div>
-
-                                        <div className="form-group">
-                                            <label htmlFor="documentNumber">
-                                                <span className="label-icon">🔢</span>
-                                                Número de Documento *
-                                            </label>
-                                            <input
-                                                type="text"
-                                                id="documentNumber"
-                                                name="documentNumber"
-                                                value={formData.documentNumber}
-                                                onChange={handleInputChange}
-                                                placeholder="Ej: 123456789"
-                                                className={errors.documentNumber ? "error" : ""}
-                                            />
-                                            {errors.documentNumber && (
-                                                <span className="error-message">{errors.documentNumber}</span>
-                                            )}
-                                        </div>
-                                    </div>
-
                                     <div className="form-group">
-                                        <label htmlFor="phone">
-                                            <span className="label-icon">📱</span>
-                                            Teléfono *
+                                        <label htmlFor="identityDocument">
+                                            <span className="label-icon">🪪</span>
+                                            Documento de Identidad (PDF - Ambas caras en un solo archivo) *
                                         </label>
                                         <input
-                                            type="tel"
-                                            id="phone"
-                                            name="phone"
-                                            value={formData.phone}
-                                            onChange={handleInputChange}
-                                            placeholder="Ej: +57 300 123 4567"
-                                            className={errors.phone ? "error" : ""}
+                                            type="file"
+                                            id="identityDocument"
+                                            name="identityDocument"
+                                            accept=".pdf"
+                                            onChange={handleFileChange}
+                                            className={errors.identityDocument ? "error" : ""}
                                         />
-                                        {errors.phone && (
-                                            <span className="error-message">{errors.phone}</span>
+                                        {formData.identityDocument && (
+                                            <span className="file-name">✓ {formData.identityDocument.name}</span>
                                         )}
+                                        {errors.identityDocument && (
+                                            <span className="error-message">{errors.identityDocument}</span>
+                                        )}
+                                        <p className="field-note">
+                                            Por favor, incluye ambas caras (frontal y reverso) de tu documento de identidad en un solo archivo PDF
+                                        </p>
                                     </div>
                                 </div>
 
