@@ -109,6 +109,104 @@
 }
 
 /* ============================================
+   CHANGE PASSWORD CONTAINER
+============================================ */
+.change-password-container {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.password-change-content {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.password-icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, rgba(184, 0, 0, 0.1) 0%, rgba(150, 0, 0, 0.1) 100%);
+    border-radius: 50%;
+    margin-bottom: 20px;
+    animation: pulse 3s ease-in-out infinite;
+}
+
+.password-icon {
+    font-size: 2.5rem;
+}
+
+.password-change-title {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.password-change-subtitle {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.password-change-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ============================================
+   PASSWORD REQUIREMENTS
+============================================ */
+.password-requirements {
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 16px 20px;
+}
+
+.requirements-title {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.requirements-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.requirements-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #999;
+    transition: all 0.3s ease;
+}
+
+.requirements-list li.valid {
+    color: #28a745;
+}
+
+.requirement-icon {
+    font-size: 1rem;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.requirements-list li.valid .requirement-icon {
+    color: #28a745;
+}
+
+/* ============================================
    MAIN CONTAINER
 ============================================ */
 .login-main-container {
@@ -920,5 +1018,28 @@
 
     .qr-code-container {
         padding: 15px;
+    }
+
+    @media (max-width: 480px) {
+        .password-icon-wrapper {
+            width: 70px;
+            height: 70px;
+        }
+
+        .password-icon {
+            font-size: 2rem;
+        }
+
+        .password-change-title {
+            font-size: 1.3rem;
+        }
+
+        .password-requirements {
+            padding: 14px 16px;
+        }
+
+        .requirements-list li {
+            font-size: 0.85rem;
+        }
     }
 }
