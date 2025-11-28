@@ -19,6 +19,10 @@ echo "🔧 Compilando Profile service..."
 cd "$ROOT_DIR/zonapiloto_back/services/profile-service"
 ./mvnw clean package -DskipTests
 
+echo "🔧 Compilando Notification service..."
+cd "$ROOT_DIR/zonapiloto_back/services/notification-service"
+./mvnw clean package -DskipTests
+
 cd "$ROOT_DIR"
 
 echo "Construyendo y levantando los contenedores Docker..."

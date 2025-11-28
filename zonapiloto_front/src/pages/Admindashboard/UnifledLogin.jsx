@@ -76,7 +76,7 @@ const UnifiedLogin = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: credentials.username.toLowerCase(),
+          email: credentials.username.toLowerCase(),
           password: credentials.password,
         }),
       });
@@ -140,7 +140,7 @@ const UnifiedLogin = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: credentials.username.toLowerCase(),
+          email: credentials.username.toLowerCase(),
           password: credentials.password,
         }),
       });
@@ -172,7 +172,7 @@ const UnifiedLogin = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: credentials.username.toLowerCase(),
+          email: credentials.username.toLowerCase(),
           password: credentials.password,
         }),
       });
@@ -253,7 +253,7 @@ const UnifiedLogin = () => {
       if (step === "setup-mfa") {
         endpoint = `${API_URL}/auth/verify-registration`;
         requestBody = {
-          username: credentials.username.toLowerCase(),
+          email: credentials.username.toLowerCase(),
           password: credentials.password,
           new_password: newPassword.password,
           mfa_code: fullCode,
@@ -261,7 +261,7 @@ const UnifiedLogin = () => {
       } else {
         endpoint = `${API_URL}/auth/login`;
         requestBody = {
-          username: credentials.username.toLowerCase(),
+          email: credentials.username.toLowerCase(),
           password: credentials.password,
           mfa_code: fullCode,
         };
@@ -488,11 +488,15 @@ const UnifiedLogin = () => {
                     Configura tu contraseña segura
                   </h3>
                   <p className="password-change-subtitle">
-                    Por seguridad, necesitas establecer una nueva contraseña antes de configurar el MFA
+                    Por seguridad, necesitas establecer una nueva contraseña
+                    antes de configurar el MFA
                   </p>
                 </div>
 
-                <form onSubmit={handleChangePassword} className="password-change-form">
+                <form
+                  onSubmit={handleChangePassword}
+                  className="password-change-form"
+                >
                   <div className="form-group">
                     <label htmlFor="newPassword">Nueva Contraseña</label>
                     <div className="input-wrapper">
@@ -518,7 +522,9 @@ const UnifiedLogin = () => {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="confirmPassword">Confirmar Contraseña</label>
+                    <label htmlFor="confirmPassword">
+                      Confirmar Contraseña
+                    </label>
                     <div className="input-wrapper">
                       <span className="input-icon">🔒</span>
                       <input
@@ -544,9 +550,15 @@ const UnifiedLogin = () => {
                   </div>
 
                   <div className="password-requirements">
-                    <p className="requirements-title">La contraseña debe tener:</p>
+                    <p className="requirements-title">
+                      La contraseña debe tener:
+                    </p>
                     <ul className="requirements-list">
-                      <li className={newPassword.password.length >= 8 ? "valid" : ""}>
+                      <li
+                        className={
+                          newPassword.password.length >= 8 ? "valid" : ""
+                        }
+                      >
                         <span className="requirement-icon">
                           {newPassword.password.length >= 8 ? "✓" : "○"}
                         </span>
@@ -555,16 +567,16 @@ const UnifiedLogin = () => {
                       <li
                         className={
                           newPassword.password &&
-                            newPassword.confirmPassword &&
-                            newPassword.password === newPassword.confirmPassword
+                          newPassword.confirmPassword &&
+                          newPassword.password === newPassword.confirmPassword
                             ? "valid"
                             : ""
                         }
                       >
                         <span className="requirement-icon">
                           {newPassword.password &&
-                            newPassword.confirmPassword &&
-                            newPassword.password === newPassword.confirmPassword
+                          newPassword.confirmPassword &&
+                          newPassword.password === newPassword.confirmPassword
                             ? "✓"
                             : "○"}
                         </span>
