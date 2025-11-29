@@ -1,7 +1,7 @@
 import React from "react";
 import SearchBox from "../shared/SearchBox";
 import DataTable from "../shared/DataTable";
-import "../../../styles/admin_dashboard/sections/usuariossection.css";
+import "../../../styles/admin_dashboard/sections/userssection.css";
 
 const UsuariosSection = ({
   users,
@@ -16,7 +16,7 @@ const UsuariosSection = ({
   handleDelete,
   filterItems,
 }) => {
-  const filteredUsers = filterItems(users, ["username", "role", "email"]);
+  const filteredUsers = filterItems(users, ["username", "role"]);
 
   return (
     <div className="admin-dashboard-section">
@@ -25,11 +25,8 @@ const UsuariosSection = ({
           <span className="admin-title-icon">👥</span>
           Gestión de Usuarios
         </h2>
-        <p className="admin-section-subtitle">
-          Solo para Super Administradores
-        </p>
+        <p className="admin-section-subtitle">Solo para Super Administradores</p>
       </div>
-
       {userRole === "SUPERADMIN" ? (
         <>
           <div className="admin-form-container">
@@ -37,9 +34,7 @@ const UsuariosSection = ({
               <span>👑</span>
               <span>Privilegios de Super Administrador</span>
             </div>
-
             <h3 className="admin-form-title">Crear Nuevo Usuario</h3>
-
             <form
               className="admin-data-form"
               onSubmit={async (e) => {
@@ -55,7 +50,6 @@ const UsuariosSection = ({
 
                 const data = {
                   username: formData.get("username"),
-                  email: formData.get("email"),
                   password: password,
                   role: formData.get("role"),
                 };
@@ -74,17 +68,6 @@ const UsuariosSection = ({
                   required
                 />
               </div>
-
-              <div className="admin-form-group">
-                <label>Correo Electrónico *</label>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="correo@ejemplo.com"
-                  required
-                />
-              </div>
-
               <div className="admin-form-group">
                 <label>Contraseña *</label>
                 <input
@@ -94,7 +77,6 @@ const UsuariosSection = ({
                   required
                 />
               </div>
-
               <div className="admin-form-group">
                 <label>Confirmar Contraseña *</label>
                 <input
@@ -104,32 +86,21 @@ const UsuariosSection = ({
                   required
                 />
               </div>
-
               <div className="admin-form-group">
                 <label>Rol *</label>
                 <select name="role" required>
                   <option value="">Seleccionar...</option>
                   <option value="SUPERADMIN">Super Administrador</option>
-                  <option value="RESTAURANTADMIN">
-                    Administrador De Restaurante
-                  </option>
-                  <option value="QUESTIONSADMIN">
-                    Administrador De Banco De Pregungas
-                  </option>
+                  <option value="RESTAURANTADMIN">Administrador De Restaurante</option>
+                  <option value="QUESTIONSADMIN">Administrador De Banco De Pregungas</option>
                   <option value="EVENTSADMIN">Administrador De Eventos</option>
                 </select>
               </div>
-
-              <button
-                type="submit"
-                className="admin-submit-btn"
-                disabled={loading}
-              >
+              <button type="submit" className="admin-submit-btn" disabled={loading}>
                 {loading ? "Creando..." : "Crear Usuario"}
               </button>
             </form>
           </div>
-
           <div className="admin-list-container">
             <div className="admin-list-header">
               <h3 className="admin-form-title">Usuarios Existentes</h3>
@@ -139,33 +110,25 @@ const UsuariosSection = ({
                 placeholder="Buscar usuarios..."
               />
             </div>
-
             {loading ? (
               <div className="admin-loading-state">Cargando usuarios...</div>
             ) : filteredUsers.length === 0 ? (
-              <div className="admin-empty-state">
-                No hay usuarios registrados
-              </div>
+              <div className="admin-empty-state">No hay usuarios registrados</div>
             ) : (
               <DataTable
-                headers={[
-                  "Usuario",
-                  "Email",
-                  "Rol",
-                  "MFA Configurado",
-                  "Acciones",
-                ]}
+                headers={["Usuario", "Rol", "MFA Configurado", "Acciones"]}
                 data={filteredUsers}
                 renderRow={(user) => (
                   <>
                     <span>{user.username}</span>
-                    <span>{user.email}</span>
                     <span className={`role-badge ${user.role.toLowerCase()}`}>
                       {user.role}
                     </span>
                     <span>
                       {!user.mfaPending ? (
                         <span style={{ color: "#4ade80" }}>✓ Sí</span>
+                      ) : !user.mfaPending ? (
+                        <span style={{ color: "#fbbf24" }}>⏳ Pendiente</span>
                       ) : (
                         <span style={{ color: "#f87171" }}>✗ No</span>
                       )}
