@@ -83,9 +83,9 @@ const RestaurantSection = () => {
         const error = await response.json();
         alert(
           "Error: " +
-            (error.message ||
-              error.error ||
-              "No se pudo guardar el restaurante"),
+          (error.message ||
+            error.error ||
+            "No se pudo guardar el restaurante"),
         );
       }
     } catch (error) {

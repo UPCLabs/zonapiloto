@@ -1,5 +1,5 @@
 import React from "react";
-import "../../../styles/admin_dashboard/layout/HeaderAdminDash.css";
+import "../../../styles/admin_dashboard/layout/headeradmin.css";
 
 const Header = ({ menuOpen, setMenuOpen }) => {
     return (

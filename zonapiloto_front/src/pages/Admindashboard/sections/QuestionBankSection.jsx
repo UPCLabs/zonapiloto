@@ -1,7 +1,7 @@
 import React from "react";
 import SearchBox from "../shared/SearchBox";
 import DataTable from "../shared/DataTable";
-import "../../../styles/admin_dashboard/sections/bancopreguntassection.css";
+
 
 const BancoPreguntasSection = ({
     questions,
@@ -126,7 +126,6 @@ const BancoPreguntasSection = ({
                 )}
             </div>
 
-            {/* GESTIÓN DE PREGUNTAS */}
             <div className="admin-form-container" style={{ marginTop: "40px" }}>
                 <h3 className="admin-form-title">❓ Nueva Pregunta</h3>
                 <form

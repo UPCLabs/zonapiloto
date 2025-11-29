@@ -11,6 +11,8 @@ const RegisterPage = ({ onBack }) => {
   const [verificationCode, setVerificationCode] = useState("");
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState("");
 
   const [formData, setFormData] = useState({
     email: "",
@@ -236,6 +238,28 @@ const RegisterPage = ({ onBack }) => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false);
+    setStep(1);
+    setSelectedRole(null);
+    setIsEmailVerified(false);
+    setEmailSent(false);
+    setVerificationCode("");
+    setAcceptedTerms(false);
+    setFormData({
+      email: "",
+      confirmEmail: "",
+      fullName: "",
+      roleType: "",
+      identityDocument: null,
+      chamberOfCommerce: null,
+      rut: null,
+      requestLetter: null,
+      departmentLetter: null,
+      laborCertificate: null,
+    });
+    setErrors({});
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -307,6 +331,8 @@ const RegisterPage = ({ onBack }) => {
       setEmailSent(false);
       setVerificationCode("");
       setAcceptedTerms(false);
+      setSubmittedEmail(formData.email);
+      setShowSuccessModal(true);
       setFormData({
         email: "",
         confirmEmail: "",
@@ -873,6 +899,32 @@ const RegisterPage = ({ onBack }) => {
                 Verificar
               </button>
             </div>
+          </div>
+        </div>
+      )}
+      {showSuccessModal && (
+        <div className="modal-overlay">
+          <div className="modal-content success-modal">
+            <div className="success-icon">✅</div>
+            <h3 className="modal-title">¡Solicitud Enviada Exitosamente!</h3>
+            <p className="modal-subtitle">
+              Tu solicitud de registro ha sido recibida correctamente.
+            </p>
+            <div className="success-message">
+              <p>
+                Nuestro equipo revisará tu información y documentos en las próximas 24-48 horas.
+              </p>
+              <p>
+                Recibirás un correo electrónico a <strong>{submittedEmail}</strong> con la confirmación de tu registro.
+              </p>
+            </div>
+            <button
+              onClick={handleCloseSuccessModal}
+
+              className="modal-btn success-btn"
+            >
+              Entendido
+            </button>
           </div>
         </div>
       )}

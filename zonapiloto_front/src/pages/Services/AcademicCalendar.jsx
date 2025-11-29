@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import "../../styles/services/calendario.css";
+import "../../styles/services/calendar.css";
 
 const CalendarioAcademico = () => {
   const [currentDate, setCurrentDate] = useState(new Date());

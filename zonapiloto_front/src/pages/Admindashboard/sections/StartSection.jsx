@@ -1,5 +1,5 @@
 import React from "react";
-import "../../../styles/admin_dashboard/sections/iniciosection.css";
+import "../../../styles/admin_dashboard/sections/startsection.css";
 
 const InicioSection = ({ services, setActiveSection }) => {
     return (

@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import "../../styles/components/terminos.css";
+import "../../styles/components/terms.css";
 
 const Terminos = () => {
     return (

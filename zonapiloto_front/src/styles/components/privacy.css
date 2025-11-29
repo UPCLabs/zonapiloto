@@ -1,16 +1,16 @@
-.terminos-container {
+.privacidad-container {
     max-width: 900px;
     margin: 100px auto 60px;
     padding: 0 20px;
 }
 
-.terminos-header {
+.privacidad-header {
     text-align: center;
     margin-bottom: 50px;
     animation: fadeInDown 0.6s ease-out;
 }
 
-.terminos-header h1 {
+.privacidad-header h1 {
     font-size: 2.5rem;
     color: #b80000;
     margin-bottom: 10px;
@@ -22,7 +22,7 @@
     font-style: italic;
 }
 
-.terminos-content {
+.privacidad-content {
     background-color: #fff;
     border: 1px solid #e0e0e0;
     border-radius: 12px;
@@ -31,64 +31,52 @@
     animation: fadeInUp 0.7s ease-out;
 }
 
-.terms-section {
+.privacy-section {
     margin-bottom: 40px;
     padding-bottom: 30px;
     border-bottom: 1px solid #e0e0e0;
     animation: fadeIn 0.8s ease-out backwards;
 }
 
-.terms-section:nth-child(1) {
+.privacy-section:nth-child(1) {
     animation-delay: 0.1s;
 }
 
-.terms-section:nth-child(2) {
+.privacy-section:nth-child(2) {
     animation-delay: 0.2s;
 }
 
-.terms-section:nth-child(3) {
+.privacy-section:nth-child(3) {
     animation-delay: 0.3s;
 }
 
-.terms-section:nth-child(4) {
+.privacy-section:nth-child(4) {
     animation-delay: 0.4s;
 }
 
-.terms-section:nth-child(5) {
+.privacy-section:nth-child(5) {
     animation-delay: 0.5s;
 }
 
-.terms-section:nth-child(6) {
+.privacy-section:nth-child(6) {
     animation-delay: 0.6s;
 }
 
-.terms-section:nth-child(7) {
+.privacy-section:nth-child(7) {
     animation-delay: 0.7s;
 }
 
-.terms-section:nth-child(8) {
+.privacy-section:nth-child(8) {
     animation-delay: 0.8s;
 }
 
-.terms-section:nth-child(9) {
-    animation-delay: 0.9s;
-}
-
-.terms-section:nth-child(10) {
-    animation-delay: 1s;
-}
-
-.terms-section:nth-child(11) {
-    animation-delay: 1.1s;
-}
-
-.terms-section:last-child {
+.privacy-section:last-child {
     border-bottom: none;
     margin-bottom: 0;
     padding-bottom: 0;
 }
 
-.terms-section h2 {
+.privacy-section h2 {
     color: #b80000;
     font-size: 1.5rem;
     margin-bottom: 15px;
@@ -97,7 +85,7 @@
     gap: 10px;
 }
 
-.terms-section h2::before {
+.privacy-section h2::before {
     content: "";
     display: inline-block;
     width: 4px;
@@ -106,41 +94,21 @@
     border-radius: 2px;
 }
 
-.terms-section h4 {
+.privacy-section h4 {
     color: #333;
     font-size: 1.1rem;
     margin-bottom: 10px;
 }
 
-.terms-section p {
+.privacy-section p {
     color: #555;
     line-height: 1.8;
     margin-bottom: 15px;
     font-size: 1rem;
 }
 
-.warning-box {
-    background-color: #fff3cd;
-    border-left: 4px solid #ffc107;
-    border-radius: 8px;
-    padding: 20px;
-    margin-top: 20px;
-}
-
-.warning-box p {
-    margin: 0;
-    color: #856404;
-}
-
-.info-box {
-    background-color: #e3f2fd;
-    border-left: 4px solid #2196f3;
-    border-radius: 8px;
-    padding: 20px;
-    margin-top: 20px;
-}
-
-.rules-box {
+.info-box,
+.highlight-box {
     background-color: #fff5f5;
     border-left: 4px solid #b80000;
     border-radius: 8px;
@@ -148,40 +116,30 @@
     margin-top: 20px;
 }
 
-.disclaimer-box {
-    background-color: #f5f5f5;
-    border-left: 4px solid #757575;
-    border-radius: 8px;
-    padding: 20px;
-    margin-top: 20px;
+.highlight-box {
+    background-color: #ffe5e5;
 }
 
 .info-box ul,
-.rules-box ul,
-.disclaimer-box ul {
+.highlight-box ul,
+.simple-list {
     margin: 15px 0;
     padding-left: 25px;
 }
 
 .info-box li,
-.rules-box li,
-.disclaimer-box li {
+.highlight-box li,
+.simple-list li {
     color: #444;
     line-height: 1.8;
     margin-bottom: 8px;
     position: relative;
 }
 
-.info-box li::marker {
-    color: #2196f3;
-}
-
-.rules-box li::marker {
+.info-box li::marker,
+.highlight-box li::marker,
+.simple-list li::marker {
     color: #b80000;
-}
-
-.disclaimer-box li::marker {
-    color: #757575;
 }
 
 .contact-section {
@@ -207,7 +165,6 @@
     color: #b80000;
 }
 
-/* Animations */
 @keyframes fadeInDown {
     from {
         opacity: 0;
@@ -242,42 +199,39 @@
     }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
-    .terminos-container {
+    .privacidad-container {
         margin: 80px auto 40px;
     }
 
-    .terminos-header h1 {
+    .privacidad-header h1 {
         font-size: 2rem;
     }
 
-    .terminos-content {
+    .privacidad-content {
         padding: 30px 25px;
     }
 
-    .terms-section h2 {
+    .privacy-section h2 {
         font-size: 1.3rem;
     }
 }
 
 @media (max-width: 480px) {
-    .terminos-header h1 {
+    .privacidad-header h1 {
         font-size: 1.7rem;
     }
 
-    .terminos-content {
+    .privacidad-content {
         padding: 25px 20px;
     }
 
-    .terms-section h2 {
+    .privacy-section h2 {
         font-size: 1.2rem;
     }
 
-    .warning-box,
     .info-box,
-    .rules-box,
-    .disclaimer-box {
+    .highlight-box {
         padding: 15px;
     }
 }

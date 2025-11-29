@@ -32,7 +32,6 @@ const UsuariosSection = ({
 
       {userRole === "SUPERADMIN" ? (
         <>
-          {/* ---------- CREAR USUARIO ---------- */}
           <div className="admin-form-container">
             <div className="superadmin-badge">
               <span>👑</span>
@@ -76,7 +75,6 @@ const UsuariosSection = ({
                 />
               </div>
 
-              {/* EMAIL */}
               <div className="admin-form-group">
                 <label>Correo Electrónico *</label>
                 <input
@@ -132,7 +130,6 @@ const UsuariosSection = ({
             </form>
           </div>
 
-          {/* ---------- LISTA DE USUARIOS ---------- */}
           <div className="admin-list-container">
             <div className="admin-list-header">
               <h3 className="admin-form-title">Usuarios Existentes</h3>
@@ -162,7 +159,7 @@ const UsuariosSection = ({
                 renderRow={(user) => (
                   <>
                     <span>{user.username}</span>
-                    <span>{user.email}</span> {/* ← AGREGADO */}
+                    <span>{user.email}</span>
                     <span className={`role-badge ${user.role.toLowerCase()}`}>
                       {user.role}
                     </span>

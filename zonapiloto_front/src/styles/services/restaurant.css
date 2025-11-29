@@ -1,16 +1,9 @@
-/* ===================================
-   RESTAURANT PAGE STYLES
-   =================================== */
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* ===================================
-   MAIN CONTAINER
-   =================================== */
 .restaurant-container {
     max-width: 1400px;
     margin: 100px auto 60px;
@@ -24,9 +17,6 @@
     text-align: center;
 }
 
-/* ===================================
-   LAYOUT - SIDEBAR + CONTENT
-   =================================== */
 .restaurant-layout {
     display: grid;
     grid-template-columns: 350px 1fr;
@@ -34,9 +24,6 @@
     min-height: 70vh;
 }
 
-/* ===================================
-   SIDEBAR - LISTA DE RESTAURANTES
-   =================================== */
 .restaurants-sidebar {
     background-color: #fff;
     border: 1px solid #e0e0e0;
@@ -51,9 +38,6 @@
     top: 20px;
 }
 
-/* ===================================
-   SEARCH
-   =================================== */
 .search-container {
     position: relative;
     margin-bottom: 20px;
@@ -82,9 +66,6 @@
     box-shadow: 0 0 6px rgba(184, 0, 0, 0.4);
 }
 
-/* ===================================
-   RESTAURANTS LIST
-   =================================== */
 .restaurants-list {
     display: flex;
     flex-direction: column;
@@ -164,9 +145,6 @@
     font-size: 0.95rem;
 }
 
-/* ===================================
-   MAIN CONTENT
-   =================================== */
 .restaurant-content {
     background-color: #fff;
     border: 1px solid #e0e0e0;
@@ -176,9 +154,6 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-/* ===================================
-   RESTAURANT HEADER INFO
-   =================================== */
 .restaurant-header-info {
     display: flex;
     align-items: center;
@@ -226,9 +201,6 @@
     border: 1px solid #b80000;
 }
 
-/* ===================================
-   MENU VIEWER
-   =================================== */
 .menu-viewer-container {
     border-radius: 8px;
     overflow: hidden;
@@ -252,9 +224,6 @@
     color: #999;
 }
 
-/* ===================================
-   LOADING STATE
-   =================================== */
 .restaurant-loading {
     display: flex;
     flex-direction: column;
@@ -280,9 +249,6 @@
     }
 }
 
-/* ===================================
-   ERROR STATE
-   =================================== */
 .restaurant-error {
     display: flex;
     flex-direction: column;
@@ -325,9 +291,6 @@
     box-shadow: 0 0 6px rgba(184, 0, 0, 0.4);
 }
 
-/* ===================================
-   SCROLLBAR PERSONALIZADO
-   =================================== */
 .restaurants-sidebar::-webkit-scrollbar {
     width: 6px;
 }
@@ -346,9 +309,6 @@
     background: #990000;
 }
 
-/* ===================================
-   RESPONSIVE DESIGN
-   =================================== */
 @media (max-width: 1024px) {
     .restaurant-layout {
         grid-template-columns: 1fr;

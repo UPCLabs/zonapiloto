@@ -2,7 +2,6 @@ import React from "react";
 import SearchBox from "../shared/SearchBox";
 import DataTable from "../shared/DataTable";
 import CarouselGrid from "../shared/CarouselGrid";
-import "../../../styles/admin_dashboard/sections/anunciossection.css";
 
 const AnunciosSection = ({
     announcements,

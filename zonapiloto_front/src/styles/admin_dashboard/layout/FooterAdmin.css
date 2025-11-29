@@ -26,7 +26,6 @@
     color: #667eea;
 }
 
-/* RESPONSIVE */
 @media (max-width: 1024px) {
     .dashboard-footer {
         padding: 16px 20px;

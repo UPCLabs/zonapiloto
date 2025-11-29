@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import "../../styles/services/biblioteca.css";
+import "../../styles/services/library.css";
 
 import img1 from "../../assets/images/biblioteca/biblioteca1.jpeg";
 import img2 from "../../assets/images/biblioteca/biblioteca2.jpeg";

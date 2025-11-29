@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import "../../styles/components/privacidad.css";
+import "../../styles/components/privacy.css";
 
 const Privacidad = () => {
     return (

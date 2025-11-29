@@ -1,8 +1,3 @@
-/* ============================================
-   RESTAURANT SECTION - ESTILOS COMPLETOS
-============================================ */
-
-/* INFO CARD */
 .restaurant-info-card {
     background: rgba(25, 30, 50, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -63,7 +58,6 @@
     margin-top: 20px;
 }
 
-/* MENU SECTION */
 .menu-section {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding-top: 24px;
@@ -85,7 +79,6 @@
     background: rgba(0, 0, 0, 0.2);
 }
 
-/* FORM STYLES */
 .form-help-text {
     color: #888;
     font-size: 0.85rem;
@@ -107,7 +100,6 @@
     min-width: 150px;
 }
 
-/* IMAGE PREVIEW */
 .image-preview-container {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -136,7 +128,6 @@
     display: block;
 }
 
-/* SPINNER ANIMATION */
 .spinner {
     animation: spin 1s linear infinite;
 }
@@ -151,7 +142,6 @@
     }
 }
 
-/* LOADING & EMPTY STATES */
 .loading-state {
     display: flex;
     flex-direction: column;
@@ -182,7 +172,7 @@
     background: #ff6a33;
 }
 
-/* RESPONSIVE */
+
 @media (max-width: 768px) {
     .restaurant-info-card {
         padding: 20px;
@@ -248,8 +238,9 @@
     }
 }
 
-/* PRINT STYLES */
+
 @media print {
+
     .restaurant-actions,
     .form-actions,
     .submit-btn,

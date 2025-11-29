@@ -1,7 +1,3 @@
-/* ============================================
-   REGISTER PAGE - PÁGINA DE REGISTRO ADMINISTRADORES
-============================================ */
-
 .register-page {
     min-height: 100vh;
     display: flex;
@@ -9,9 +5,6 @@
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 }
 
-/* ============================================
-   MAIN CONTENT
-============================================ */
 .register-main {
     flex: 1;
     padding: 50px 20px;
@@ -26,9 +19,6 @@
     animation: fadeIn 0.6s ease-out;
 }
 
-/* ============================================
-   HEADER
-============================================ */
 .register-header {
     text-align: center;
     margin-bottom: 60px;
@@ -92,9 +82,6 @@
     font-size: 1.4rem;
 }
 
-/* ============================================
-   BACK BUTTON
-============================================ */
 .back-button {
     display: inline-flex;
     align-items: center;
@@ -129,16 +116,10 @@
     transform: translateX(-3px);
 }
 
-/* ============================================
-   STEP SECTIONS
-============================================ */
 .step-section {
     animation: slideUp 0.6s ease-out;
 }
 
-/* ============================================
-   ROLES SECTION - PASO 1
-============================================ */
 .roles-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -225,9 +206,6 @@
     font-weight: 500;
 }
 
-/* ============================================
-   EMAIL VERIFICATION SECTION - PASO 2
-============================================ */
 .verification-card {
     background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
     padding: 50px;
@@ -280,9 +258,6 @@
     border-left: 4px solid #16a34a;
 }
 
-/* ============================================
-   REGISTER FORM SECTION - PASO 3
-============================================ */
 .register-form {
     background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
     padding: 50px;
@@ -306,7 +281,6 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-/* Sección Bloqueada */
 .locked-section {
     background: linear-gradient(135deg, #fff9e6 0%, #fff4cc 100%);
     border: 2px solid #ffc107;
@@ -374,7 +348,6 @@
     opacity: 0.8;
 }
 
-/* Campos Bloqueados */
 .locked-input {
     background: linear-gradient(135deg, #fff9e6 0%, #fff4cc 100%) !important;
     border: 2px solid #ffc107 !important;
@@ -383,7 +356,6 @@
     cursor: not-allowed !important;
 }
 
-/* File Inputs */
 .form-group input[type="file"] {
     padding: 14px;
     cursor: pointer;
@@ -443,9 +415,6 @@
     gap: 25px;
 }
 
-/* ============================================
-   BUTTONS
-============================================ */
 .submit-btn {
     width: 100%;
     padding: 18px;
@@ -506,9 +475,6 @@
     z-index: 1;
 }
 
-/* ============================================
-   VERIFICATION MODAL
-============================================ */
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -610,11 +576,6 @@
     box-shadow: 0 10px 30px rgba(184, 0, 0, 0.4);
 }
 
-/* ============================================
-   TERMS AND CONDITIONS SECTION
-   Agregar esto al final de registerpage.css
-============================================ */
-
 .terms-section {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -675,7 +636,6 @@
     margin-left: 32px;
 }
 
-/* Privacy Notice Box */
 .privacy-notice {
     display: flex;
     gap: 16px;
@@ -710,7 +670,6 @@
     margin: 0;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .terms-section {
         padding: 20px;
@@ -774,9 +733,72 @@
     }
 }
 
-/* ============================================
-   ANIMACIONES
-============================================ */
+.success-modal {
+    text-align: center;
+    max-width: 500px;
+}
+
+.success-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: successPop 0.6s ease-out;
+}
+
+@keyframes successPop {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.success-message {
+    background-color: #f0f9ff;
+    border-left: 4px solid #93c563;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+    text-align: left;
+}
+
+.success-message p {
+    margin: 0.5rem 0;
+    color: #333;
+    line-height: 1.6;
+}
+
+.success-message strong {
+    color: #93c563;
+    font-weight: 600;
+}
+
+.success-btn {
+    background: linear-gradient(135deg, #93c563 0%, #7ab04a 100%);
+    color: white;
+    padding: 0.875rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.success-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(147, 197, 99, 0.4);
+}
+
 @keyframes slideDown {
     from {
         opacity: 0;
@@ -847,9 +869,6 @@
     }
 }
 
-/* ============================================
-   RESPONSIVE
-============================================ */
 @media (max-width: 992px) {
     .roles-grid {
         grid-template-columns: repeat(2, 1fr);

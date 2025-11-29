@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../styles/services/contacto.css";
+import "../../styles/services/contact.css";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 

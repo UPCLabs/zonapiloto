@@ -1,5 +1,5 @@
 import React from "react";
-import "../../../styles/admin_dashboard/layout/FooterAdmin.css";
+import "../../../styles/admin_dashboard/layout/footeradmin.css";
 
 const Footer = () => {
     return (

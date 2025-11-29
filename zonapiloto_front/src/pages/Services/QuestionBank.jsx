@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import "../../styles/services/banco.css";
+import "../../styles/services/bank.css";
 
 function BancoPreguntas() {
   const [preguntas, setPreguntas] = useState([]);

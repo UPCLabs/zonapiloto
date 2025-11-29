@@ -1,7 +1,6 @@
 import React from "react";
 import SearchBox from "../shared/SearchBox";
 import EventItem from "../shared/EventItem";
-import "../../../styles/admin_dashboard/sections/calendariosection.css";
 
 const CalendarioSection = ({
     calendarEvents,

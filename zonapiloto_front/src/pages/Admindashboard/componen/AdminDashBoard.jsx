@@ -3,14 +3,14 @@ import useAdminData from "../hooks/useAdminData.js";
 import Sidebar from "../layout/Sidebar.jsx";
 import Header from "../layout/HeaderAdminDash.jsx";
 import Footer from "../layout/FooterAdmin.jsx";
-import InicioSection from "../sections/InicioSection.jsx";
+import InicioSection from "../sections/StartSection.jsx";
 import CalendarioSection from "../sections/CalendarySection.jsx";
 import BancoPreguntasSection from "../sections/QuestionBankSection.jsx";
 import EventosInstitucionalesSection from "../sections/InstitutionalEventsSection.jsx";
 import AnunciosSection from "../sections/AnnouncementsSection.jsx";
-import UsuariosSection from "../sections/UsuariosSection.jsx";
+import UsuariosSection from "../sections/UsersSection.jsx";
 import RestaurantSection from "../sections/RestaurantSection.jsx";
-import SolicitudesSection from "../sections/SolicitudesSection.jsx";
+import SolicitudesSection from "../sections/ApplicationsSection.jsx";
 import EditModal from "../modals/EditModal.jsx";
 import "../../../styles/admin_dashboard/componen/admindashboard.css";
 
@@ -100,7 +100,7 @@ const AdminDashboard = () => {
             id: "usuarios",
             icon: "👥",
             label: "Gestión de Usuarios",
-            roles: ["QUESTIONSADMIN", "RESTAURANTADMIN", "EVENTSADMIN", "SUPERADMIN"],
+            roles: ["SUPERADMIN"],
         },
         {
             id: "solicitudes",

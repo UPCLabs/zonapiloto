@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import SearchBox from "../shared/SearchBox";
-import "../../../styles/admin_dashboard/sections/solicitudessection.css";
+import "../../../styles/admin_dashboard/sections/applicationssection.css";
 
 const SolicitudesSection = () => {
     const [pendingUsers, setPendingUsers] = useState([]);

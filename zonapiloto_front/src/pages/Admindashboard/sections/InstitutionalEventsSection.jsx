@@ -1,7 +1,6 @@
 import React from "react";
 import SearchBox from "../shared/SearchBox";
 import EventItem from "../shared/EventItem";
-import "../../../styles/admin_dashboard/sections/eventosinstitucionalessection.css";
 
 const EventosInstitucionalesSection = ({
     institutionalEvents,
