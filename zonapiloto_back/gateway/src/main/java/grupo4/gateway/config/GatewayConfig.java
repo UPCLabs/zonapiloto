@@ -28,6 +28,12 @@ public class GatewayConfig {
                     .filters(f -> f.stripPrefix(1))
                     .uri("http://auth-service:5001")
             )
+            .route("legal-documents", r ->
+                r
+                    .path("/api/storage/**")
+                    .filters(f -> f.stripPrefix(1))
+                    .uri("http://auth-service:5001")
+            )
             .route("information-service", r ->
                 r
                     .path("/api/information/**")

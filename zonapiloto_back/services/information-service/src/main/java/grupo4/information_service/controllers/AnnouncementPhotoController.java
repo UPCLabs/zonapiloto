@@ -28,14 +28,14 @@ public class AnnouncementPhotoController {
     }
 
     @GetMapping("/admin")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'ADMIN',  'SUPERADMIN')")
     public ResponseEntity<?> getAllAdminPhotos() {
         List<AnnouncementPhoto> events = service.getAllAdminPhotos();
         return ResponseEntity.ok(events);
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'ADMIN',  'SUPERADMIN')")
     public ResponseEntity<AnnouncementPhoto> create(
         @RequestParam("title") String title,
         @RequestParam("file") MultipartFile file
@@ -45,7 +45,7 @@ public class AnnouncementPhotoController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'ADMIN', 'SUPERADMIN')")
     public ResponseEntity<AnnouncementPhoto> update(
         @PathVariable Long id,
         @RequestParam("title") String title,
@@ -57,7 +57,7 @@ public class AnnouncementPhotoController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'ADMIN', 'SUPERADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.deletePhoto(id);
         return ResponseEntity.noContent().build();

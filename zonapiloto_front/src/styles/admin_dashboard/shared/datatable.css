@@ -1,0 +1,144 @@
+/* ============================================
+   DATA TABLE
+============================================ */
+.data-table {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.table-header {
+    display: grid;
+    gap: 16px;
+    padding: 16px 20px;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 10px;
+    font-weight: 600;
+    color: #b0b0b0;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table-row {
+    display: grid;
+    gap: 16px;
+    padding: 20px;
+    background: rgba(20, 25, 45, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    align-items: center;
+    transition: all 0.3s ease;
+    color: #e0e0e0;
+}
+
+.table-row:hover {
+    border-color: rgba(102, 126, 234, 0.3);
+    transform: translateX(4px);
+}
+
+.row-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.highlight-text {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+}
+
+.icon-btn:hover {
+    transform: translateY(-2px);
+}
+
+.icon-btn.edit {
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.icon-btn.edit:hover {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.icon-btn.view {
+    border-color: rgba(168, 85, 247, 0.3);
+}
+
+.icon-btn.view:hover {
+    background: rgba(168, 85, 247, 0.1);
+}
+
+.icon-btn.delete {
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.icon-btn.delete:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+
+    .table-header,
+    .table-row {
+        grid-template-columns: 1.5fr 1fr 0.8fr 120px !important;
+        gap: 12px;
+        padding: 16px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .table-header {
+        display: none;
+    }
+
+    .table-row {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+    }
+
+    .table-row>span:nth-child(1)::before {
+        content: 'Info: ';
+        font-weight: 600;
+        color: #999;
+    }
+
+    .table-row>span:nth-child(2)::before {
+        content: 'Categoría/Tipo/Rol: ';
+        font-weight: 600;
+        color: #999;
+    }
+
+    .table-row>span:nth-child(3)::before {
+        content: 'Detalles: ';
+        font-weight: 600;
+        color: #999;
+    }
+
+    .row-actions {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .icon-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+}

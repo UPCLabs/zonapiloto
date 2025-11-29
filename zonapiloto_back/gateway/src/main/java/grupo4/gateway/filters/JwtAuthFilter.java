@@ -30,10 +30,17 @@ public class JwtAuthFilter implements GlobalFilter {
     private final List<String> PRIVATE_GET = List.of(
         "/auth/users/me",
         "/auth/users",
-        "/information/**/admin"
+        "/auth/users/detail",
+        "/information/**/admin",
+        "/auth/pending-users",
+        "/storage/**",
+        "/information/**/own"
     );
 
     private final List<String> PUBLIC_POST = List.of(
+        "/auth/registration/register",
+        "/auth/send-email-code",
+        "/auth/verify-email-code",
         "/auth/login",
         "/auth/check-credentials",
         "/auth/confirm-registration",
@@ -95,13 +102,18 @@ public class JwtAuthFilter implements GlobalFilter {
                         .mutate()
                         .header("X-User", claims.getSubject())
                         .header("X-Role", (String) claims.get("role"))
+                        .header(
+                            "X-UserId",
+                            String.valueOf(claims.get("userId"))
+                        )
                         .build()
                 )
                 .build();
 
             logger.info(
                 String.format(
-                    "User: %s, role: %s - request: %s",
+                    "UserId: %s, User: %s, role: %s - request: %s",
+                    claims.get("userId"),
                     claims.getSubject(),
                     claims.get("role"),
                     path

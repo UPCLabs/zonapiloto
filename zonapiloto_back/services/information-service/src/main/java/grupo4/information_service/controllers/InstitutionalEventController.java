@@ -35,14 +35,14 @@ public class InstitutionalEventController {
     }
 
     @GetMapping("/admin")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> getAllAdminEvents() {
         List<InstitutionalEvent> events = eventService.getAllAdminEvents();
         return ResponseEntity.ok(events);
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> createEvent(
         @RequestBody InstitutionalEventDTO eventDTO
     ) {
@@ -51,7 +51,7 @@ public class InstitutionalEventController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> updateEvent(
         @PathVariable Long id,
         @RequestBody InstitutionalEventDTO eventDTO
@@ -61,7 +61,7 @@ public class InstitutionalEventController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'ADMIN', 'SUPERADMIN')")
     public void deleteEvent(@PathVariable Long id) {
         eventService.deleteEvent(id);
     }

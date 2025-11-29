@@ -110,8 +110,6 @@
     margin-right: auto;
 }
 
-
-/* Responsive */
 @media (max-width: 968px) {
     .hero-container {
         height: 80vh;
@@ -175,7 +173,6 @@
     }
 }
 
-/* Accesibilidad */
 @media (prefers-reduced-motion: reduce) {
 
     *,

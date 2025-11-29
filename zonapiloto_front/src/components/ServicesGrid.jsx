@@ -42,6 +42,11 @@ const services = [
     desc: "Conéctate con nosotros",
     icon: <i class="fi fi-sr-users-alt"></i>,
   },
+  {
+    title: "Panel de Administración",
+    desc: "Accede a las herramientas administrativas",
+    icon: <i class="fi fi-sr-users-alt"></i>,
+  },
 ];
 
 function ServicesGrid() {
@@ -72,6 +77,9 @@ function ServicesGrid() {
         break;
       case "Contacto":
         navigate("/contacto");
+        break;
+      case "Panel de Administración":
+        navigate("/loggin");
         break;
       default:
         alert(`Haz clic en: ${title}`);

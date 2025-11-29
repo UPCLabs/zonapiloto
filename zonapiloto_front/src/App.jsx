@@ -6,18 +6,19 @@ import {
 } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import PerfilAcademico from "./pages/Services/Profile.jsx";
-import BancoPreguntas from "./pages/Services/BancoPreguntas.jsx";
-import Soporte from "./pages/Services/Soporte.jsx";
-import Terminos from "./pages/Services/Terminos.jsx";
-import Privacidad from "./pages/Services/Privacidad.jsx";
-import Login from "./pages/Login";
-import CalendarioAcademico from "./pages/Services/CalendarioAcademico.jsx";
+import BancoPreguntas from "./pages/Services/QuestionBank.jsx";
+import Soporte from "./pages/Services/Support.jsx";
+import Terminos from "./pages/Services/Terms.jsx";
+import Privacidad from "./pages/Services/Privacy.jsx";
+import Login from "./pages/Services/Login.jsx";
+import CalendarioAcademico from "./pages/Services/AcademicCalendar.jsx";
 import Restaurant from "./pages/Services/Restaurant.jsx";
 import Events from "./pages/Services/InstitucionalEvents.jsx";
-import Lybrary from "./pages/Services/Biblioteca.jsx";
-import AdminDash from "./pages/Authentication/AdminDashboard.jsx";
-import Loggin from "./pages/Authentication/UnifledLogin.jsx";
-import Contact from "./pages/Services/Contacto.jsx";
+import Lybrary from "./pages/Services/Library.jsx";
+import AdminDash from "./pages/Admindashboard/componen/AdminDashBoard.jsx";
+import Loggin from "./pages/Admindashboard/UnifledLogin.jsx";
+import Contact from "./pages/Services/Contact.jsx";
+import Register from "./pages/Services/RegisterPage.jsx";
 import SecretLoginTrigger from "./components/SecretLoginTrigger";
 import NotFound404 from "./pages/NotFound404.jsx";
 
@@ -52,6 +53,7 @@ function App() {
           <Route path="/biblioteca" element={<Lybrary />} />
           <Route path="/admindash" element={<AdminDash />} />
           <Route path="/loggin" element={<Loggin />} />
+          <Route path="/register" element={<Register />} />
           <Route path="*" element={<NotFound404 />} />
         </Routes>
       </Router>

@@ -18,8 +18,8 @@ public class AuthService {
         return jwtUtil.generateToken(user);
     }
 
-    public boolean checkCredentials(String username, String password) {
-        User user = userService.getUser(username);
+    public boolean checkCredentials(String email, String password) {
+        User user = userService.getUserEntity(email);
 
         if (user == null) {
             return false;
@@ -28,8 +28,8 @@ public class AuthService {
         return UserUtil.checkPassword(password, user.getPassword());
     }
 
-    public String loginWithMfa(String username, String password, int code) {
-        User user = userService.getUser(username);
+    public String loginWithMfa(String email, String password, int code) {
+        User user = userService.getUserEntity(email);
         if (user == null) {
             return null;
         }
@@ -38,7 +38,7 @@ public class AuthService {
             return null;
         }
 
-        if (!mfaService.verifyCode(username, user.getMfaSecret(), code)) {
+        if (!mfaService.verifyCode(email, user.getMfaSecret(), code)) {
             return null;
         }
 

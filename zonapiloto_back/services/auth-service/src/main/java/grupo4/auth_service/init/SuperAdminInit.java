@@ -13,8 +13,8 @@ public class SuperAdminInit implements CommandLineRunner {
 
     private final UserRepository userRepository;
 
-    @Value("${superadmin.username}")
-    private String superAdminUsername;
+    @Value("${superadmin.email}")
+    private String superAdminEmail;
 
     @Value("${superadmin.password}")
     private String superAdminPassword;
@@ -25,9 +25,10 @@ public class SuperAdminInit implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (userRepository.findByUsername(superAdminUsername).isEmpty()) {
+        if (userRepository.findByEmail(superAdminEmail).isEmpty()) {
             User superAdmin = new User();
-            superAdmin.setUsername(superAdminUsername);
+            superAdmin.setUsername("root");
+            superAdmin.setEmail(superAdminEmail);
             superAdmin.setPassword(
                 UserUtil.encryptPassword(superAdminPassword)
             );
@@ -35,7 +36,7 @@ public class SuperAdminInit implements CommandLineRunner {
             superAdmin.setRole(UserRole.SUPERADMIN);
 
             userRepository.save(superAdmin);
-            System.out.println("SUPERADMIN created: " + superAdminUsername);
+            System.out.println("SUPERADMIN created: root");
         } else {
             System.out.println("SUPERADMIN exists, Not create a new one");
         }

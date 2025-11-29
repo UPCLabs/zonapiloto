@@ -36,7 +36,7 @@ public class AdvertisementController {
     }
 
     @GetMapping("/admin")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'ADMIN',  'SUPERADMIN')")
     public ResponseEntity<?> getAllAdminAdvertisements() {
         List<Advertisement> events =
             advertisementService.getAllAdminAdvertisements();
@@ -44,7 +44,7 @@ public class AdvertisementController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> createAdvertisement(
         @RequestBody AdvertisementDTO eventDTO
     ) {
@@ -55,7 +55,7 @@ public class AdvertisementController {
     }
 
     @PutMapping("{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> updateAdvertisement(
         @PathVariable Long id,
         @RequestBody AdvertisementDTO eventDTO
@@ -68,7 +68,7 @@ public class AdvertisementController {
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'ADMIN', 'SUPERADMIN')")
     public void deleteAdvertisement(@PathVariable Long id) {
         advertisementService.deleteAdvertisement(id);
     }
