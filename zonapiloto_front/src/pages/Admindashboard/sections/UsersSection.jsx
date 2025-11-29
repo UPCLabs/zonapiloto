@@ -112,6 +112,7 @@ const UsuariosSection = ({
                 <select name="role" required>
                   <option value="">Seleccionar...</option>
                   <option value="SUPERADMIN">Super Administrador</option>
+                  <option value="ADMIN">Administrador</option>
                   <option value="RESTAURANTADMIN">
                     Administrador De Restaurante
                   </option>

@@ -382,10 +382,10 @@ const EditModal = ({
                     required
                   >
                     <option value="">Seleccionar...</option>
-                    <option value="important">Importante</option>
-                    <option value="alert">Alerta</option>
-                    <option value="news">Novedad</option>
-                    <option value="general">General</option>
+                    <option value="IMPORTANT">Importante</option>
+                    <option value="ALERT">Alerta</option>
+                    <option value="NEWS">Novedad</option>
+                    <option value="GENERAL">General</option>
                   </select>
                 </div>
               </div>
@@ -545,9 +545,15 @@ const EditModal = ({
                   required
                 >
                   <option value="">Seleccionar...</option>
-                  <option value="USER">Usuario</option>
-                  <option value="ADMIN">Administrador</option>
                   <option value="SUPERADMIN">Super Administrador</option>
+                  <option value="ADMIN">Administrador</option>
+                  <option value="RESTAURANTADMIN">
+                    Administrador De Restaurante
+                  </option>
+                  <option value="QUESTIONSADMIN">
+                    Administrador De Banco De Pregungas
+                  </option>
+                  <option value="EVENTSADMIN">Administrador De Eventos</option>
                 </select>
               </div>
             </>
