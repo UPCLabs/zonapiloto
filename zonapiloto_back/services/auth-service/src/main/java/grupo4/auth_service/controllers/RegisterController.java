@@ -75,6 +75,15 @@ public class RegisterController {
             List<String> requiredDocs =
                 roleDocumentConfig.getRequiredDocumentsForRole(role);
 
+            if (requiredDocs.isEmpty()) {
+                return ResponseEntity.badRequest().body(
+                    Map.of(
+                        "error",
+                        "Este rol no es elegible para hacer una solicitud"
+                    )
+                );
+            }
+
             for (String required : requiredDocs) {
                 if (!files.containsKey(required)) {
                     return ResponseEntity.badRequest().body(

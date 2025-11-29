@@ -102,18 +102,25 @@ public class UserController {
     @PutMapping("/users/{user_id}")
     @PreAuthorize("hasAuthority('SUPERADMIN')")
     public ResponseEntity<?> updateUser(
+        @RequestHeader("X-UserId") Long requesterUserId,
         @RequestBody Map<String, String> req,
         @PathVariable Long user_id
     ) {
         String newUsername = req.get("username");
         String newEmail = req.get("email");
         String newPassword = req.get("password");
-        String newRole = req.get("role");
+        UserRole newRole = UserRole.valueOf(req.get("role"));
 
         User user = userService.getUserEntity(user_id);
         if (user == null) {
             return ResponseEntity.status(404).body(
                 Map.of("error", "Usuario no encontrado")
+            );
+        }
+
+        if (newRole != user.getRole() && requesterUserId == user.getId()) {
+            return ResponseEntity.status(403).body(
+                Map.of("error", "No puedes cambiarte el rol")
             );
         }
 
@@ -124,9 +131,8 @@ public class UserController {
             user.setEmail(newEmail);
         }
 
+        user.setRole(newRole);
         user.setUsername(newUsername);
-
-        user.setRole(UserRole.valueOf(newRole));
 
         userService.updateUser(user);
         return ResponseEntity.ok(Map.of("message", "Usuario actualizado"));
@@ -135,7 +141,7 @@ public class UserController {
     @DeleteMapping("/users/{user_id}")
     @PreAuthorize("hasAuthority('SUPERADMIN')")
     public ResponseEntity<?> deleteUser(
-        @RequestHeader("X-User") String requester,
+        @RequestHeader("X-UserId") Long requesterUserId,
         @PathVariable Long user_id
     ) {
         User user = userService.getUserEntity(user_id);
@@ -146,7 +152,7 @@ public class UserController {
             );
         }
 
-        if (requester.equals(user.getUsername())) {
+        if (requesterUserId == user.getId()) {
             return ResponseEntity.status(400).body(
                 Map.of("error", "No puedes eliminar tu propio usuario")
             );
