@@ -20,6 +20,26 @@ services:
       retries: 5
       start_period: 20s
 
+  rabbitmq:
+    image: rabbitmq:3.13
+    container_name: rabbitmq-zonapiloto
+    restart: unless-stopped
+    expose:
+      - "5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBIT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_PASSWORD}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - zonapiloto_net
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
   auth-service:
     build: ./zonapiloto_back/services/auth-service
     container_name: auth-service
@@ -28,6 +48,10 @@ services:
       postgres:
         condition: service_healthy
     environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: ${RABBIT_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASSWORD}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
@@ -35,9 +59,11 @@ services:
       SPRING_JPA_SHOW_SQL: "true"
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION}
-
-      SUPERADMIN_USERNAME: ${SUPERADMIN_USERNAME}
+      SUPERADMIN_EMAIL: ${SUPERADMIN_EMAIL}
       SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD}
+      DOCUMENTS_PATH: ${DOCUMENTS_PATH}
+    volumes:
+      - zonapiloto_documents:/storage/documents
     expose:
       - "5001"
     networks:
@@ -81,6 +107,30 @@ services:
     networks:
       - zonapiloto_net
 
+  notification-service:
+    build: ./zonapiloto_back/services/notification-service
+    container_name: notification-service
+    restart: unless-stopped
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: ${RABBIT_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASSWORD}
+
+      SPRING_MAIL_HOST: smtp.zoho.com
+      SPRING_MAIL_PORT: 587
+      SPRING_MAIL_USERNAME: ${SMTP_USERNAME}
+      SPRING_MAIL_PASSWORD: ${SMTP_PASSWORD}
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: "true"
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: "true"
+    expose:
+      - "5004"
+    networks:
+      - zonapiloto_net
+
   gateway:
     build: ./zonapiloto_back/gateway
     container_name: gateway
@@ -95,6 +145,7 @@ services:
         information-service=http://information-service:5002/actuator/health,
         profile-service=http://profile-service:5003/actuator/health,
         notification-service=http://notification-service:5004/actuator/health,
+
     expose:
       - "5000"
     networks:
@@ -129,3 +180,5 @@ networks:
 volumes:
   postgres_data:
   zonapiloto_images:
+  rabbitmq_data:
+  zonapiloto_documents:
