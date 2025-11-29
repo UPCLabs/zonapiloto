@@ -17,5 +17,14 @@ spring:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
 server:
   port: 5004
