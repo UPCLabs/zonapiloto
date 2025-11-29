@@ -11,7 +11,6 @@ const CalendarioSection = ({
     openEditModal,
     handleDelete,
     filterItems,
-    formatDate,
 }) => {
     const filteredCalendarEvents = filterItems(calendarEvents, [
         "title",
@@ -116,7 +115,6 @@ const CalendarioSection = ({
                             <EventItem
                                 key={event.id}
                                 event={event}
-                                formatDate={formatDate}
                                 openEditModal={() => openEditModal("calendar", event)}
                                 handleDelete={() =>
                                     handleDelete("/information/calendar-events", event.id)
