@@ -10,5 +10,5 @@ public class RestaurantDTO {
     private String logo;
     private String location;
     private String menuUri;
-    private boolean state;
+    private boolean state = true;
 }

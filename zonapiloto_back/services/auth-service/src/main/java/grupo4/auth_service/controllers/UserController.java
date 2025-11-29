@@ -5,6 +5,10 @@ import grupo4.auth_service.enums.UserRole;
 import grupo4.auth_service.services.UserDocumentService;
 import grupo4.auth_service.services.UserService;
 import grupo4.auth_service.util.UserUtil;
+import grupo4.common_messaging.email.EmailTemplate;
+import grupo4.common_messaging.events.EmailEvent;
+import grupo4.common_messaging.publisher.MessagePublisher;
+import grupo4.common_messaging.queues.QueuesNames;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
@@ -19,6 +23,7 @@ public class UserController {
 
     private final UserService userService;
     private final UserDocumentService userDocumentService;
+    private final MessagePublisher messagePublisher;
 
     @GetMapping("/users/me")
     public ResponseEntity<?> userInfo(
@@ -74,6 +79,17 @@ public class UserController {
         }
 
         userService.createUser(username, email, password, role);
+
+        EmailEvent credentialsEmail = EmailEvent.builder()
+            .to(email)
+            .subject("El admin te ha creado un usuario")
+            .template(EmailTemplate.USER_ACCEPTED)
+            .variables(
+                Map.of("user", username, "email", email, "password", password)
+            )
+            .build();
+
+        messagePublisher.send(QueuesNames.EMAIL_QUEUE, credentialsEmail);
 
         return ResponseEntity.ok(
             Map.of(

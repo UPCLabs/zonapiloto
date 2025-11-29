@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Loader, AlertCircle, Search, ChevronRight } from 'lucide-react';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import '../../styles/services/restaurant.css';
+import React, { useState, useEffect } from "react";
+import { Loader, AlertCircle, Search, ChevronRight } from "lucide-react";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import "../../styles/services/restaurant.css";
 
 const Restaurant = () => {
   const API_URL = import.meta.env.VITE_API_BASE_URL;
@@ -11,7 +11,7 @@ const Restaurant = () => {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchRestaurants();
@@ -23,14 +23,14 @@ const Restaurant = () => {
       setError(null);
 
       const response = await fetch(`${API_URL}/information/restaurants`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
       if (!response.ok) {
-        throw new Error('Error al cargar los restaurantes');
+        throw new Error("Error al cargar los restaurantes");
       }
 
       const data = await response.json();
@@ -41,7 +41,7 @@ const Restaurant = () => {
       }
     } catch (err) {
       setError(err.message);
-      console.error('Error al cargar restaurantes:', err);
+      console.error("Error al cargar restaurantes:", err);
     } finally {
       setLoading(false);
     }
@@ -51,9 +51,10 @@ const Restaurant = () => {
     setSelectedRestaurant(restaurant);
   };
 
-  const filteredRestaurants = restaurants.filter(restaurant =>
-    restaurant.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    restaurant.categoria.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredRestaurants = restaurants.filter(
+    (restaurant) =>
+      restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      restaurant.category.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   if (loading) {
@@ -129,20 +130,23 @@ const Restaurant = () => {
                 filteredRestaurants.map((restaurant) => (
                   <div
                     key={restaurant.id}
-                    className={`restaurant-item ${selectedRestaurant?.id === restaurant.id ? 'active' : ''}`}
+                    className={`restaurant-item ${selectedRestaurant?.id === restaurant.id ? "active" : ""}`}
                     onClick={() => handleSelectRestaurant(restaurant)}
                   >
                     <img
                       src={restaurant.logo}
-                      alt={restaurant.nombre}
+                      alt={restaurant.name}
                       className="restaurant-item-logo"
                       onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/60?text=Logo';
+                        e.target.src =
+                          "https://via.placeholder.com/60?text=Logo";
                       }}
                     />
                     <div className="restaurant-item-info">
-                      <h3>{restaurant.nombre}</h3>
-                      <p className="restaurant-item-category">{restaurant.categoria}</p>
+                      <h3>{restaurant.name}</h3>
+                      <p className="restaurant-item-category">
+                        {restaurant.category}
+                      </p>
                     </div>
                     <ChevronRight size={20} className="chevron-icon" />
                   </div>
@@ -158,27 +162,34 @@ const Restaurant = () => {
                 <div className="restaurant-header-info">
                   <img
                     src={selectedRestaurant.logo}
-                    alt={selectedRestaurant.nombre}
+                    alt={selectedRestaurant.name}
                     className="restaurant-main-logo"
                     onError={(e) => {
-                      e.target.src = 'https://via.placeholder.com/100?text=Logo';
+                      e.target.src =
+                        "https://via.placeholder.com/100?text=Logo";
                     }}
                   />
                   <div className="restaurant-main-details">
-                    <h2>{selectedRestaurant.nombre}</h2>
-                    <p className="restaurant-main-location">📍 {selectedRestaurant.localizacion}</p>
-                    <span className="restaurant-badge">{selectedRestaurant.categoria}</span>
+                    <h2>{selectedRestaurant.name}</h2>
+                    <p className="restaurant-main-location">
+                      📍 {selectedRestaurant.location}
+                    </p>
+                    <span className="restaurant-badge">
+                      {selectedRestaurant.category}
+                    </span>
                   </div>
                 </div>
 
                 <div className="menu-viewer-container">
-                  {selectedRestaurant.menuPdfUrl ? (
-                    <iframe
-                      src={selectedRestaurant.menuPdfUrl}
-                      title={`Menú de ${selectedRestaurant.nombre}`}
-                      className="menu-iframe"
-                      loading="lazy"
-                    />
+                  {selectedRestaurant.menuUri ? (
+                    <a
+                      href={selectedRestaurant.menuUri}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="open-menu-btn"
+                    >
+                      Abrir menú en otra pestaña
+                    </a>
                   ) : (
                     <div className="no-selection">
                       <AlertCircle size={48} />
