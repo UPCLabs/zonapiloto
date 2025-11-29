@@ -1,5 +1,5 @@
 import React from "react";
-import "../../../styles/admin_dashboard/layout/sidebar.css";
+import "../../../styles/admin_dashboard/layout/Sidebar.css";
 
 const Sidebar = ({
   menuOpen,
