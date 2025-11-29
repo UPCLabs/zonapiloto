@@ -25,7 +25,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/own")
-    @PreAuthorize("hasAnyAuthority('RESTAURANTADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('RESTAURANTADMIN', 'ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> getRestaurant(
         @RequestHeader("X-UserId") Long userId
     ) {
@@ -43,14 +43,14 @@ public class RestaurantController {
     }
 
     @GetMapping("/admin")
-    @PreAuthorize("hasAnyAuthority('SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority( 'ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> getAllAdminRestaurants() {
         List<Restaurant> events = restaurantService.getAllAdminRestaurants();
         return ResponseEntity.ok(events);
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('RESTAURANTADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('RESTAURANTADMIN', 'ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> createRestaurant(
         @RequestHeader("X-UserId") Long userId,
         @RequestBody RestaurantDTO restaurantDTO
@@ -70,7 +70,7 @@ public class RestaurantController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAnyAuthority('RESTAURANTADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('RESTAURANTADMIN', 'ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> updateRestaurant(
         @RequestHeader("X-UserId") Long userId,
         @RequestBody RestaurantDTO eventDTO
@@ -83,7 +83,7 @@ public class RestaurantController {
     }
 
     @PutMapping("/admin/{id}")
-    @PreAuthorize("hasAnyAuthority('SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority( 'ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> updateRestaurantAdmin(
         @PathVariable Long id,
         @RequestBody RestaurantDTO eventDTO
@@ -96,7 +96,7 @@ public class RestaurantController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
     public void deleteEvent(@PathVariable Long id) {
         restaurantService.deleteRestaurant(id);
     }

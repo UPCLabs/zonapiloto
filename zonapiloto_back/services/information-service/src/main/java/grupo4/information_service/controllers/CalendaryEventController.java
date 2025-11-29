@@ -35,14 +35,14 @@ public class CalendaryEventController {
     }
 
     @GetMapping("/admin")
-    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> getAllAdminEvents() {
         List<CalendaryEvent> events = eventService.getAllAdminEvents();
         return ResponseEntity.ok(events);
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> createEvent(
         @RequestBody CalendaryEventDTO eventDTO
     ) {
@@ -51,7 +51,7 @@ public class CalendaryEventController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'ADMIN', 'SUPERADMIN')")
     public ResponseEntity<?> updateEvent(
         @PathVariable Long id,
         @RequestBody CalendaryEventDTO eventDTO
@@ -61,7 +61,7 @@ public class CalendaryEventController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('EVENTSADMIN', 'ADMIN', 'SUPERADMIN')")
     public void deleteEvent(@PathVariable Long id) {
         eventService.deleteEvent(id);
     }
