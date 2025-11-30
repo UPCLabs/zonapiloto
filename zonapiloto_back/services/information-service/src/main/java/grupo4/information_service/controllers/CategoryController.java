@@ -37,7 +37,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('QUESTIONSADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('QUESTIONSADMIN', 'ADMIN', 'SUPERADMIN')")
     public ResponseEntity<CategoryResponse> createCategory(
         @RequestBody CategoryRequest dto
     ) {
@@ -46,7 +46,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('QUESTIONSADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('QUESTIONSADMIN','ADMIN', 'SUPERADMIN')")
     public ResponseEntity<CategoryResponse> updateCategory(
         @PathVariable Long id,
         @RequestBody CategoryRequest dto
@@ -60,7 +60,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('QUESTIONSADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('QUESTIONSADMIN','ADMIN', 'SUPERADMIN')")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         try {
             categoryService.deleteCategory(id);
