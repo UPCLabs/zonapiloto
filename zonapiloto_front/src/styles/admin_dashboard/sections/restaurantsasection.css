@@ -1,0 +1,409 @@
+/* Restaurant SA Section Styles */
+
+/* Search Bar */
+.rsa-search-bar {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.rsa-search-bar svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    pointer-events: none;
+}
+
+.rsa-search-bar input {
+    width: 100%;
+    padding: 10px 12px 10px 40px;
+    background: rgba(20, 25, 45, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.rsa-search-bar input:focus {
+    outline: none;
+    border-color: #667eea;
+    background: rgba(20, 25, 45, 0.8);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.rsa-search-bar input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.rsa-count {
+    color: #999;
+    font-size: 0.95rem;
+}
+
+/* Restaurants Grid */
+.rsa-restaurants-grid {
+    display: grid;
+    gap: 20px;
+}
+
+.rsa-restaurant-card {
+    background: rgba(20, 25, 45, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    transition: all 0.3s ease;
+}
+
+.rsa-restaurant-card:hover {
+    background: rgba(20, 25, 45, 0.8);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.rsa-restaurant-logo {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.rsa-restaurant-content {
+    flex: 1;
+}
+
+.rsa-restaurant-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    gap: 16px;
+}
+
+.rsa-restaurant-info {
+    flex: 1;
+}
+
+.rsa-restaurant-name {
+    color: #fff;
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.rsa-restaurant-location {
+    color: #999;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.rsa-restaurant-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(102, 126, 234, 0.2);
+    color: #667eea;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.rsa-restaurant-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.rsa-btn-edit,
+.rsa-btn-delete {
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.rsa-btn-edit {
+    background: rgba(102, 126, 234, 0.2);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    color: #667eea;
+}
+
+.rsa-btn-edit:hover {
+    background: rgba(102, 126, 234, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.rsa-btn-delete {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+}
+
+.rsa-btn-delete:hover {
+    background: rgba(239, 68, 68, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.rsa-menu-link {
+    margin-top: 16px;
+}
+
+.rsa-menu-link a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #667eea;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.rsa-menu-link a:hover {
+    color: #7c8ef5;
+    text-decoration: underline;
+}
+
+/* Modal Styles */
+.rsa-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+    animation: rsa-fadeIn 0.3s ease;
+}
+
+@keyframes rsa-fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.rsa-modal-content {
+    background: rgba(30, 35, 55, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: rsa-slideUp 0.3s ease;
+}
+
+@keyframes rsa-slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.rsa-modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.rsa-modal-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.rsa-modal-content::-webkit-scrollbar-thumb {
+    background: rgba(102, 126, 234, 0.5);
+    border-radius: 10px;
+}
+
+.rsa-modal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(102, 126, 234, 0.7);
+}
+
+.rsa-modal-title {
+    color: #fff;
+    margin-bottom: 24px;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* Form Styles */
+.rsa-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.rsa-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rsa-form-group label {
+    color: #b0b0b0;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.rsa-form-group input,
+.rsa-form-group select {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(20, 25, 45, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.rsa-form-group input:focus,
+.rsa-form-group select:focus {
+    outline: none;
+    border-color: #667eea;
+    background: rgba(20, 25, 45, 0.8);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.rsa-form-group input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.rsa-form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.rsa-btn-cancel,
+.rsa-btn-submit {
+    flex: 1;
+    padding: 14px 28px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.rsa-btn-cancel {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #b0b0b0;
+}
+
+.rsa-btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.rsa-btn-submit {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+}
+
+.rsa-btn-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+.rsa-btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .rsa-restaurant-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .rsa-restaurant-header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .rsa-restaurant-actions {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .rsa-btn-edit,
+    .rsa-btn-delete {
+        flex: 1;
+    }
+
+    .rsa-search-bar {
+        max-width: 100%;
+    }
+
+    .admin-list-header {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .rsa-modal-content {
+        padding: 24px;
+    }
+
+    .rsa-form-actions {
+        flex-direction: column;
+    }
+
+    .rsa-btn-cancel,
+    .rsa-btn-submit {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .rsa-restaurant-logo {
+        width: 80px;
+        height: 80px;
+    }
+
+    .rsa-restaurant-name {
+        font-size: 1.1rem;
+    }
+
+    .rsa-modal-title {
+        font-size: 1.3rem;
+    }
+
+    .rsa-modal-content {
+        padding: 20px;
+    }
+}
