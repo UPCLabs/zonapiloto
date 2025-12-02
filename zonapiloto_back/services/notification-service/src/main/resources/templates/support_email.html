@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Nuevo mensaje de soporte</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background: #f7f7f7;
+                padding: 20px;
+            }
+            .container {
+                max-width: 600px;
+                background: white;
+                padding: 25px;
+                margin: auto;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+            h2 {
+                color: #b30000;
+                margin-bottom: 25px;
+            }
+            .item {
+                margin-bottom: 18px;
+            }
+            .label {
+                font-weight: bold;
+                font-size: 15px;
+                color: #333;
+            }
+            .value {
+                margin-top: 5px;
+                font-size: 16px;
+                background: #f0f0f0;
+                padding: 12px;
+                border-radius: 8px;
+                white-space: pre-wrap;
+            }
+            .footer {
+                margin-top: 30px;
+                font-size: 14px;
+                color: #666;
+                text-align: center;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <h2>📩 Nuevo mensaje enviado desde el formulario de soporte</h2>
+
+            <div class="item">
+                <div class="label">Nombre completo:</div>
+                <div class="value">{{nombre}}</div>
+            </div>
+
+            <div class="item">
+                <div class="label">Correo electrónico:</div>
+                <div class="value">{{correo}}</div>
+            </div>
+
+            <div class="item">
+                <div class="label">Asunto:</div>
+                <div class="value">{{asunto}}</div>
+            </div>
+
+            <div class="item">
+                <div class="label">Mensaje:</div>
+                <div class="value">{{mensaje}}</div>
+            </div>
+
+            <div class="footer">
+                Este correo fue generado automáticamente desde zonapiloto
+            </div>
+        </div>
+    </body>
+</html>

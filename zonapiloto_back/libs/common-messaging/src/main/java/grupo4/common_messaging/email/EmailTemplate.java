@@ -6,6 +6,7 @@ public enum EmailTemplate {
     PASSWORD_RESET,
     USER_ACCEPTED,
     USER_REJECTED,
+    SUPPORT_EMAIL,
     EMAIL_VERIFY;
 
     @Override
