@@ -144,26 +144,6 @@ const Privacidad = () => {
               actualización".
             </p>
           </section>
-
-          <section className="privacy-section contact-section">
-            <h2>8. Contacto</h2>
-            <p>
-              Si tiene preguntas sobre esta política de privacidad o sobre cómo
-              manejamos su información personal, contáctenos a:
-            </p>
-            <div className="contact-info">
-              <p>
-                <strong>Email:</strong> privacidad@ejemplo.com
-              </p>
-              <p>
-                <strong>Dirección:</strong> Calle Principal 123, Soacha,
-                Cundinamarca
-              </p>
-              <p>
-                <strong>Teléfono:</strong> +57 123 456 7890
-              </p>
-            </div>
-          </section>
         </div>
       </div>
       <Footer />
