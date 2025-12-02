@@ -39,7 +39,7 @@ public class JwtAuthFilter implements GlobalFilter {
 
     private final List<String> PUBLIC_POST = List.of(
         "/auth/registration/register",
-        "/auth/notification/**",
+        "/notification/**",
         "/auth/send-email-code",
         "/auth/verify-email-code",
         "/auth/login",
