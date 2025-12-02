@@ -39,7 +39,7 @@ public class JwtAuthFilter implements GlobalFilter {
 
     private final List<String> PUBLIC_POST = List.of(
         "/auth/registration/register",
-        "/notification/**",
+        "/notification/support-email",
         "/auth/send-email-code",
         "/auth/verify-email-code",
         "/auth/login",
@@ -121,6 +121,7 @@ public class JwtAuthFilter implements GlobalFilter {
                 )
             );
         } catch (Exception e) {
+            logger.info(String.format("Error: request: %s", path));
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
