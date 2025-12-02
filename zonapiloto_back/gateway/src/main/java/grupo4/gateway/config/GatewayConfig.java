@@ -36,7 +36,7 @@ public class GatewayConfig {
             )
             .route("notifications", r ->
                 r
-                    .path("/api/notication/**")
+                    .path("/api/notification/**")
                     .filters(f -> f.stripPrefix(1))
                     .uri("http://auth-service:5001")
             )
