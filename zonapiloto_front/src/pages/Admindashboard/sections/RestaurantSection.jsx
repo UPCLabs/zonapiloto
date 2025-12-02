@@ -59,7 +59,7 @@ const RestaurantSection = () => {
         name: formData.get("nombre"),
         logo: formData.get("logo"),
         location: formData.get("localizacion"),
-        categoria: formData.get("categoria"),
+        category: formData.get("categoria"),
         menuUri: formData.get("menuPdfUrl"),
       };
 
@@ -86,9 +86,9 @@ const RestaurantSection = () => {
         const error = await response.json();
         alert(
           "Error: " +
-          (error.message ||
-            error.error ||
-            "No se pudo guardar el restaurante"),
+            (error.message ||
+              error.error ||
+              "No se pudo guardar el restaurante"),
         );
       }
     } catch (error) {

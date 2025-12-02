@@ -353,10 +353,6 @@ const UnifiedLogin = () => {
               </p>
               <div className="security-features">
                 <div className="feature-item">
-                  <span className="feature-icon">🔐</span>
-                  <span>Encriptación de extremo a extremo</span>
-                </div>
-                <div className="feature-item">
                   <span className="feature-icon">📱</span>
                   <span>Autenticación de dos factores</span>
                 </div>
@@ -567,16 +563,16 @@ const UnifiedLogin = () => {
                       <li
                         className={
                           newPassword.password &&
-                          newPassword.confirmPassword &&
-                          newPassword.password === newPassword.confirmPassword
+                            newPassword.confirmPassword &&
+                            newPassword.password === newPassword.confirmPassword
                             ? "valid"
                             : ""
                         }
                       >
                         <span className="requirement-icon">
                           {newPassword.password &&
-                          newPassword.confirmPassword &&
-                          newPassword.password === newPassword.confirmPassword
+                            newPassword.confirmPassword &&
+                            newPassword.password === newPassword.confirmPassword
                             ? "✓"
                             : "○"}
                         </span>

@@ -7,6 +7,7 @@ public class RestaurantDTO {
 
     private Long ownerUserId;
     private String name;
+    private String category;
     private String logo;
     private String location;
     private String menuUri;
