@@ -21,6 +21,8 @@ public class Restaurant {
     @Column(nullable = false)
     private String name;
 
+    private String category;
+
     @Column(nullable = false)
     private String logo;
 

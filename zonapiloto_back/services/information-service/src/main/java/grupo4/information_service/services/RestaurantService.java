@@ -38,6 +38,8 @@ public class RestaurantService implements IRestaurantService {
             .findByOwnerUserId(ownerUserId)
             .orElseThrow(() -> new RuntimeException("Restaurant not found"));
 
+        restaurant.setName(dto.getName());
+        restaurant.setCategory(dto.getCategory());
         restaurant.setLogo(dto.getLogo());
         restaurant.setLocation(dto.getLocation());
         restaurant.setMenuUri(dto.getMenuUri());
@@ -55,6 +57,8 @@ public class RestaurantService implements IRestaurantService {
             .findById(restaurantId)
             .orElseThrow(() -> new RuntimeException("Restaurant not found"));
 
+        restaurant.setName(dto.getName());
+        restaurant.setCategory(dto.getCategory());
         restaurant.setLogo(dto.getLogo());
         restaurant.setLocation(dto.getLocation());
         restaurant.setMenuUri(dto.getMenuUri());
@@ -74,6 +78,7 @@ public class RestaurantService implements IRestaurantService {
         Restaurant restaurant = Restaurant.builder()
             .ownerUserId(dto.getOwnerUserId())
             .name(dto.getName())
+            .category(dto.getCategory())
             .logo(dto.getLogo())
             .location(dto.getLocation())
             .menuUri(dto.getMenuUri())
