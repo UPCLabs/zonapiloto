@@ -57,7 +57,7 @@ public class AuthController {
 
         if (!isValid) {
             return ResponseEntity.badRequest().body(
-                Map.of("error", "Código inválido o expirado")
+                Map.of("error", "Código inválido o expirado. Por favor verifique el codigo en su correo")
             );
         }
 
