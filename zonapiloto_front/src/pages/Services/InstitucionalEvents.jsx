@@ -19,11 +19,10 @@ const EventosInstitucionales = () => {
 
   const tiposEvento = [
     "TODOS",
-    "ACADEMICO",
-    "DEPORTIVO",
+    "ACADEMIC",
+    "SPORT",
     "CULTURAL",
-    "FESTIVO",
-    "REUNIÓN",
+    "MEETING",
   ];
 
   const getTipoColor = (tipo) => {
