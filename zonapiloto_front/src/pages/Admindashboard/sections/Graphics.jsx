@@ -14,7 +14,7 @@ const GraphicsSection = () => {
 
     try {
       const response = await fetch(`${API_URL}/report/general`, {
-        method: "POST",
+        method: "GET",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",

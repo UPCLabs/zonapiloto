@@ -89,7 +89,6 @@ const AdminDashboard = () => {
       description: "Gestión de restaurantes, menu de la cafeteria",
       roles: ["RESTAURANTADMIN", "SUPERADMIN", "ADMIN"],
     },
-    
   ];
 
   const adminMenuItems = [
@@ -125,12 +124,12 @@ const AdminDashboard = () => {
       roles: ["ADMIN", "SUPERADMIN"],
     },
     {
-      id: "graphicos",
+      id: "graficos",
       icon: "📊",
-      label: "Restaurantes",
+      label: "Graficos",
       description: "Gestión de restaurantes, menu de la cafeteria",
       roles: ["SUPERADMIN", "ADMIN"],
-    }
+    },
   ];
 
   const allMenuItems = [
@@ -247,8 +246,8 @@ const AdminDashboard = () => {
       case "solicitudes":
         return <SolicitudesSection />;
 
-         case "graficos":
-        return <Graphics/>;
+      case "graficos":
+        return <Graphics />;
 
       default:
         return (
