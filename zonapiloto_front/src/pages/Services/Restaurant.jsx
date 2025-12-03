@@ -81,73 +81,6 @@ const Restaurant = () => {
       // Simular delay de red
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Datos de ejemplo - comentar esto cuando conectes con el backend real
-      const mockData = [
-        {
-          id: 1,
-          name: "El Corral",
-          category: "Hamburguesas",
-          location: "Carrera 7 #32-16, Bogotá, Colombia",
-          logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ6yJ0LyqQxoqLj7wP7B3dVMzLxK5sZ8xGKg&s",
-          menuUri: "https://elcorral.com/menu"
-        },
-        {
-          id: 2,
-          name: "Crepes & Waffles",
-          category: "Postres y Comida Internacional",
-          location: "Calle 82 #12-13, Bogotá, Colombia",
-          logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Crepes_%26_Waffles_logo.svg/1200px-Crepes_%26_Waffles_logo.svg.png",
-          menuUri: "https://crepesywaffles.com.co/menu"
-        },
-        {
-          id: 3,
-          name: "Andrés Carne de Res",
-          category: "Comida Colombiana",
-          location: "Calle 3 #11-56, Chía, Cundinamarca, Colombia",
-          logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRqNxOZ8jLq0vZ_0HZT1EqYvCqJLqPKLqEgg&s",
-          menuUri: null
-        },
-        {
-          id: 4,
-          name: "Juan Valdez Café",
-          category: "Café y Panadería",
-          location: "Avenida 19 #103-81, Bogotá, Colombia",
-          logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX0Q8yLk7YxJQ0z_JvZLqYHqXZhQvQvYqO-g&s",
-          menuUri: "https://www.juanvaldezcafe.com/menu"
-        },
-        {
-          id: 5,
-          name: "Wok",
-          category: "Comida Asiática",
-          location: "Centro Comercial Santafé, Bogotá, Colombia",
-          logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHZpB0xMNvKYQmqYvFZLqHqZLqZqZLqZqZqA&s",
-          menuUri: "https://wok.com.co/menu"
-        },
-        {
-          id: 6,
-          name: "La Hamburguesería",
-          category: "Hamburguesas Gourmet",
-          location: "Carrera 15 #88-45, Bogotá, Colombia",
-          logo: "https://via.placeholder.com/100?text=LH",
-          menuUri: "https://example.com/menu"
-        },
-        {
-          id: 7,
-          name: "Pizzería Italiana",
-          category: "Pizza y Pasta",
-          location: "Calle 93B #13-32, Bogotá, Colombia",
-          logo: "https://via.placeholder.com/100?text=PI",
-          menuUri: null
-        },
-        {
-          id: 8,
-          name: "Sushi Light",
-          category: "Comida Japonesa",
-          location: "Autopista Norte #123-45, Bogotá, Colombia",
-          logo: "https://via.placeholder.com/100?text=SL",
-          menuUri: "https://example.com/sushi-menu"
-        }
-      ];
 
       setRestaurants(mockData);
 
@@ -155,8 +88,6 @@ const Restaurant = () => {
         setSelectedRestaurant(mockData[0]);
       }
 
-      // Código comentado para cuando conectes con el backend real:
-      /*
       const response = await fetch(`${API_URL}/information/restaurants`, {
         method: "GET",
         headers: {
@@ -174,7 +105,7 @@ const Restaurant = () => {
       if (data.length > 0) {
         setSelectedRestaurant(data[0]);
       }
-      */
+
     } catch (err) {
       setError(err.message);
       console.error("Error al cargar restaurantes:", err);
