@@ -34,9 +34,21 @@ public class GatewayConfig {
                     .filters(f -> f.stripPrefix(1))
                     .uri("http://auth-service:5001")
             )
+            .route("notifications", r ->
+                r
+                    .path("/api/notification/**")
+                    .filters(f -> f.stripPrefix(1))
+                    .uri("http://auth-service:5001")
+            )
             .route("information-service", r ->
                 r
                     .path("/api/information/**")
+                    .filters(f -> f.stripPrefix(1))
+                    .uri("http://information-service:5002")
+            )
+            .route("reports-chart", r ->
+                r
+                    .path("/api/report/**")
                     .filters(f -> f.stripPrefix(1))
                     .uri("http://information-service:5002")
             )

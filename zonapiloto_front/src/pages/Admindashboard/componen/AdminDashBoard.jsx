@@ -12,6 +12,7 @@ import UsuariosSection from "../sections/UsersSection.jsx";
 import RestaurantSection from "../sections/RestaurantSection.jsx";
 import SolicitudesSection from "../sections/ApplicationsSection.jsx";
 import RestaurantSASection from "../sections/RestaurantSASection.jsx";
+import Graphics from "../sections/Graphics.jsx";
 import EditModal from "../modals/EditModal.jsx";
 import "../../../styles/admin_dashboard/componen/admindashboard.css";
 
@@ -121,7 +122,14 @@ const AdminDashboard = () => {
       label: "Gestión Restaurantes",
       description: "Administrar todos los restaurantes",
       roles: ["ADMIN", "SUPERADMIN"],
-    }
+    },
+    {
+      id: "graficos",
+      icon: "📊",
+      label: "Graficos",
+      description: "Gestión de restaurantes, menu de la cafeteria",
+      roles: ["SUPERADMIN", "ADMIN"],
+    },
   ];
 
   const allMenuItems = [
@@ -237,6 +245,9 @@ const AdminDashboard = () => {
 
       case "solicitudes":
         return <SolicitudesSection />;
+
+      case "graficos":
+        return <Graphics />;
 
       default:
         return (
