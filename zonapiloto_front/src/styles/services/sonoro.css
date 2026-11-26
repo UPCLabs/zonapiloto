@@ -1,0 +1,613 @@
+/* ZonaPiloto Sonoro — public page. Institutional red frames the page;
+   the three level colours are reserved for acoustic data only. */
+
+.sonoro {
+    --s-ink: #1d1b1b;
+    --s-muted: #5c5757;
+    --s-paper: #ffffff;
+    --s-wash: #f6f3f3;
+    --s-line: #e4dddd;
+    --s-brand: #9b0000;
+    --s-quiet: #1d6b63;
+    --s-quiet-bg: #e3f1ef;
+    --s-moderate: #8a5a00;
+    --s-moderate-bg: #fbefd6;
+    --s-noisy: #a3123a;
+    --s-noisy-bg: #fbe3ea;
+    --s-nodata: #6b6666;
+    --s-nodata-bg: #efecec;
+    --s-num: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
+
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 48px 24px 72px;
+    color: var(--s-ink);
+    font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    text-align: left;
+}
+
+.sonoro *,
+.sonoro *::before,
+.sonoro *::after {
+    box-sizing: border-box;
+}
+
+.sonoro .num {
+    font-family: var(--s-num);
+    font-variant-numeric: tabular-nums;
+}
+
+.sonoro .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+/* ---------- Hero ---------- */
+.sonoro-hero {
+    margin-bottom: 32px;
+    max-width: 760px;
+}
+
+.sonoro-eyebrow {
+    margin: 0 0 8px;
+    color: var(--s-brand);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.sonoro-hero h1,
+.sonoro-card h2 {
+    text-wrap: balance;
+}
+
+.sonoro-hero h1 {
+    margin: 0 0 12px;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--s-ink);
+}
+
+.sonoro-intro {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--s-muted);
+}
+
+/* ---------- Layout ---------- */
+.sonoro-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+    margin-bottom: 24px;
+}
+
+.sonoro-card {
+    background: var(--s-paper);
+    border: 1px solid var(--s-line);
+    border-top: 4px solid var(--s-brand);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 10px rgba(29, 27, 27, 0.05);
+}
+
+.sonoro-card h2 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 750;
+    color: var(--s-ink);
+}
+
+.sonoro-card-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.sonoro-capture h2 {
+    margin-bottom: 8px;
+}
+
+.sonoro-lead {
+    margin: 0 0 16px;
+    color: var(--s-muted);
+    line-height: 1.55;
+}
+
+.sonoro-subhead {
+    margin: 24px 0 8px;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.sonoro-empty {
+    margin: 8px 0;
+    color: var(--s-muted);
+}
+
+.sonoro-footnote {
+    margin: 8px 0 0;
+    font-size: 0.85rem;
+    color: var(--s-muted);
+}
+
+.sonoro-alert {
+    margin: 16px 0 0;
+    padding: 12px 14px;
+    border-left: 4px solid var(--s-brand);
+    background: #fdf0f0;
+    color: #6e0000;
+    border-radius: 6px;
+    line-height: 1.5;
+}
+
+/* ---------- Controls ---------- */
+.sonoro button:focus-visible,
+.sonoro select:focus-visible,
+.sonoro input:focus-visible,
+.sonoro summary:focus-visible,
+.sonoro .plan-zone:focus-visible {
+    outline: 3px solid #1a56db;
+    outline-offset: 2px;
+}
+
+.sonoro-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 24px;
+    border: 2px solid var(--s-brand);
+    border-radius: 10px;
+    background: var(--s-brand);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: background-color 0.15s ease;
+}
+
+.sonoro-btn:hover:not(:disabled) {
+    background: #7d0000;
+}
+
+.sonoro-btn:disabled {
+    background: #d9cfcf;
+    border-color: #d9cfcf;
+    color: #5c5757;
+    cursor: not-allowed;
+}
+
+.sonoro-btn.secondary {
+    background: #fff;
+    color: var(--s-brand);
+}
+
+.sonoro-btn.secondary:hover {
+    background: #fdf0f0;
+}
+
+.sonoro-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.sonoro-field.inline {
+    flex-direction: row;
+    align-items: center;
+    margin: 0;
+}
+
+.sonoro-field label {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.sonoro-field select {
+    min-height: 44px;
+    padding: 0 12px;
+    border: 1px solid #b9afaf;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--s-ink);
+    font: inherit;
+    max-width: 100%;
+}
+
+.sonoro-consent {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: 12px;
+    margin-bottom: 16px;
+    background: var(--s-wash);
+    border-radius: 8px;
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+.sonoro-consent input {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    accent-color: var(--s-brand);
+}
+
+.sonoro-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+.sonoro-hint {
+    font-size: 0.9rem;
+    color: var(--s-muted);
+}
+
+.sonoro-slots {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px;
+    background: var(--s-wash);
+    border-radius: 10px;
+}
+
+.sonoro-slots button {
+    min-height: 36px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--s-muted);
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.sonoro-slots button:hover {
+    color: var(--s-ink);
+}
+
+.sonoro-slots button.active {
+    background: #fff;
+    color: var(--s-brand);
+    box-shadow: 0 1px 3px rgba(29, 27, 27, 0.15);
+}
+
+/* ---------- Level tags ---------- */
+.sonoro-level-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.sonoro-level-tag::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.level-quiet.sonoro-level-tag { color: var(--s-quiet); background: var(--s-quiet-bg); }
+.level-moderate.sonoro-level-tag { color: var(--s-moderate); background: var(--s-moderate-bg); }
+.level-noisy.sonoro-level-tag { color: var(--s-noisy); background: var(--s-noisy-bg); }
+.level-no_data.sonoro-level-tag { color: var(--s-nodata); background: var(--s-nodata-bg); }
+
+.sonoro-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0 20px;
+}
+
+/* ---------- Campus plan (signature) ---------- */
+.sonoro-plan {
+    margin: 0;
+}
+
+.sonoro-plan svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #faf8f8;
+    border-radius: 10px;
+    border: 1px solid var(--s-line);
+}
+
+.sonoro-plan figcaption {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: var(--s-muted);
+}
+
+.plan-street { fill: #e7e2e2; }
+.plan-campus { fill: #fff; stroke: #d8d0d0; stroke-width: 0.3; }
+
+.plan-street-label {
+    font-size: 2.1px;
+    fill: #6b6666;
+    text-anchor: middle;
+    font-weight: 600;
+    letter-spacing: 0.08px;
+}
+
+.plan-zone { cursor: pointer; outline: none; }
+.plan-zone .ring { fill: none; stroke-width: 0.45; }
+.plan-zone .ring.outer { opacity: 0.35; }
+.plan-zone .ring.inner { opacity: 0.6; }
+.plan-zone .core { stroke: #fff; stroke-width: 0.5; }
+
+.plan-zone .zone-code {
+    font-family: system-ui, "Segoe UI", sans-serif;
+    font-size: 2.6px;
+    font-weight: 800;
+    fill: #fff;
+    text-anchor: middle;
+    pointer-events: none;
+}
+
+.plan-zone.level-quiet .core { fill: var(--s-quiet); }
+.plan-zone.level-quiet .ring { stroke: var(--s-quiet); }
+.plan-zone.level-moderate .core { fill: var(--s-moderate); }
+.plan-zone.level-moderate .ring { stroke: var(--s-moderate); }
+.plan-zone.level-noisy .core { fill: var(--s-noisy); }
+.plan-zone.level-noisy .ring { stroke: var(--s-noisy); }
+.plan-zone.level-no_data .core { fill: var(--s-nodata); }
+
+.plan-zone.selected .core { stroke: var(--s-ink); stroke-width: 0.8; }
+.plan-zone:focus-visible .core { stroke: #1a56db; stroke-width: 1; }
+
+@media (prefers-reduced-motion: no-preference) {
+    .plan-zone .ring.outer {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: sonoroPulse 3.2s ease-out infinite;
+    }
+}
+
+@keyframes sonoroPulse {
+    0% { transform: scale(0.85); opacity: 0.45; }
+    100% { transform: scale(1.15); opacity: 0; }
+}
+
+/* ---------- Recommendations ---------- */
+.sonoro-recos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.sonoro-reco {
+    padding: 16px;
+    border: 1px solid var(--s-line);
+    border-radius: 10px;
+}
+
+.sonoro-reco h3 {
+    margin: 0 0 4px;
+    font-size: 1.05rem;
+}
+
+.sonoro-reco-hint {
+    margin: 0 0 10px;
+    font-size: 0.88rem;
+    color: var(--s-muted);
+}
+
+.sonoro-reco ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: reco;
+}
+
+.sonoro-reco li {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    border-top: 1px solid var(--s-line);
+    counter-increment: reco;
+}
+
+.sonoro-reco li::before {
+    content: counter(reco);
+    font-family: var(--s-num);
+    color: var(--s-muted);
+    font-size: 0.85rem;
+}
+
+.sonoro-reco li .name { font-weight: 600; }
+
+/* ---------- Capture reading ---------- */
+.sonoro-reading {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--s-line);
+}
+
+.sonoro-countdown {
+    margin: 0 0 10px;
+    font-weight: 600;
+}
+
+.sonoro-value {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 12px 0 0;
+}
+
+.sonoro-value .num {
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.sonoro-result {
+    margin: 12px 0 0;
+    line-height: 1.5;
+}
+
+.sonoro-strip-track {
+    position: relative;
+    display: flex;
+    height: 14px;
+    border-radius: 7px;
+    overflow: visible;
+}
+
+.sonoro-strip-track .band { height: 100%; }
+.sonoro-strip-track .band.quiet { background: var(--s-quiet); border-radius: 7px 0 0 7px; }
+.sonoro-strip-track .band.moderate { background: #c98a12; }
+.sonoro-strip-track .band.noisy { background: var(--s-noisy); border-radius: 0 7px 7px 0; }
+
+.sonoro-strip-marker {
+    position: absolute;
+    top: -5px;
+    width: 4px;
+    height: 24px;
+    margin-left: -2px;
+    background: var(--s-ink);
+    border: 1px solid #fff;
+    border-radius: 2px;
+}
+
+.sonoro-strip-scale {
+    position: relative;
+    height: 18px;
+    margin-top: 4px;
+    font-family: var(--s-num);
+    font-size: 0.75rem;
+    color: var(--s-muted);
+}
+
+.sonoro-strip-scale span { position: absolute; transform: translateX(-50%); }
+.sonoro-strip-scale span:first-child { left: 0; transform: none; }
+.sonoro-strip-scale span.end { right: 0; transform: none; }
+
+.sonoro-privacy {
+    margin-top: 20px;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--s-muted);
+}
+
+.sonoro-privacy summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--s-ink);
+}
+
+.sonoro-privacy ul { margin: 8px 0; padding-left: 20px; }
+.sonoro-privacy p { margin: 0; }
+
+/* ---------- History ---------- */
+.sonoro-table-wrap {
+    overflow-x: auto;
+}
+
+.sonoro-matrix {
+    width: 100%;
+    min-width: 520px;
+    border-collapse: separate;
+    border-spacing: 4px;
+    font-size: 0.9rem;
+}
+
+/* Reset global table rules from profile.css, which are not scoped. */
+.sonoro-matrix thead {
+    background: none;
+}
+
+.sonoro-matrix th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 4px 6px;
+    color: var(--s-ink);
+    border-bottom: 0;
+}
+
+.sonoro-matrix thead th .hours {
+    display: block;
+    font-weight: 400;
+    font-size: 0.75rem;
+    color: var(--s-muted);
+}
+
+.sonoro-matrix td {
+    padding: 8px;
+    border-bottom: 0;
+    border-radius: 6px;
+    vertical-align: top;
+    background: var(--s-nodata-bg);
+}
+
+.sonoro-matrix td .num { display: block; font-weight: 700; font-size: 1rem; }
+.sonoro-matrix td .meta { font-size: 0.75rem; }
+
+.sonoro-matrix td.level-quiet { background: var(--s-quiet-bg); color: var(--s-quiet); }
+.sonoro-matrix td.level-moderate { background: var(--s-moderate-bg); color: var(--s-moderate); }
+.sonoro-matrix td.level-noisy { background: var(--s-noisy-bg); color: var(--s-noisy); }
+.sonoro-matrix td.level-no_data { color: var(--s-nodata); }
+
+.sonoro-daily {
+    display: block;
+    width: 100%;
+    height: 90px;
+    background: var(--s-wash);
+    border-radius: 8px;
+}
+
+.sonoro-daily rect.filled { fill: var(--s-brand); }
+.sonoro-daily rect.empty { fill: #cfc7c7; }
+
+.sonoro-daily-axis {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-family: var(--s-num);
+    font-size: 0.75rem;
+    color: var(--s-muted);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 960px) {
+    .sonoro-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 560px) {
+    .sonoro { padding: 32px 16px 56px; }
+    .sonoro-card { padding: 18px; }
+    .sonoro-recos { grid-template-columns: minmax(0, 1fr); }
+    .sonoro-field.inline { flex-direction: column; align-items: stretch; width: 100%; }
+    .sonoro-btn { width: 100%; }
+}

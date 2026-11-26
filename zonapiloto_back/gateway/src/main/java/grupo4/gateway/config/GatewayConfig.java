@@ -64,6 +64,12 @@ public class GatewayConfig {
                     .filters(f -> f.stripPrefix(1))
                     .uri("http://profile-service:5003")
             )
+            .route("acoustic-service", r ->
+                r
+                    .path("/api/acoustic/**")
+                    .filters(f -> f.stripPrefix(1))
+                    .uri("http://acoustic-service:5005")
+            )
             .build();
     }
 

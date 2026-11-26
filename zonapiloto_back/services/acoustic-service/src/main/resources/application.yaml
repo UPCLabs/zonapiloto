@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: acoustic-service
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          time_zone: UTC
+
+server:
+  port: 5005
+
+acoustic:
+  timezone: America/Bogota
+  device-salt: ${ACOUSTIC_DEVICE_SALT:}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always

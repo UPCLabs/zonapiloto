@@ -1,0 +1,203 @@
+/* Sonoro admin section; inherits the dashboard's dark theme. */
+.sonoro-admin-alert,
+.sonoro-admin-notice {
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    line-height: 1.5;
+}
+
+.sonoro-admin-alert {
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #fecaca;
+}
+
+.sonoro-admin-notice {
+    background: rgba(74, 222, 128, 0.1);
+    border: 1px solid rgba(74, 222, 128, 0.35);
+    color: #bbf7d0;
+}
+
+.sonoro-admin-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.sonoro-admin-kpis > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px;
+    background: rgba(20, 25, 45, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: #b0b0b0;
+    font-size: 0.85rem;
+}
+
+.sonoro-admin-kpis .kpi {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+}
+
+.sonoro-admin-cols {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 24px;
+}
+
+.sonoro-admin-cols h4 {
+    margin-bottom: 12px;
+    color: #e0e0e0;
+    font-size: 1rem;
+}
+
+.sonoro-admin-reasons {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sonoro-admin-reasons li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    background: rgba(20, 25, 45, 0.6);
+    border-radius: 8px;
+}
+
+.sonoro-admin-reasons .kpi-sm {
+    font-weight: 700;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+}
+
+.sonoro-admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+}
+
+/* Reset global table rules from profile.css, which are not scoped. */
+.sonoro-admin-table thead {
+    background: none;
+}
+
+.sonoro-admin-table th,
+.sonoro-admin-table td {
+    padding: 10px 12px;
+    text-align: left;
+    font-size: inherit;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    vertical-align: middle;
+}
+
+.sonoro-admin-table thead th {
+    color: #b0b0b0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.sonoro-admin-table tbody th {
+    color: #fff;
+    font-weight: 600;
+}
+
+.sonoro-admin-table td {
+    color: #e0e0e0;
+    font-variant-numeric: tabular-nums;
+}
+
+.sonoro-admin-table .sub {
+    display: block;
+    color: #999;
+    font-size: 0.8rem;
+}
+
+.sonoro-admin-table .actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.sonoro-admin-spark {
+    display: block;
+    width: 100%;
+    min-width: 140px;
+    height: 32px;
+}
+
+.sonoro-admin-spark polyline {
+    stroke: #8ea2ff;
+    stroke-width: 1.5;
+}
+
+.sonoro-admin-spark-empty {
+    color: #999;
+    font-size: 0.85rem;
+}
+
+.sonoro-admin-state {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.sonoro-admin-state.on {
+    background: rgba(74, 222, 128, 0.15);
+    color: #86efac;
+}
+
+.sonoro-admin-state.off {
+    background: rgba(255, 255, 255, 0.08);
+    color: #b0b0b0;
+}
+
+.sonoro-admin-form-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.admin-secondary-btn.sm {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+}
+
+.admin-dashboard .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+.admin-dashboard-section button:focus-visible,
+.admin-dashboard-section input:focus-visible {
+    outline: 3px solid #8ea2ff;
+    outline-offset: 2px;
+}
+
+@media (max-width: 900px) {
+    .sonoro-admin-cols {
+        grid-template-columns: 1fr;
+    }
+
+    .sonoro-admin-table {
+        display: block;
+        overflow-x: auto;
+    }
+}

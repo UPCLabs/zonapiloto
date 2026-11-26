@@ -132,6 +132,24 @@ services:
     networks:
       - zonapiloto_net
 
+  acoustic-service:
+    build: ./zonapiloto_back/services/acoustic-service
+    container_name: acoustic-service
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/acoustic_db
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      ACOUSTIC_DEVICE_SALT: ${ACOUSTIC_DEVICE_SALT}
+    expose:
+      - "5005"
+    networks:
+      - zonapiloto_net
+
   gateway:
     build: ./zonapiloto_back/gateway
     container_name: gateway
@@ -146,6 +164,7 @@ services:
         information-service=http://information-service:5002/actuator/health,
         profile-service=http://profile-service:5003/actuator/health,
         notification-service=http://notification-service:5004/actuator/health,
+        acoustic-service=http://acoustic-service:5005/actuator/health,
 
     expose:
       - "5000"
