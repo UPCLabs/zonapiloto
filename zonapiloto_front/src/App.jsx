@@ -21,6 +21,7 @@ import Contact from "./pages/Services/Contact.jsx";
 import Register from "./pages/Services/RegisterPage.jsx";
 import SecretLoginTrigger from "./components/SecretLoginTrigger";
 import NotFound404 from "./pages/NotFound404.jsx";
+import Sonoro from "./pages/Services/Sonoro.jsx";
 
 function ConditionalSecretTrigger() {
   const location = useLocation();
@@ -54,6 +55,7 @@ function App() {
           <Route path="/admindash" element={<AdminDash />} />
           <Route path="/loggin" element={<Loggin />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/sonoro" element={<Sonoro />} />
           <Route path="*" element={<NotFound404 />} />
         </Routes>
       </Router>

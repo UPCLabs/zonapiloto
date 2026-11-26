@@ -13,6 +13,7 @@ import RestaurantSection from "../sections/RestaurantSection.jsx";
 import SolicitudesSection from "../sections/ApplicationsSection.jsx";
 import RestaurantSASection from "../sections/RestaurantSASection.jsx";
 import Graphics from "../sections/Graphics.jsx";
+import SonoroSection from "../sections/SonoroSection.jsx";
 import EditModal from "../modals/EditModal.jsx";
 import "../../../styles/admin_dashboard/componen/admindashboard.css";
 
@@ -122,6 +123,12 @@ const AdminDashboard = () => {
       label: "Gestión Restaurantes",
       description: "Administrar todos los restaurantes",
       roles: ["ADMIN", "SUPERADMIN"],
+    },
+    {
+      id: "sonoro",
+      icon: "🔊",
+      label: "ZonaPiloto Sonoro",
+      roles: ["SUPERADMIN", "ADMIN"],
     },
     {
       id: "graficos",
@@ -248,6 +255,9 @@ const AdminDashboard = () => {
 
       case "graficos":
         return <Graphics />;
+
+      case "sonoro":
+        return <SonoroSection />;
 
       default:
         return (

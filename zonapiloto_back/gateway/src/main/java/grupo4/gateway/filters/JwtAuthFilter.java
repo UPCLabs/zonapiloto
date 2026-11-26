@@ -35,7 +35,8 @@ public class JwtAuthFilter implements GlobalFilter {
         "/auth/pending-users",
         "/storage/**",
         "/information/**/own",
-        "/report/general"
+        "/report/general",
+        "/acoustic/admin/**"
     );
 
     private final List<String> PUBLIC_POST = List.of(
@@ -46,7 +47,8 @@ public class JwtAuthFilter implements GlobalFilter {
         "/auth/login",
         "/auth/check-credentials",
         "/auth/confirm-registration",
-        "/auth/verify-registration"
+        "/auth/verify-registration",
+        "/acoustic/samples"
     );
 
     private final AntPathMatcher pathMatcher = new AntPathMatcher();

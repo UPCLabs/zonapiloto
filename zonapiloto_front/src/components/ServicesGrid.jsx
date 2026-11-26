@@ -33,6 +33,11 @@ const services = [
     icon: <i class="fi fi-sr-diary-bookmark-down"></i>,
   },
   {
+    title: "ZonaPiloto Sonoro",
+    desc: "Encuentra zonas para estudiar o conversar según su nivel de ruido",
+    icon: <i class="fi fi-sr-volume"></i>,
+  },
+  {
     title: "Laboratorio",
     desc: "Sistema de reservas para el laboratio",
     icon: <i class="fi fi-sr-display-code"></i>,
@@ -71,6 +76,9 @@ function ServicesGrid() {
         break;
       case "Biblioteca":
         navigate("/biblioteca");
+        break;
+      case "ZonaPiloto Sonoro":
+        navigate("/sonoro");
         break;
       case "Laboratorio":
         window.location.href = "https://labpiloto.com/";
