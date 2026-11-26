@@ -1,76 +1,82 @@
-import { LEVEL_LABEL, formatIndex } from "./labels.js";
+import campusMap from "../assets/images/sonoro/campus-map.webp";
+import { LEVEL_LABEL, SOURCE_LABEL, formatIndex } from "./labels.js";
 
-const HEIGHT = 80;
+const MAP_WIDTH = 1400;
+const MAP_HEIGHT = 1309;
+
+function describe(status) {
+  const { zone, medianIndex, level, sampleCount, source, minutesAgo } = status;
+  if (level === "NO_DATA") {
+    return `${zone.name}: sin datos suficientes (${sampleCount} mediciones)`;
+  }
+  const origin =
+    source === "LIVE"
+      ? `medido hace ${minutesAgo ?? 0} min`
+      : SOURCE_LABEL[source].toLowerCase();
+  return `${zone.name}: ${LEVEL_LABEL[level].toLowerCase()}, índice ${formatIndex(medianIndex)}, ${origin}`;
+}
 
 /**
- * Schematic top-down plan of the campus. Each pilot zone is drawn as a sound
- * source whose rings grow with its median index for the selected time slot.
+ * Official campus map with each pilot zone drawn on its building as a sound
+ * source: ring size grows with the index, colour encodes the level, and a
+ * solid ring marks a live reading.
  */
 function CampusPlan({ zones, selectedZoneId, onSelect }) {
   return (
     <figure className="sonoro-plan">
-      <svg
-        viewBox={`0 0 100 ${HEIGHT}`}
-        role="group"
-        aria-label="Plano esquemático del campus con las zonas del piloto"
-      >
-        <rect className="plan-street" x="0" y="0" width="7" height={HEIGHT} />
-        <rect className="plan-street" x="0" y={HEIGHT - 7} width="100" height="7" />
-        <rect className="plan-street" x="93" y="0" width="7" height={HEIGHT} />
-        <rect className="plan-campus" x="10" y="3" width="80" height={HEIGHT - 13} rx="2" />
-        <text className="plan-street-label" x="3.5" y="40" transform={`rotate(-90 3.5 40)`}>
-          Carrera 8
-        </text>
-        <text className="plan-street-label" x="50" y={HEIGHT - 2.4}>
-          Calle 46
-        </text>
-        <text className="plan-street-label" x="96.5" y="40" transform={`rotate(90 96.5 40)`}>
-          Cra. 13
-        </text>
-
-        {zones.map((status) => {
-          const { zone, medianIndex, level, sampleCount } = status;
-          const x = zone.mapX;
-          const y = (zone.mapY / 100) * HEIGHT;
-          const intensity = medianIndex ?? 0;
-          const radius = 3.2 + (intensity / 100) * 6;
-          const selected = zone.id === selectedZoneId;
-          const description =
-            level === "NO_DATA"
-              ? `${zone.name}: sin datos suficientes (${sampleCount} mediciones)`
-              : `${zone.name}: ${LEVEL_LABEL[level].toLowerCase()}, índice ${formatIndex(medianIndex)}`;
-          return (
-            <g
-              key={zone.id}
-              className={`plan-zone level-${level.toLowerCase()} ${selected ? "selected" : ""}`}
-              role="button"
-              tabIndex={0}
-              aria-pressed={selected}
-              aria-label={description}
-              onClick={() => onSelect(zone.id)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  onSelect(zone.id);
-                }
-              }}
-            >
-              <title>{description}</title>
-              {level !== "NO_DATA" && (
-                <>
-                  <circle className="ring outer" cx={x} cy={y} r={radius * 1.9} />
-                  <circle className="ring inner" cx={x} cy={y} r={radius * 1.4} />
-                </>
-              )}
-              <circle className="core" cx={x} cy={y} r={radius} />
-              <text className="zone-code" x={x} y={y + 1.1}>
-                {zone.code}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
-      <figcaption>Plano esquemático, no a escala. Selecciona una zona para ver su historial.</figcaption>
+      <div className="sonoro-plan-stage">
+        <img
+          src={campusMap}
+          width={MAP_WIDTH}
+          height={MAP_HEIGHT}
+          alt=""
+          className="sonoro-plan-image"
+          decoding="async"
+        />
+        <svg
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          className="sonoro-plan-overlay"
+          aria-hidden="true"
+        >
+          {zones.map(({ zone, medianIndex, level, source }) => {
+            if (level === "NO_DATA") return null;
+            const r = 4 + ((medianIndex ?? 0) / 100) * 7;
+            const ry = r * (MAP_WIDTH / MAP_HEIGHT);
+            return (
+              <g key={zone.id} className={`plan-rings level-${level.toLowerCase()} ${source === "LIVE" ? "live" : ""}`}>
+                <ellipse className="ring outer" cx={zone.mapX} cy={zone.mapY} rx={r * 1.5} ry={ry * 1.5} />
+                <ellipse className="ring inner" cx={zone.mapX} cy={zone.mapY} rx={r} ry={ry} />
+              </g>
+            );
+          })}
+        </svg>
+        <ul className="sonoro-plan-pins" aria-label="Zonas del piloto">
+          {zones.map((status) => {
+            const { zone, medianIndex, level, source } = status;
+            const selected = zone.id === selectedZoneId;
+            const description = describe(status);
+            return (
+              <li key={zone.id} style={{ left: `${zone.mapX}%`, top: `${zone.mapY}%` }}>
+                <button
+                  type="button"
+                  className={`plan-pin level-${level.toLowerCase()} ${selected ? "selected" : ""} ${source === "LIVE" ? "live" : ""}`}
+                  aria-pressed={selected}
+                  aria-label={description}
+                  title={description}
+                  onClick={() => onSelect(zone.id)}
+                >
+                  <span className="code">{zone.code}</span>
+                  <span className="value num">{level === "NO_DATA" ? "—" : formatIndex(medianIndex)}</span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+      <figcaption>
+        Mapa oficial «Conoce tu universidad». Selecciona una sede para ver su historial.
+      </figcaption>
     </figure>
   );
 }

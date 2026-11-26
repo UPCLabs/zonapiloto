@@ -326,18 +326,31 @@
     margin: 12px 0 20px;
 }
 
-/* ---------- Campus plan (signature) ---------- */
+/* ---------- Campus map (signature) ---------- */
 .sonoro-plan {
     margin: 0;
 }
 
-.sonoro-plan svg {
+.sonoro-plan-stage {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--s-line);
+    background: #a7a5a6;
+}
+
+.sonoro-plan-image {
     display: block;
     width: 100%;
     height: auto;
-    background: #faf8f8;
-    border-radius: 10px;
-    border: 1px solid var(--s-line);
+}
+
+.sonoro-plan-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
 }
 
 .sonoro-plan figcaption {
@@ -346,54 +359,171 @@
     color: var(--s-muted);
 }
 
-.plan-street { fill: #e7e2e2; }
-.plan-campus { fill: #fff; stroke: #d8d0d0; stroke-width: 0.3; }
-
-.plan-street-label {
-    font-size: 2.1px;
-    fill: #6b6666;
-    text-anchor: middle;
-    font-weight: 600;
-    letter-spacing: 0.08px;
+.plan-rings .ring {
+    fill: none;
+    stroke-width: 0.9;
+    vector-effect: non-scaling-stroke;
 }
 
-.plan-zone { cursor: pointer; outline: none; }
-.plan-zone .ring { fill: none; stroke-width: 0.45; }
-.plan-zone .ring.outer { opacity: 0.35; }
-.plan-zone .ring.inner { opacity: 0.6; }
-.plan-zone .core { stroke: #fff; stroke-width: 0.5; }
+.plan-rings .ring.inner { stroke-width: 3; opacity: 0.95; }
+.plan-rings .ring.outer { stroke-width: 2; opacity: 0.6; }
+.plan-rings:not(.live) .ring { stroke-dasharray: 6 5; }
 
-.plan-zone .zone-code {
-    font-family: system-ui, "Segoe UI", sans-serif;
-    font-size: 2.6px;
-    font-weight: 800;
-    fill: #fff;
-    text-anchor: middle;
-    pointer-events: none;
-}
+.plan-rings.level-quiet .ring { stroke: #2fbfae; }
+.plan-rings.level-moderate .ring { stroke: #ffb000; }
+.plan-rings.level-noisy .ring { stroke: #ff2d55; }
 
-.plan-zone.level-quiet .core { fill: var(--s-quiet); }
-.plan-zone.level-quiet .ring { stroke: var(--s-quiet); }
-.plan-zone.level-moderate .core { fill: var(--s-moderate); }
-.plan-zone.level-moderate .ring { stroke: var(--s-moderate); }
-.plan-zone.level-noisy .core { fill: var(--s-noisy); }
-.plan-zone.level-noisy .ring { stroke: var(--s-noisy); }
-.plan-zone.level-no_data .core { fill: var(--s-nodata); }
-
-.plan-zone.selected .core { stroke: var(--s-ink); stroke-width: 0.8; }
-.plan-zone:focus-visible .core { stroke: #1a56db; stroke-width: 1; }
+.plan-rings.level-quiet .ring.inner { fill: rgba(47, 191, 174, 0.22); }
+.plan-rings.level-moderate .ring.inner { fill: rgba(255, 176, 0, 0.22); }
+.plan-rings.level-noisy .ring.inner { fill: rgba(255, 45, 85, 0.22); }
 
 @media (prefers-reduced-motion: no-preference) {
-    .plan-zone .ring.outer {
+    .plan-rings.live .ring.outer {
         transform-box: fill-box;
         transform-origin: center;
-        animation: sonoroPulse 3.2s ease-out infinite;
+        animation: sonoroPulse 2.6s ease-out infinite;
     }
 }
 
 @keyframes sonoroPulse {
-    0% { transform: scale(0.85); opacity: 0.45; }
-    100% { transform: scale(1.15); opacity: 0; }
+    0% { transform: scale(0.8); opacity: 0.7; }
+    100% { transform: scale(1.25); opacity: 0; }
+}
+
+.sonoro-plan-pins {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sonoro-plan-pins li {
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+.plan-pin {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 32px;
+    padding: 3px 10px 3px 4px;
+    border: 2px solid #fff;
+    border-radius: 999px;
+    background: var(--s-nodata);
+    color: #fff;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+    touch-action: manipulation;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.plan-pin .code {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--s-ink);
+    font-size: 0.75rem;
+}
+
+.plan-pin.level-quiet { background: var(--s-quiet); }
+.plan-pin.level-moderate { background: var(--s-moderate); }
+.plan-pin.level-noisy { background: var(--s-noisy); }
+
+.plan-pin:hover { filter: brightness(1.1); }
+
+.plan-pin.selected {
+    outline: 3px solid var(--s-ink);
+    outline-offset: 1px;
+}
+
+.sonoro .plan-pin:focus-visible {
+    outline: 3px solid #1a56db;
+    outline-offset: 2px;
+}
+
+.sonoro-clock {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0 0;
+    color: var(--s-muted);
+    font-size: 0.9rem;
+}
+
+.sonoro-clock .num::first-letter { text-transform: uppercase; }
+
+.sonoro-live-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--s-wash);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.sonoro-live-tag::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--s-noisy);
+}
+
+.sonoro-legend-note {
+    margin: -12px 0 16px;
+    font-size: 0.82rem;
+    color: var(--s-muted);
+}
+
+/* ---------- Zone readings ---------- */
+.sonoro-readings {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+    gap: 8px;
+    margin: 0 0 20px;
+    padding: 0;
+    list-style: none;
+}
+
+.sonoro-readings button {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 4px 8px;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--s-line);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--s-ink);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.sonoro-readings button:hover { border-color: #b9afaf; }
+.sonoro-readings .name { grid-area: 1 / 1; font-weight: 700; }
+.sonoro-readings .num { grid-area: 1 / 2; justify-self: end; font-weight: 700; }
+.sonoro-readings .sonoro-level-tag { grid-area: 2 / 1 / 3 / 3; justify-self: start; }
+.sonoro-readings .origin { grid-area: 3 / 1 / 4 / 3; font-size: 0.78rem; color: var(--s-muted); }
+
+@media (max-width: 560px) {
+    .plan-pin { min-height: 28px; padding: 2px 8px 2px 3px; font-size: 0.75rem; }
+    .plan-pin .code { min-width: 20px; height: 20px; font-size: 0.68rem; }
 }
 
 /* ---------- Recommendations ---------- */

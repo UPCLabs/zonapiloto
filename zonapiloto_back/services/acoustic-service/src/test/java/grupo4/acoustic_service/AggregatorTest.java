@@ -9,6 +9,7 @@ import grupo4.acoustic_service.dtos.SlotCell;
 import grupo4.acoustic_service.dtos.ZoneResponse;
 import grupo4.acoustic_service.dtos.ZoneStatus;
 import grupo4.acoustic_service.enums.NoiseLevel;
+import grupo4.acoustic_service.enums.StatusSource;
 import grupo4.acoustic_service.enums.TimeSlot;
 import grupo4.acoustic_service.services.Aggregator;
 import java.time.DayOfWeek;
@@ -35,6 +36,54 @@ class AggregatorTest {
         assertThat(ok.enoughData()).isTrue();
         assertThat(ok.medianIndex()).isEqualTo(22.0);
         assertThat(ok.level()).isEqualTo(NoiseLevel.QUIET);
+    }
+
+    @Test
+    void liveSamplesTakePrecedence() {
+        ZoneStatus s = Aggregator.resolve(
+            zone(1, "A"),
+            List.of(70.0),
+            5L,
+            List.of(20.0, 20.0, 20.0),
+            List.of(30.0, 30.0, 30.0)
+        );
+        assertThat(s.source()).isEqualTo(StatusSource.LIVE);
+        assertThat(s.medianIndex()).isEqualTo(70.0);
+        assertThat(s.level()).isEqualTo(NoiseLevel.NOISY);
+        assertThat(s.minutesAgo()).isEqualTo(5L);
+    }
+
+    @Test
+    void fallsBackToWeekdayThenSlotHistory() {
+        ZoneStatus daySlot = Aggregator.resolve(
+            zone(1, "A"),
+            List.of(),
+            null,
+            List.of(20.0, 22.0, 24.0),
+            List.of(50.0, 50.0, 50.0)
+        );
+        assertThat(daySlot.source()).isEqualTo(StatusSource.DAY_SLOT);
+        assertThat(daySlot.medianIndex()).isEqualTo(22.0);
+
+        ZoneStatus slot = Aggregator.resolve(
+            zone(1, "A"),
+            List.of(),
+            null,
+            List.of(20.0),
+            List.of(50.0, 50.0, 50.0)
+        );
+        assertThat(slot.source()).isEqualTo(StatusSource.SLOT);
+        assertThat(slot.level()).isEqualTo(NoiseLevel.MODERATE);
+
+        ZoneStatus none = Aggregator.resolve(
+            zone(1, "A"),
+            List.of(),
+            null,
+            List.of(),
+            List.of(50.0)
+        );
+        assertThat(none.source()).isEqualTo(StatusSource.NO_DATA);
+        assertThat(none.enoughData()).isFalse();
     }
 
     @Test

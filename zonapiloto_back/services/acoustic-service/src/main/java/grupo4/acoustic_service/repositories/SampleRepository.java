@@ -1,5 +1,6 @@
 package grupo4.acoustic_service.repositories;
 
+import grupo4.acoustic_service.dtos.LivePoint;
 import grupo4.acoustic_service.dtos.SamplePoint;
 import grupo4.acoustic_service.entities.Sample;
 import grupo4.acoustic_service.enums.SampleStatus;
@@ -65,6 +66,17 @@ public interface SampleRepository extends JpaRepository<Sample, Long> {
         @Param("zoneId") Long zoneId,
         @Param("since") LocalDate since
     );
+
+    @Query(
+        """
+        select new grupo4.acoustic_service.dtos.LivePoint(
+            s.zone.id, s.capturedAt, s.acousticIndex)
+        from Sample s
+        where s.status = grupo4.acoustic_service.enums.SampleStatus.ACCEPTED
+          and s.capturedAt >= :since
+        """
+    )
+    List<LivePoint> findAcceptedSince(@Param("since") Instant since);
 
     @Query(
         """

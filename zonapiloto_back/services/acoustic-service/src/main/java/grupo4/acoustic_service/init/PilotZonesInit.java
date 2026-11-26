@@ -8,9 +8,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 /**
- * Seeds the five pilot zones on an empty database. Positions project the
- * isometric campus map ("Conoce tu universidad") onto a top-down plan with
- * Carrera 8 on the left, Calle 46 at the bottom, and Cra. 13 on the right.
+ * Seeds the five pilot zones on an empty database. Positions are percentages
+ * of the official campus map image (src/assets/images/sonoro/campus-map.webp),
+ * placed on each building's letter badge.
  */
 @Component
 @RequiredArgsConstructor
@@ -21,34 +21,34 @@ public class PilotZonesInit implements CommandLineRunner {
     private record Seed(String code, String name, String description, double x, double y) {}
 
     private static final List<Seed> PILOT_ZONES = List.of(
-        new Seed("A", "Sede A", "Biblioteca", 28, 40),
+        new Seed("A", "Sede A", "Biblioteca", 39.6, 24.7),
         new Seed(
             "F",
             "Sede F",
             "Facultad de Arquitectura y Artes, zona de cafetería y laboratorios",
-            33,
-            14
+            63.1,
+            8.0
         ),
         new Seed(
             "D",
             "Sede D",
             "Laboratorio de Informática, salas de cómputo y Mediexpress",
-            55,
-            20
+            80.7,
+            37.7
         ),
         new Seed(
             "G",
             "Sede G",
             "Salas de cómputo, Dirección de Tecnología y sala múltiple",
-            57,
-            52
+            61.8,
+            61.3
         ),
         new Seed(
             "APR",
             "Sede APR",
             "Auditorios, plazoleta de comidas, salones y salas de cómputo",
-            46,
-            80
+            33.6,
+            73.0
         )
     );
 

@@ -41,6 +41,23 @@ export const DAY_LABEL = {
   SUNDAY: "Domingo",
 };
 
+export const SOURCE_LABEL = {
+  LIVE: "En vivo",
+  DAY_SLOT: "Histórico de este día y franja",
+  SLOT: "Histórico de la franja",
+  NO_DATA: "Sin datos",
+};
+
+export const DAY_LABEL_LOWER = {
+  MONDAY: "lunes",
+  TUESDAY: "martes",
+  WEDNESDAY: "miércoles",
+  THURSDAY: "jueves",
+  FRIDAY: "viernes",
+  SATURDAY: "sábados",
+  SUNDAY: "domingos",
+};
+
 export const REASON_LABEL = {
   DURATION_OUT_OF_RANGE: "Duración fuera de 10–15 s",
   CLIPPING: "Micrófono saturado",
@@ -52,6 +69,15 @@ const indexFormat = new Intl.NumberFormat("es-CO", {
   maximumFractionDigits: 1,
 });
 const dateFormat = new Intl.DateTimeFormat("es-CO", { day: "numeric", month: "short" });
+const clockFormat = new Intl.DateTimeFormat("es-CO", {
+  weekday: "long",
+  hour: "numeric",
+  minute: "2-digit",
+  timeZone: "America/Bogota",
+});
+
+/** Campus time, regardless of the visitor's device time zone. */
+export const formatCampusClock = (date) => clockFormat.format(date);
 
 export const formatIndex = (value) =>
   value === null || value === undefined ? "—" : indexFormat.format(value);

@@ -6,13 +6,39 @@ import CapturePanel from "../../sonoro/CapturePanel.jsx";
 import HistoryPanel from "../../sonoro/HistoryPanel.jsx";
 import { sonoroApi } from "../../sonoro/api.js";
 import {
+  DAY_LABEL_LOWER,
   LEVEL_LABEL,
   SLOTS,
   SLOT_HOURS,
   SLOT_LABEL,
+  SOURCE_LABEL,
+  formatCampusClock,
   formatIndex,
 } from "../../sonoro/labels.js";
 import "../../styles/services/sonoro.css";
+
+function ZoneReadings({ zones, onSelect }) {
+  return (
+    <ul className="sonoro-readings" aria-label="Estado de cada sede">
+      {zones.map((s) => (
+        <li key={s.zone.id}>
+          <button type="button" onClick={() => onSelect(s.zone.id)}>
+            <span className="name">{s.zone.name}</span>
+            <span className={`sonoro-level-tag level-${s.level.toLowerCase()}`}>
+              {LEVEL_LABEL[s.level]}
+            </span>
+            <span className="num">{formatIndex(s.medianIndex)}</span>
+            <span className="origin">
+              {s.source === "LIVE"
+                ? `Medido hace ${s.minutesAgo ?? 0} min`
+                : SOURCE_LABEL[s.source]}
+            </span>
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 function RecommendationList({ title, hint, recommendation, emptyText }) {
   const ranked = recommendation?.ranked ?? [];
@@ -39,6 +65,9 @@ function RecommendationList({ title, hint, recommendation, emptyText }) {
   );
 }
 
+const REFRESH_MS = 60_000;
+const CLOCK_MS = 15_000;
+
 function Sonoro() {
   const [zones, setZones] = useState([]);
   const [overview, setOverview] = useState(null);
@@ -47,6 +76,7 @@ function Sonoro() {
   const [state, setState] = useState("loading");
   const [error, setError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [now, setNow] = useState(() => new Date());
 
   const load = useCallback(async () => {
     setError(null);
@@ -69,6 +99,20 @@ function Sonoro() {
     load();
   }, [load, refreshKey]);
 
+  // Following the current time: refresh readings every minute while visible.
+  useEffect(() => {
+    if (slot !== null) return undefined;
+    const timer = setInterval(() => {
+      if (!document.hidden) load();
+    }, REFRESH_MS);
+    return () => clearInterval(timer);
+  }, [slot, load]);
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), CLOCK_MS);
+    return () => clearInterval(timer);
+  }, []);
+
   useEffect(() => {
     document.title = "ZonaPiloto Sonoro";
     return () => {
@@ -77,7 +121,8 @@ function Sonoro() {
   }, []);
 
   const shownSlot = overview?.slot;
-  const isCurrent = shownSlot && shownSlot === overview?.currentSlot;
+  const following = slot === null;
+  const liveCount = overview?.zones.filter((z) => z.source === "LIVE").length ?? 0;
 
   return (
     <>
@@ -114,27 +159,58 @@ function Sonoro() {
             <div className="sonoro-grid">
               <section className="sonoro-card sonoro-now" aria-labelledby="now-title">
                 <div className="sonoro-card-head">
-                  <h2 id="now-title">
-                    {isCurrent ? "Ahora en el campus" : `Franja: ${SLOT_LABEL[shownSlot]}`}
-                  </h2>
-                  <div className="sonoro-slots" role="group" aria-label="Franja horaria">
-                    {SLOTS.map((s) => (
-                      <button
-                        key={s}
-                        type="button"
-                        aria-pressed={shownSlot === s}
-                        className={shownSlot === s ? "active" : ""}
-                        onClick={() => setSlot(s)}
-                        title={SLOT_HOURS[s]}
-                      >
-                        {SLOT_LABEL[s]}
-                      </button>
-                    ))}
+                  <div>
+                    <h2 id="now-title">
+                      {following ? "Ahora en el campus" : `Franja: ${SLOT_LABEL[shownSlot]}`}
+                    </h2>
+                    <p className="sonoro-clock">
+                      <span className="num">{formatCampusClock(now)}</span>
+                      {following && (
+                        <span className="sonoro-live-tag">
+                          {liveCount > 0 ? `${liveCount} en vivo` : "Se actualiza cada minuto"}
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                  <div className="sonoro-slots" role="group" aria-label="Momento que se muestra">
+                    <button
+                      type="button"
+                      aria-pressed={following}
+                      className={following ? "active" : ""}
+                      onClick={() => setSlot(null)}
+                    >
+                      Ahora
+                    </button>
+                    {SLOTS.map((s) => {
+                      const active = !following && shownSlot === s;
+                      return (
+                        <button
+                          key={s}
+                          type="button"
+                          aria-pressed={active}
+                          className={active ? "active" : ""}
+                          onClick={() => setSlot(s)}
+                          title={SLOT_HOURS[s]}
+                        >
+                          {SLOT_LABEL[s]}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
                 <p className="sonoro-lead">
-                  Mediana de los últimos {overview.windowDays} días entre {SLOT_HOURS[shownSlot]}.
-                  Los anillos crecen con el ruido.
+                  {following ? (
+                    <>
+                      Cada sede muestra lo medido en la última hora. Si no hay mediciones
+                      recientes, usa el histórico de los {DAY_LABEL_LOWER[overview.day]} entre{" "}
+                      {SLOT_HOURS[shownSlot]} y, si tampoco hay, el de esa franja en los últimos{" "}
+                      {overview.windowDays} días.
+                    </>
+                  ) : (
+                    <>
+                      {`Histórico de los ${DAY_LABEL_LOWER[overview.day]} entre ${SLOT_HOURS[shownSlot]}; si no alcanza, el de esa franja en los últimos ${overview.windowDays} días.`}
+                    </>
+                  )}
                 </p>
 
                 <CampusPlan
@@ -151,6 +227,12 @@ function Sonoro() {
                     Sin datos · menos de {overview.minSamples} mediciones
                   </span>
                 </div>
+                <p className="sonoro-legend-note">
+                  Anillo continuo: medido en la última hora. Anillo punteado: estimado con el
+                  histórico. Los anillos crecen con el ruido.
+                </p>
+
+                <ZoneReadings zones={overview.zones} onSelect={setSelectedZoneId} />
 
                 <div className="sonoro-recos">
                   <RecommendationList

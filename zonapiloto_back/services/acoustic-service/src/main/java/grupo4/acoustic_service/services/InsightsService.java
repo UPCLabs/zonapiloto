@@ -1,6 +1,7 @@
 package grupo4.acoustic_service.services;
 
 import grupo4.acoustic_service.dtos.DailyPoint;
+import grupo4.acoustic_service.dtos.LivePoint;
 import grupo4.acoustic_service.dtos.Overview;
 import grupo4.acoustic_service.dtos.QualityReport;
 import grupo4.acoustic_service.dtos.SamplePoint;
@@ -14,8 +15,13 @@ import grupo4.acoustic_service.enums.SampleStatus;
 import grupo4.acoustic_service.enums.TimeSlot;
 import grupo4.acoustic_service.repositories.SampleRepository;
 import java.time.Clock;
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -41,15 +47,77 @@ public class InsightsService {
         return TimeSlot.of(LocalTime.now(clock));
     }
 
+    /**
+     * Zone status for a time slot of today. For the current slot, recent
+     * samples take precedence over history.
+     */
     public Overview overview(TimeSlot requestedSlot) {
-        TimeSlot current = currentSlot();
+        Instant now = clock.instant();
+        ZonedDateTime localNow = now.atZone(clock.getZone());
+        TimeSlot current = TimeSlot.of(localNow.toLocalTime());
         TimeSlot slot = requestedSlot == null ? current : requestedSlot;
-        LocalDate since = LocalDate.now(clock).minusDays(DEFAULT_WINDOW_DAYS - 1);
+        DayOfWeek day = localNow.getDayOfWeek();
+        boolean live = slot == current;
+        LocalDate since = localNow.toLocalDate().minusDays(DEFAULT_WINDOW_DAYS - 1);
 
-        Map<Long, List<Double>> bySlot = sampleRepository
+        List<SamplePoint> slotPoints = sampleRepository
             .findAcceptedPoints(since)
             .stream()
             .filter(p -> p.timeSlot() == slot)
+            .toList();
+        Map<Long, List<Double>> bySlot = indexesByZone(slotPoints);
+        Map<Long, List<Double>> byDaySlot = indexesByZone(
+            slotPoints.stream().filter(p -> p.dayOfWeek() == day).toList()
+        );
+
+        Map<Long, List<LivePoint>> liveByZone = live
+            ? sampleRepository
+                .findAcceptedSince(
+                    now.minus(Duration.ofMinutes(Aggregator.LIVE_WINDOW_MINUTES))
+                )
+                .stream()
+                .collect(Collectors.groupingBy(LivePoint::zoneId))
+            : Map.of();
+
+        List<ZoneStatus> zones = zoneService
+            .activeZones()
+            .stream()
+            .map(z -> {
+                List<LivePoint> recent = liveByZone.getOrDefault(z.id(), List.of());
+                Long minutesAgo = recent
+                    .stream()
+                    .map(LivePoint::capturedAt)
+                    .max(Comparator.naturalOrder())
+                    .map(t -> Duration.between(t, now).toMinutes())
+                    .orElse(null);
+                return Aggregator.resolve(
+                    z,
+                    recent.stream().map(LivePoint::acousticIndex).toList(),
+                    minutesAgo,
+                    byDaySlot.getOrDefault(z.id(), List.of()),
+                    bySlot.getOrDefault(z.id(), List.of())
+                );
+            })
+            .toList();
+
+        return new Overview(
+            slot,
+            current,
+            day,
+            live,
+            Aggregator.LIVE_WINDOW_MINUTES,
+            now,
+            DEFAULT_WINDOW_DAYS,
+            Aggregator.MIN_SAMPLES,
+            zones,
+            Aggregator.forStudy(zones),
+            Aggregator.forConversation(zones)
+        );
+    }
+
+    private static Map<Long, List<Double>> indexesByZone(List<SamplePoint> points) {
+        return points
+            .stream()
             .collect(
                 Collectors.groupingBy(
                     SamplePoint::zoneId,
@@ -59,22 +127,6 @@ public class InsightsService {
                     )
                 )
             );
-
-        List<ZoneStatus> zones = zoneService
-            .activeZones()
-            .stream()
-            .map(z -> Aggregator.status(z, bySlot.getOrDefault(z.id(), List.of())))
-            .toList();
-
-        return new Overview(
-            slot,
-            current,
-            DEFAULT_WINDOW_DAYS,
-            Aggregator.MIN_SAMPLES,
-            zones,
-            Aggregator.forStudy(zones),
-            Aggregator.forConversation(zones)
-        );
     }
 
     public ZoneHistory history(Long zoneId, int days) {

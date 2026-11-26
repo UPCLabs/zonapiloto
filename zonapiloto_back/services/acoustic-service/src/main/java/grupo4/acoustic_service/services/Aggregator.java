@@ -8,6 +8,7 @@ import grupo4.acoustic_service.dtos.ZoneResponse;
 import grupo4.acoustic_service.dtos.ZoneStatus;
 import grupo4.acoustic_service.enums.Activity;
 import grupo4.acoustic_service.enums.NoiseLevel;
+import grupo4.acoustic_service.enums.StatusSource;
 import grupo4.acoustic_service.enums.TimeSlot;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -28,15 +29,62 @@ public final class Aggregator {
 
     private Aggregator() {}
 
+    /** Accepted samples newer than this describe the zone "right now". */
+    public static final int LIVE_WINDOW_MINUTES = 60;
+    /** One recent accepted sample is enough: outliers were already excluded. */
+    public static final int LIVE_MIN_SAMPLES = 1;
+
+    /** Status from a time slot's history alone. */
     public static ZoneStatus status(ZoneResponse zone, List<Double> indexes) {
-        Double median = Stats.round1(Stats.median(indexes));
-        boolean enough = indexes.size() >= MIN_SAMPLES;
+        return resolve(zone, List.of(), null, List.of(), indexes);
+    }
+
+    /**
+     * Picks the most specific source with enough data: live samples, then the
+     * same weekday and slot, then the slot on any day.
+     */
+    public static ZoneStatus resolve(
+        ZoneResponse zone,
+        List<Double> live,
+        Long minutesAgo,
+        List<Double> daySlot,
+        List<Double> slot
+    ) {
+        if (live.size() >= LIVE_MIN_SAMPLES) {
+            return classified(zone, live, StatusSource.LIVE, minutesAgo);
+        }
+        if (daySlot.size() >= MIN_SAMPLES) {
+            return classified(zone, daySlot, StatusSource.DAY_SLOT, null);
+        }
+        if (slot.size() >= MIN_SAMPLES) {
+            return classified(zone, slot, StatusSource.SLOT, null);
+        }
+        return new ZoneStatus(
+            zone,
+            Stats.round1(Stats.median(slot)),
+            NoiseLevel.NO_DATA,
+            slot.size(),
+            false,
+            StatusSource.NO_DATA,
+            null
+        );
+    }
+
+    private static ZoneStatus classified(
+        ZoneResponse zone,
+        List<Double> values,
+        StatusSource source,
+        Long minutesAgo
+    ) {
+        Double median = Stats.round1(Stats.median(values));
         return new ZoneStatus(
             zone,
             median,
-            enough ? NoiseLevel.of(median) : NoiseLevel.NO_DATA,
-            indexes.size(),
-            enough
+            NoiseLevel.of(median),
+            values.size(),
+            true,
+            source,
+            minutesAgo
         );
     }
 
